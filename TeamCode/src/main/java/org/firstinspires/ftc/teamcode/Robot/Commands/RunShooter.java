@@ -6,8 +6,6 @@ import org.firstinspires.ftc.teamcode.Robot.Subsystems.Shooter;
 
 public class RunShooter extends InstantCommand {
     public RunShooter(Shooter.ShooterStates state) {
-//        super(
-//                () -> RobotHardware.getInstance().intake.updateState(state)
-//        );
+//        super(Shooter.ShooterStates = state);
     }
 }

@@ -1,7 +1,5 @@
 package org.firstinspires.ftc.teamcode.tuning;
 
-//import com.ThermalEquilibrium.homeostasis.Controllers.Feedback.BasicPID;
-//import com.ThermalEquilibrium.homeostasis.Parameters.PIDCoefficients;
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.Pose2d;
@@ -23,12 +21,10 @@ public class LocalizationTest extends LinearOpMode {
     public static double kp = .01, ki =0, kd=0, target = 0;
 //    PIDCoefficients coefficients;
 //    BasicPID pid;
-//    AprilTagDetection tag22;
     Apriltag apriltag22;
 
     @Override
     public void runOpMode() {
-//        tag22 = new AprilTagDetection();
         limelight = hardwareMap.get(Limelight3A.class, "limelight");
 //        coefficients = new PIDCoefficients(kp,ki,kd);
 //        pid = new BasicPID(coefficients);
@@ -84,9 +80,11 @@ public class LocalizationTest extends LinearOpMode {
                 }
 
                 if (gamepad1.dpad_right){
-                    shooter.setPower(1);
+                    shooter.setPower(.33);
                 } else if (gamepad1.dpad_left){
-                    shooter.setPower(-1);
+                    shooter.setPower(.5);
+                } else if (gamepad1.dpad_up){
+                    shooter.setPower(.66);
                 } else {
                     shooter.setPower(0);
                 }
