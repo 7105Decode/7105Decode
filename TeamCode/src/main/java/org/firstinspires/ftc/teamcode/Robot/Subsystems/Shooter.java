@@ -1,6 +1,8 @@
 package org.firstinspires.ftc.teamcode.Robot.Subsystems;
 
-public class Shooter {
+import com.arcrobotics.ftclib.command.SubsystemBase;
+
+public class Shooter extends SubsystemBase {
 
     public enum ShooterStates {
         MAXSPEED,

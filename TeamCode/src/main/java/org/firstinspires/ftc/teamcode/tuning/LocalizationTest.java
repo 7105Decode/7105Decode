@@ -32,7 +32,7 @@ public class LocalizationTest extends LinearOpMode {
 
         apriltag22 = new Apriltag();
 
-        limelight.pipelineSwitch(0);
+        limelight.pipelineSwitch(1);
         shooter = hardwareMap.get(DcMotor.class,"shooter");
         frontintake = hardwareMap.get(DcMotor.class,"frontintake");
         backintake = hardwareMap.get(DcMotor.class,"backintake");
@@ -43,6 +43,8 @@ public class LocalizationTest extends LinearOpMode {
             apriltag22.setX(0);
             apriltag22.setY(0);
             apriltag22.setHeading(0);
+            shooter.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            shooter.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             waitForStart();
 
             while (opModeIsActive()) {
@@ -85,6 +87,8 @@ public class LocalizationTest extends LinearOpMode {
                     shooter.setPower(.5);
                 } else if (gamepad1.dpad_up){
                     shooter.setPower(.66);
+                } else if (gamepad1.a) {
+                    shooter.setPower(1);
                 } else {
                     shooter.setPower(0);
                 }

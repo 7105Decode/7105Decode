@@ -18,12 +18,12 @@ public class BetterDashboard extends SubsystemBase {
     public void periodic() {
         telemetryPacket = new TelemetryPacket();
         FtcDashboard.getInstance().sendTelemetryPacket(telemetryPacket);
+        telemetry.update();
     }
 
     public void sendTelem(String name, Object packet){
         telemetry.addData(name,packet);
         telemetryPacket.put(name,packet);
-        telemetry.update();
     }
     public void streamLimelight(Limelight3A limelight3A, int maxfps){
         FtcDashboard.getInstance().startCameraStream(limelight3A,maxfps);
