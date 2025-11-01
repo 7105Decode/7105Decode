@@ -1,11 +1,5 @@
 package org.firstinspires.ftc.teamcode.Robot.Subsystems;
 
-import static com.sun.tools.doclint.Entity.pi;
-
-import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.gamepad1;
-
-import com.acmerobotics.dashboard.FtcDashboard;
-import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.PoseVelocity2d;
 import com.acmerobotics.roadrunner.Vector2d;
@@ -24,12 +18,12 @@ public class DriveTrain extends SubsystemBase{
         pinpointDrive = new PinpointDrive(hardwareMap, pose2d);
         pose = pinpointDrive.pose;
     }
-    public void driveTrainTelem(BetterDashboard betterDashboard){
-        betterDashboard.telemetryPacket.fieldOverlay().setStroke("#4c00b0");
-        Drawing.drawRobot(betterDashboard.telemetryPacket.fieldOverlay(), pose);
-        betterDashboard.sendTelem("heading", getHeadingDegrees());
-        betterDashboard.sendTelem("x",getX());
-        betterDashboard.sendTelem("y",getY());
+    public void driveTrainTelem(){
+        BetterDashboard.telemetryPacket.fieldOverlay().setStroke("#4c00b0");
+        Drawing.drawRobot(BetterDashboard.telemetryPacket.fieldOverlay(), pose);
+        BetterDashboard.sendTelem("heading", getHeadingDegrees());
+        BetterDashboard.sendTelem("x",getX());
+        BetterDashboard.sendTelem("y",getY());
     }
     public double getHeadingDegrees(){
         return Math.toDegrees(pose.heading.toDouble());

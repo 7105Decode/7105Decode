@@ -8,19 +8,20 @@ import com.qualcomm.hardware.limelightvision.Limelight3A;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 public class BetterDashboard extends SubsystemBase {
-    Telemetry telemetry;
-    public double hello = 0;
+    static Telemetry telemetry;
     public static TelemetryPacket telemetryPacket;
+    public double loopTime;
     public BetterDashboard(Telemetry telemetry){
-        this.telemetry = telemetry;
-        hello = 0;
+        BetterDashboard.telemetry = telemetry;
     }
-    public void sendTelem(String name, Object packet){
+    public static void sendTelem(String name, Object packet){
         telemetry.addData(name,packet);
         telemetryPacket.put(name,packet);
     }
     public void dashboardTelem(){
-        sendTelem("double",hello);
+        double loop = System.nanoTime();
+        sendTelem("Loop Time ", 1000000000 / (loop - loopTime));
+        loopTime = loop;
     }
     public void updateTelemetry(){
         telemetryPacket = new TelemetryPacket();
