@@ -20,15 +20,11 @@ import org.firstinspires.ftc.teamcode.Robot.BetterDashboard;
 public class DriveTrain extends SubsystemBase{
     PinpointDrive pinpointDrive;
     Pose2d pose;
-    BetterDashboard betterDashboard;
-    public DriveTrain(HardwareMap hardwareMap, Pose2d pose2d, BetterDashboard betterDashboard){
+    public DriveTrain(HardwareMap hardwareMap, Pose2d pose2d){
         pinpointDrive = new PinpointDrive(hardwareMap, pose2d);
         pose = pinpointDrive.pose;
-        this.betterDashboard = betterDashboard;
     }
-
-    @Override
-    public void periodic() {
+    public void driveTrainTelem(BetterDashboard betterDashboard){
         betterDashboard.telemetryPacket.fieldOverlay().setStroke("#4c00b0");
         Drawing.drawRobot(betterDashboard.telemetryPacket.fieldOverlay(), pose);
         betterDashboard.sendTelem("heading", getHeadingDegrees());

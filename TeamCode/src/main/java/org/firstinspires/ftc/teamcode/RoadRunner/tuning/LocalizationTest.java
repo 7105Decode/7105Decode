@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.tuning;
+package org.firstinspires.ftc.teamcode.RoadRunner.tuning;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
@@ -11,7 +11,6 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.firstinspires.ftc.robotcore.external.navigation.Pose3D;
-import org.firstinspires.ftc.teamcode.Apriltag;
 import org.firstinspires.ftc.teamcode.RoadRunner.Drawing;
 import org.firstinspires.ftc.teamcode.RoadRunner.PinpointDrive;
 
@@ -19,10 +18,6 @@ public class LocalizationTest extends LinearOpMode {
     DcMotor shooter, frontintake, backintake;
     Limelight3A limelight;
     public static double kp = .01, ki =0, kd=0, target = 0;
-//    PIDCoefficients coefficients;
-//    BasicPID pid;
-    Apriltag apriltag22;
-
     @Override
     public void runOpMode() {
         limelight = hardwareMap.get(Limelight3A.class, "limelight");
@@ -30,9 +25,7 @@ public class LocalizationTest extends LinearOpMode {
 //        pid = new BasicPID(coefficients);
         telemetry.setMsTransmissionInterval(11);
 
-        apriltag22 = new Apriltag();
-
-        limelight.pipelineSwitch(1);
+        limelight.pipelineSwitch(3);
         shooter = hardwareMap.get(DcMotor.class,"shooter");
         frontintake = hardwareMap.get(DcMotor.class,"frontintake");
         backintake = hardwareMap.get(DcMotor.class,"backintake");
@@ -40,9 +33,6 @@ public class LocalizationTest extends LinearOpMode {
         if (TuningOpModes.DRIVE_CLASS.equals(PinpointDrive.class)) {
             PinpointDrive drive = new PinpointDrive(hardwareMap, new Pose2d(0, 0, 0));
             limelight.start();
-            apriltag22.setX(0);
-            apriltag22.setY(0);
-            apriltag22.setHeading(0);
             shooter.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             shooter.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             waitForStart();
