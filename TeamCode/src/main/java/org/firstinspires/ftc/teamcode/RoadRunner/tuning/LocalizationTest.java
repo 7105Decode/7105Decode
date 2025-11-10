@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.RoadRunner.tuning;
 
 import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.PoseVelocity2d;
@@ -9,15 +10,18 @@ import com.qualcomm.hardware.limelightvision.LLResult;
 import com.qualcomm.hardware.limelightvision.Limelight3A;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.navigation.Pose3D;
 import org.firstinspires.ftc.teamcode.RoadRunner.Drawing;
 import org.firstinspires.ftc.teamcode.RoadRunner.PinpointDrive;
 
+@Config
 public class LocalizationTest extends LinearOpMode {
-    DcMotor shooter, frontintake, backintake;
+    DcMotor shooter, frontintake, backintake, topturret;
     Limelight3A limelight;
-    public static double kp = .01, ki =0, kd=0, target = 0;
+    Servo turretservo;
+    public static double kp = .01, ki =0, kd=0, target = 0, MidServoPos = .5, RightServoPos = .6, LeftServoPos = .4, TopTurretPower = .5;
     @Override
     public void runOpMode() {
         limelight = hardwareMap.get(Limelight3A.class, "limelight");
@@ -27,6 +31,8 @@ public class LocalizationTest extends LinearOpMode {
 
         limelight.pipelineSwitch(3);
         shooter = hardwareMap.get(DcMotor.class,"shooter");
+        topturret = hardwareMap.get(DcMotor.class,"topturret");
+        turretservo = hardwareMap.get(Servo.class,"turretservo");
         frontintake = hardwareMap.get(DcMotor.class,"frontintake");
         backintake = hardwareMap.get(DcMotor.class,"backintake");
 
@@ -63,6 +69,22 @@ public class LocalizationTest extends LinearOpMode {
                 telemetry.addData("Limelight", "No data available");
             }
 
+                if (gamepad2.a){
+                    turretservo.setPosition(RightServoPos);
+                }else if (gamepad2.b){
+                    turretservo.setPosition(LeftServoPos);
+                }else {
+                    turretservo.setPosition(MidServoPos);
+                }
+
+                if (gamepad2.left_trigger > .3){
+                    topturret.setPower(-TopTurretPower);
+                }else if (gamepad2.right_trigger > .3){
+                    topturret.setPower(TopTurretPower);
+                }else {
+                    topturret.setPower(0);
+                }
+
                 if (gamepad1.right_trigger > .3){
                     frontintake.setPower(1);
                 } else if (gamepad1.left_trigger > .3){
@@ -83,20 +105,20 @@ public class LocalizationTest extends LinearOpMode {
                     shooter.setPower(0);
                 }
 
-                if (gamepad2.right_bumper){
-                    drive.leftFront.setPower(1);
-                } else if (gamepad2.left_bumper) {
-                    drive.leftBack.setPower(1);
-                } else if (gamepad2.left_trigger>.3) {
-                    drive.rightFront.setPower(1); // correct
-                } else if (gamepad2.right_trigger > .3) {
-                    drive.rightBack.setPower(1);
-                } else {
-                    drive.leftFront.setPower(0);
-                    drive.leftBack.setPower(0);
-                    drive.rightBack.setPower(0);
-                    drive.rightFront.setPower(0);
-                }
+//                if (gamepad2.right_bumper){
+//                    drive.leftFront.setPower(1);
+//                } else if (gamepad2.left_bumper) {
+//                    drive.leftBack.setPower(1);
+//                } else if (gamepad2.left_trigger>.3) {
+//                    drive.rightFront.setPower(1); // correct
+//                } else if (gamepad2.right_trigger > .3) {
+//                    drive.rightBack.setPower(1);
+//                } else {
+//                    drive.leftFront.setPower(0);
+//                    drive.leftBack.setPower(0);
+//                    drive.rightBack.setPower(0);
+//                    drive.rightFront.setPower(0);
+//                }
 
                 drive.setDrivePowers(new PoseVelocity2d(
                         new Vector2d(

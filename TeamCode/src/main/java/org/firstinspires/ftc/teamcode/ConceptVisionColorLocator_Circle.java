@@ -19,11 +19,12 @@
  * SOFTWARE.
  */
 
-package org.firstinspires.ftc.robotcontroller.external.samples;
+package org.firstinspires.ftc.teamcode;
 
 import android.graphics.Color;
 import android.util.Size;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -34,7 +35,9 @@ import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.opencv.Circle;
 import org.firstinspires.ftc.vision.opencv.ColorBlobLocatorProcessor;
 import org.firstinspires.ftc.vision.opencv.ColorRange;
+import org.firstinspires.ftc.vision.opencv.ColorSpace;
 import org.firstinspires.ftc.vision.opencv.ImageRegion;
+import org.opencv.core.Scalar;
 
 import java.util.List;
 
@@ -68,9 +71,15 @@ import java.util.List;
  * Remove or comment out the @Disabled line to add this OpMode to the Driver Station OpMode list
  */
 
-@Disabled
+@Config
 @TeleOp(name = "Concept: Vision Color-Locator (Circle)", group = "Concept")
 public class ConceptVisionColorLocator_Circle extends LinearOpMode {
+    public static double loopTime = 0,minRange = 50, maxRange = 20000, minH=0,minS=126,minV = 143,maxH=255,maxS=155,maxV = 255;
+    public static final ColorRange ARTIFACT_PURPLE = new ColorRange(
+            ColorSpace.YCrCb,
+            new Scalar( minH, minS, minV),
+            new Scalar(maxH, maxS, maxV)
+    );
     @Override
     public void runOpMode() {
         /* Build a "Color Locator" vision processor based on the ColorBlobLocatorProcessor class.
@@ -130,9 +139,9 @@ public class ConceptVisionColorLocator_Circle extends LinearOpMode {
          *        CLOSING:    Will Dilate and then Erode which will tend to fill in any small holes in blob edges.
          */
         ColorBlobLocatorProcessor colorLocator = new ColorBlobLocatorProcessor.Builder()
-                .setTargetColorRange(ColorRange.ARTIFACT_PURPLE)   // Use a predefined color match
+                .setTargetColorRange(ARTIFACT_PURPLE)   // Use a predefined color match
                 .setContourMode(ColorBlobLocatorProcessor.ContourMode.EXTERNAL_ONLY)
-                .setRoi(ImageRegion.asUnityCenterCoordinates(-0.75, 0.75, 0.75, -0.75))
+//                .setRoi(ImageRegion.asUnityCenterCoordinates(-0.75, 0.75, 0.75, -0.75))
                 .setDrawContours(true)   // Show contours on the Stream Preview
                 .setBoxFitColor(0)       // Disable the drawing of rectangles
                 .setCircleFitColor(Color.rgb(255, 255, 0)) // Draw a circle
@@ -208,7 +217,7 @@ public class ConceptVisionColorLocator_Circle extends LinearOpMode {
              */
             ColorBlobLocatorProcessor.Util.filterByCriteria(
                     ColorBlobLocatorProcessor.BlobCriteria.BY_CONTOUR_AREA,
-                    50, 20000, blobs);  // filter out very small blobs.
+                    minRange, maxRange, blobs);  // filter out very small blobs.
 
             ColorBlobLocatorProcessor.Util.filterByCriteria(
                     ColorBlobLocatorProcessor.BlobCriteria.BY_CIRCULARITY,
@@ -229,6 +238,10 @@ public class ConceptVisionColorLocator_Circle extends LinearOpMode {
              */
 
             telemetry.addLine("Circularity Radius Center");
+
+            double loop = System.nanoTime();
+            telemetry.addData("Loop Time ", 1000000000 / (loop - loopTime));
+            loopTime = loop;
 
             // Display the Blob's circularity, and the size (radius) and center location of its circleFit.
             for (ColorBlobLocatorProcessor.Blob b : blobs) {

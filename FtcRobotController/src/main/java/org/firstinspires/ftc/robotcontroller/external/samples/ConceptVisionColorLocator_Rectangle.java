@@ -26,15 +26,15 @@ import android.util.Size;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.util.SortOrder;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.opencv.ColorBlobLocatorProcessor;
 import org.firstinspires.ftc.vision.opencv.ColorRange;
-import org.firstinspires.ftc.vision.opencv.ImageRegion;
+import org.firstinspires.ftc.vision.opencv.ColorSpace;
 import org.opencv.core.RotatedRect;
+import org.opencv.core.Scalar;
 
 import java.util.List;
 
@@ -68,6 +68,12 @@ import java.util.List;
 @TeleOp(name = "Concept: Color-Locator (Rectangle)", group = "Concept")
 public class ConceptVisionColorLocator_Rectangle extends LinearOpMode
 {
+    public static double minRange = 50, maxRange = 20000;
+    public static final ColorRange ARTIFACT_PURPLE = new ColorRange(
+            ColorSpace.YCrCb,
+            new Scalar( 32, 135, 135),
+            new Scalar(255, 155, 169)
+    );
     @Override
     public void runOpMode()
     {
@@ -119,9 +125,9 @@ public class ConceptVisionColorLocator_Rectangle extends LinearOpMode
          *        "pixels" in the range of 2-4 are suitable for low res images.
          */
         ColorBlobLocatorProcessor colorLocator = new ColorBlobLocatorProcessor.Builder()
-                .setTargetColorRange(ColorRange.ARTIFACT_PURPLE)   // use a predefined color match
+                .setTargetColorRange(ARTIFACT_PURPLE)   // use a predefined color match
                 .setContourMode(ColorBlobLocatorProcessor.ContourMode.EXTERNAL_ONLY)
-                .setRoi(ImageRegion.asUnityCenterCoordinates(-0.75, 0.75, 0.75, -0.75))
+//                .setRoi(ImageRegion.asUnityCenterCoordinates(0,0,0,0))
                 .setDrawContours(true)   // Show contours on the Stream Preview
                 .setBlurSize(5)          // Smooth the transitions between different colors in image
                 .build();
@@ -190,7 +196,7 @@ public class ConceptVisionColorLocator_Rectangle extends LinearOpMode
              */
             ColorBlobLocatorProcessor.Util.filterByCriteria(
                     ColorBlobLocatorProcessor.BlobCriteria.BY_CONTOUR_AREA,
-                    50, 20000, blobs);  // filter out very small blobs.
+                    minRange, maxRange, blobs);  // filter out very small blobs.
 
             /*
              * The list of Blobs can be sorted using the same Blob attributes as listed above.
