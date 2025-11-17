@@ -21,7 +21,7 @@ public class LocalizationTest extends LinearOpMode {
     DcMotor shooter, frontintake, backintake, topturret;
     Limelight3A limelight;
     Servo turretservo;
-    public static double kp = .01, ki =0, kd=0, target = 0, MidServoPos = .5, RightServoPos = .6, LeftServoPos = .4, TopTurretPower = .5;
+    public static double kp = .01, ki =0, kd=0, target = 0, shooterspeed = 0, MidServoPos = .5, RightServoPos = .6, LeftServoPos = .4, TopTurretPower = .5;
     @Override
     public void runOpMode() {
         limelight = hardwareMap.get(Limelight3A.class, "limelight");
@@ -102,7 +102,7 @@ public class LocalizationTest extends LinearOpMode {
                 } else if (gamepad1.a) {
                     shooter.setPower(1);
                 } else {
-                    shooter.setPower(0);
+                    shooter.setPower(shooterspeed);
                 }
 
 //                if (gamepad2.right_bumper){

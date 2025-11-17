@@ -37,7 +37,10 @@ import org.firstinspires.ftc.vision.opencv.ColorBlobLocatorProcessor;
 import org.firstinspires.ftc.vision.opencv.ColorRange;
 import org.firstinspires.ftc.vision.opencv.ColorSpace;
 import org.firstinspires.ftc.vision.opencv.ImageRegion;
+import org.opencv.core.MatOfPoint;
+import org.opencv.core.Rect;
 import org.opencv.core.Scalar;
+import org.opencv.imgproc.Imgproc;
 
 import java.util.List;
 
@@ -254,5 +257,22 @@ public class ConceptVisionColorLocator_Circle extends LinearOpMode {
             telemetry.update();
             sleep(100); // Match the telemetry update interval.
         }
+    }
+    private MatOfPoint findLargestContour(List<MatOfPoint> contours) {
+        double maxArea = 0;
+        MatOfPoint largestContour = null;
+
+        for (MatOfPoint contour : contours) {
+            double area = Imgproc.contourArea(contour);
+            if (area > maxArea) {
+                maxArea = area;
+                largestContour = contour;
+            }
+        }
+        return largestContour;
+    }
+    private double calculateWidth(MatOfPoint contour) {
+        Rect boundingRect = Imgproc.boundingRect(contour);
+        return boundingRect.width;
     }
 }
