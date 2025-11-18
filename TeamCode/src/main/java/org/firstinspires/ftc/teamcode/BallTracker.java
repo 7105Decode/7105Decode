@@ -20,7 +20,7 @@ import java.util.List;
 
 @TeleOp(name = "Cone Tracker")
 
-public class CameraFusedPID extends LinearOpMode {
+public class BallTracker extends LinearOpMode {
     public static double integralSum = 0, Kp = .01,Ki = 0,Kd = .000000001;
     PinpointDrive drivetrain;
     ElapsedTime timer = new ElapsedTime();
@@ -54,8 +54,8 @@ public class CameraFusedPID extends LinearOpMode {
 
         while (opModeIsActive()) {
             telemetry.addData("Target IMU Angle", getAngleTarget(cX));
-            double power = PIDControl(Math.toRadians(0 + getAngleTarget(cX)), );
-            drivetrain.power(power);
+//            double power = PIDControl(Math.toRadians(0 + getAngleTarget(cX)), );
+//            drivetrain.power(power);
             telemetry.addData("Coordinate", "(" + (int) cX + ", " + (int) cY + ")");
             telemetry.addData("Distance in Inch", (getDistance(width)));
             telemetry.update();
