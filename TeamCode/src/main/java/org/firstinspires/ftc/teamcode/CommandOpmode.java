@@ -1,13 +1,13 @@
 package org.firstinspires.ftc.teamcode;
 
-import com.acmerobotics.roadrunner.Pose2d;
 import com.arcrobotics.ftclib.command.CommandOpMode;
-import com.arcrobotics.ftclib.command.InstantCommand;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.Gamepad;
 
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.Pose2D;
 import org.firstinspires.ftc.teamcode.Robot.Commands.RunShooter;
 import org.firstinspires.ftc.teamcode.Robot.Robot;
 import org.firstinspires.ftc.teamcode.Robot.Subsystems.Shooter;
@@ -18,7 +18,7 @@ public class CommandOpmode extends CommandOpMode {
     GamepadEx gamepad,gamepad_2;
     @Override
     public void initialize() {
-        robot = new Robot(hardwareMap,telemetry,new Pose2d(0,0,0));
+        robot = new Robot(hardwareMap,telemetry,new Pose2D(DistanceUnit.INCH,0,0, AngleUnit.DEGREES,0));
 
         gamepad= new GamepadEx(gamepad1);
         gamepad_2= new GamepadEx(gamepad2);

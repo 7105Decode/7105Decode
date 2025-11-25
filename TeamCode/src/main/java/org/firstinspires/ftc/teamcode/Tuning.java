@@ -50,7 +50,7 @@ public class Tuning extends SelectableOpMode {
     public Tuning() {
         super("Select a Tuning OpMode", s -> {
             s.folder("Localization", l -> {
-                l.add("Localization Test", LocalizationTest::new);
+                l.add("Localization Test", Localizationy::new);
                 l.add("Forward Tuner", ForwardTuner::new);
                 l.add("Lateral Tuner", LateralTuner::new);
                 l.add("Turn Tuner", TurnTuner::new);
