@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import org.firstinspires.ftc.teamcode.Robot.BetterDashboard;
 
 public class Shooter extends SubsystemBase {
-    DcMotor shooter;
+    public DcMotor shooter;
     public static double MaxSpinSpeed = 1, HalfSpinSpeed = .5;
     public Shooter(HardwareMap hardwareMap){
         shooter = hardwareMap.get(DcMotor.class,"shooter");

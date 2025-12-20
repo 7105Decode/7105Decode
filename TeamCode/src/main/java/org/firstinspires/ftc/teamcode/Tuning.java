@@ -50,7 +50,7 @@ public class Tuning extends SelectableOpMode {
     public Tuning() {
         super("Select a Tuning OpMode", s -> {
             s.folder("Localization", l -> {
-                l.add("Localization Test", Localizationy::new);
+                l.add("PedroPathingLocalizationTest", PedroPathingLocalizationTest::new);
                 l.add("Forward Tuner", ForwardTuner::new);
                 l.add("Lateral Tuner", LateralTuner::new);
                 l.add("Turn Tuner", TurnTuner::new);
@@ -126,7 +126,7 @@ public class Tuning extends SelectableOpMode {
  * @author Baron Henderson - 20077 The Indubitables
  * @version 1.0, 5/6/2024
  */
-class LocalizationTest extends OpMode {
+class PedroPathingLocalizationTest extends OpMode {
     @Override
     public void init() {
         follower.setStartingPose(new Pose(72,72));

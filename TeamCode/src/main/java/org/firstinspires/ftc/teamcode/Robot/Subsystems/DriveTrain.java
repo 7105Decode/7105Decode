@@ -4,19 +4,22 @@ import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.PoseVelocity2d;
 import com.acmerobotics.roadrunner.Vector2d;
 import com.arcrobotics.ftclib.command.SubsystemBase;
+import com.pedropathing.follower.Follower;
+import com.pedropathing.geometry.Pose;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
+import org.firstinspires.ftc.teamcode.Constants;
 import org.firstinspires.ftc.teamcode.RoadRunner.Drawing;
 import org.firstinspires.ftc.teamcode.RoadRunner.PinpointDrive;
 import org.firstinspires.ftc.teamcode.Robot.BetterDashboard;
 
 public class DriveTrain extends SubsystemBase{
-    PinpointDrive pinpointDrive;
-    Pose2d pose;
-    public DriveTrain(HardwareMap hardwareMap, Pose2d pose2d){
-        pinpointDrive = new PinpointDrive(hardwareMap, pose2d);
-        pose = pinpointDrive.pose;
+    Follower follower;
+    Pose pose;
+    public DriveTrain(HardwareMap hardwareMap, Pose pose){
+        follower = Constants.createFollower(hardwareMap);
+        follower.setStartingPose(pose);
     }
     public void driveTrainTelem(){
         BetterDashboard.telemetryPacket.fieldOverlay().setStroke("#4c00b0");
