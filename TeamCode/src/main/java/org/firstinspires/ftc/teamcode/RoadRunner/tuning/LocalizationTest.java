@@ -6,48 +6,59 @@ import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.PoseVelocity2d;
 import com.acmerobotics.roadrunner.Vector2d;
+import com.bylazar.configurables.annotations.Configurable;
 import com.qualcomm.hardware.limelightvision.LLResult;
 import com.qualcomm.hardware.limelightvision.Limelight3A;
 import com.qualcomm.hardware.rev.RevColorSensorV3;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.Pose3D;
 import org.firstinspires.ftc.teamcode.RoadRunner.Drawing;
 import org.firstinspires.ftc.teamcode.RoadRunner.PinpointDrive;
 
 @Config
+@Configurable
 public class LocalizationTest extends LinearOpMode {
-    DcMotor shooter, frontintake, backintake, topturret;
+    DcMotor rightshooter,leftshooter, frontintake, topturret;
+    ElapsedTime timer = new ElapsedTime();
     Limelight3A limelight;
     RevColorSensorV3 rightcolorSensor;
-    Servo righttransfer, midtransfer,lefttransfer;
-    public static double kp = .01, ki =0, kd=0, target = 0, shooterspeed = 0, lefttransferservopos = 0.1, midtransferservopos = .78,righttransferservopos = .13, TopTurretPower = .5;
+    public static boolean hoodUP = false;
+    Servo righttransfer, midtransfer,lefttransfer, hood;
+    ShooterStates shooterStates = ShooterStates.OFF;
+    public static double hoodup = .965, hooddown = 0.055,shooterspeed = 0, lefttransferservopos = 0.095, midtransferservopos = .13,righttransferservopos = 0.095, TopTurretPower = .35;
     @Override
     public void runOpMode() {
         limelight = hardwareMap.get(Limelight3A.class, "limelight");
-//        coefficients = new PIDCoefficients(kp,ki,kd);
-//        pid = new BasicPID(coefficients);
         telemetry.setMsTransmissionInterval(11);
 
         limelight.pipelineSwitch(3);
         rightcolorSensor = hardwareMap.get(RevColorSensorV3.class,"rightcolorsensor");
-        shooter = hardwareMap.get(DcMotor.class,"shooter");
+        rightshooter = hardwareMap.get(DcMotor.class,"rightshooter");
+        leftshooter = hardwareMap.get(DcMotor.class,"leftshooter");
         topturret = hardwareMap.get(DcMotor.class,"topturret");
         frontintake = hardwareMap.get(DcMotor.class,"frontintake");
-        backintake = hardwareMap.get(DcMotor.class,"backintake");
         righttransfer = hardwareMap.get(Servo.class,"righttransfer");
         midtransfer = hardwareMap.get(Servo.class,"midtransfer");
         lefttransfer = hardwareMap.get(Servo.class,"lefttransfer");
+        hood = hardwareMap.get(Servo.class,"hood");
 
         if (TuningOpModes.DRIVE_CLASS.equals(PinpointDrive.class)) {
             PinpointDrive drive = new PinpointDrive(hardwareMap, new Pose2d(0, 0, 0));
             limelight.start();
-            shooter.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            shooter.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            righttransfer.setDirection(Servo.Direction.REVERSE);
+            rightshooter.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            rightshooter.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            leftshooter.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            leftshooter.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             waitForStart();
-
+            hoodUP = false;
+            shooterStates = ShooterStates.OFF;
+            hood.setPosition(hooddown);
+            timer.reset();
             while (opModeIsActive()) {
                 drive.updatePoseEstimate();
 
@@ -56,7 +67,7 @@ public class LocalizationTest extends LinearOpMode {
                 telemetry.addData("x", pose.position.x);
                 telemetry.addData("y", pose.position.y);
                 telemetry.addData("heading (deg)", heading);
-                telemetry.update();
+                telemetry.addData("turretpos",topturret.getCurrentPosition());
 
                 limelight.updateRobotOrientation(heading);
                 LLResult result = limelight.getLatestResult();
@@ -78,30 +89,20 @@ public class LocalizationTest extends LinearOpMode {
                     telemetry.addData("alpha",rightcolorSensor.rawOptical());
                 }
 
+                if (gamepad1.y&& !hoodUP){
+                    hood.setPosition(hoodup);
+                    hoodUP = true;
+                } else if (gamepad1.y && hoodUP){
+                    hood.setPosition(hooddown);
+                    hoodUP = false;
+                }
+
                 if (gamepad2.left_trigger > .3){
                     topturret.setPower(-TopTurretPower);
                 }else if (gamepad2.right_trigger > .3){
                     topturret.setPower(TopTurretPower);
                 }else {
                     topturret.setPower(0);
-                }
-
-                if (gamepad2.b){
-                    righttransfer.setPosition(.6);
-                } else {
-                    righttransfer.setPosition(righttransferservopos);
-                }
-
-                if (gamepad2.x){
-                    lefttransfer.setPosition(.35);
-                } else {
-                    lefttransfer.setPosition(lefttransferservopos);
-                }
-
-                if (gamepad2.a){
-                    midtransfer.setPosition(.25);
-                } else {
-                    midtransfer.setPosition(midtransferservopos);
                 }
 
                 if (gamepad1.right_trigger > .3){
@@ -112,14 +113,84 @@ public class LocalizationTest extends LinearOpMode {
                     frontintake.setPower(0);
                 }
 
-               if (gamepad1.dpad_left){
-                    shooter.setPower(.5);
-                } else if (gamepad1.dpad_up){
-                    shooter.setPower(.6);
-                } else {
-                    shooter.setPower(shooterspeed);
-                }
+//               if (gamepad1.dpad_left){
+//                    rightshooter.setPower(.7);
+//                    leftshooter.setPower(.7);
+//                } else if (gamepad1.dpad_up){
+//                    rightshooter.setPower(1);
+//                    leftshooter.setPower(1);
+//                } else {
+//                    rightshooter.setPower(shooterspeed);
+//                    leftshooter.setPower(shooterspeed);
+//                }
 
+                    switch (shooterStates) {
+                        case MAX:
+                            rightshooter.setPower(1);
+                            leftshooter.setPower(1);
+
+                            while (gamepad1.dpad_down){
+                                shooterStates = ShooterStates.OFF;
+                            } while (gamepad1.dpad_left) {
+                            shooterStates = ShooterStates.SLOWERSPEED;
+                        }
+                            break;
+                        case SLOWERSPEED:
+                            rightshooter.setPower(.7);
+                            leftshooter.setPower(.7);
+                            while (gamepad1.dpad_up){
+                                shooterStates = ShooterStates.MAX;
+                            } while (gamepad1.dpad_down) {
+                            shooterStates = ShooterStates.OFF;
+                        }
+                            break;
+                        case OFF:
+                            rightshooter.setPower(shooterspeed);
+                            leftshooter.setPower(shooterspeed);
+                            while (gamepad1.dpad_up){
+                                shooterStates = ShooterStates.MAX;
+                            } while (gamepad1.dpad_left) {
+                            shooterStates = ShooterStates.SLOWERSPEED;
+                        }
+                            break;
+                    }
+
+               if (gamepad2.b){
+                    righttransfer.setPosition(.7);
+                } else if (gamepad2.x){
+                    lefttransfer.setPosition(.7);
+                } else if (gamepad2.a){
+                    midtransfer.setPosition(.7);
+                }
+//               else if (gamepad1.y){
+//                   righttransfer.setPosition(.6);
+//                   righttransferboolean = true;
+//                   timer.reset();
+//               } else if (timer.seconds() < 1 && righttransferboolean){
+//                   righttransferboolean = false;
+//                   midtransferboolean = true;
+//                   timer.reset();
+//                   righttransfer.setPosition(righttransferservopos);
+//               } else if (timer.seconds() < 1 && midtransferboolean){
+//                   midtransferboolean = false;
+//                   lefttransferboolean = true;
+//                   timer.reset();
+//                   midtransfer.setPosition(.6);
+//               } else if (timer.seconds() < 1 && lefttransferboolean) {
+//                   lefttransferboolean = false;
+//                   extraboolean = true;
+//                   timer.reset();
+//                   midtransfer.setPosition(midtransferservopos);
+//               } else if (timer.seconds() < 1 && extraboolean) {
+//                   extraboolean = false;
+//                   timer.reset();
+//                   lefttransfer.setPosition(.625);
+//               }
+            else {
+                   midtransfer.setPosition(midtransferservopos);
+                   lefttransfer.setPosition(lefttransferservopos);
+                   righttransfer.setPosition(righttransferservopos);
+               }
 
 
 //               This was for testing the drive motors.
@@ -151,9 +222,15 @@ public class LocalizationTest extends LinearOpMode {
                 packet.fieldOverlay().setStroke("#3F51B5");
                 Drawing.drawRobot(packet.fieldOverlay(), pose);
                 FtcDashboard.getInstance().sendTelemetryPacket(packet);
+                telemetry.update();
             }
         } else {
             throw new RuntimeException();
         }
+    }
+    public enum ShooterStates{
+        MAX,
+        SLOWERSPEED,
+        OFF
     }
 }
