@@ -1,11 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
-import com.acmerobotics.dashboard.FtcDashboard;
-import com.acmerobotics.dashboard.config.Config;
-import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
-import com.acmerobotics.roadrunner.Pose2d;
-import com.acmerobotics.roadrunner.PoseVelocity2d;
-import com.acmerobotics.roadrunner.Vector2d;
+import static org.firstinspires.ftc.teamcode.Tuning.follower;
+
 import com.bylazar.configurables.annotations.Configurable;
 import com.qualcomm.hardware.limelightvision.LLResult;
 import com.qualcomm.hardware.limelightvision.Limelight3A;
@@ -16,8 +12,6 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.Pose3D;
-import org.firstinspires.ftc.teamcode.RoadRunner.Drawing;
-import org.firstinspires.ftc.teamcode.RoadRunner.PinpointDrive;
 
 
 @Configurable
@@ -46,7 +40,7 @@ public class Tele extends LinearOpMode {
         lefttransfer = hardwareMap.get(Servo.class,"lefttransfer");
         hood = hardwareMap.get(Servo.class,"hood");
 
-            PinpointDrive drive = new PinpointDrive(hardwareMap, new Pose2d(0, 0, 0));
+
             limelight.start();
             righttransfer.setDirection(Servo.Direction.REVERSE);
             rightshooter.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -59,16 +53,18 @@ public class Tele extends LinearOpMode {
             hood.setPosition(hooddown);
             timer.reset();
             while (opModeIsActive()) {
-                drive.updatePoseEstimate();
 
-                Pose2d pose = drive.pose;
-                double heading = Math.toDegrees(pose.heading.toDouble());
-                telemetry.addData("x", pose.position.x);
-                telemetry.addData("y", pose.position.y);
-                telemetry.addData("heading (deg)", heading);
+
+
+//                double heading = Math.toDegrees(pose.heading.toDouble());
+//                telemetry.addData("x", pose.position.x);
+//                telemetry.addData("y", pose.position.y);
+//                telemetry.addData("heading (deg)", heading);
+                follower.setTeleOpDrive(-gamepad1.left_stick_y, -gamepad1.left_stick_x, -gamepad1.right_stick_x, true);
+                follower.update();
                 telemetry.addData("turretpos",topturret.getCurrentPosition());
 
-                limelight.updateRobotOrientation(heading);
+//                limelight.updateRobotOrientation(heading);
                 LLResult result = limelight.getLatestResult();
                 if (result.isValid()) {
                     Pose3D botpose = result.getBotpose_MT2();
@@ -209,18 +205,6 @@ public class Tele extends LinearOpMode {
 //                    drive.rightFront.setPower(0);
 //                }
 
-                drive.setDrivePowers(new PoseVelocity2d(
-                        new Vector2d(
-                                -gamepad1.left_stick_y,
-                                -gamepad1.left_stick_x
-                        ),
-                        -gamepad1.right_stick_x
-                ));
-
-                TelemetryPacket packet = new TelemetryPacket();
-                packet.fieldOverlay().setStroke("#3F51B5");
-                Drawing.drawRobot(packet.fieldOverlay(), pose);
-                FtcDashboard.getInstance().sendTelemetryPacket(packet);
                 telemetry.update();
             }
     }
