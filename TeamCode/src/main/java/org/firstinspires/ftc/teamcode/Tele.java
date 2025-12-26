@@ -2,11 +2,14 @@ package org.firstinspires.ftc.teamcode;
 
 import static org.firstinspires.ftc.teamcode.Tuning.follower;
 
+import com.ThermalEquilibrium.homeostasis.Controllers.Feedback.BasicPID;
+import com.ThermalEquilibrium.homeostasis.Parameters.PIDCoefficients;
 import com.bylazar.configurables.annotations.Configurable;
 import com.qualcomm.hardware.limelightvision.LLResult;
 import com.qualcomm.hardware.limelightvision.Limelight3A;
 import com.qualcomm.hardware.rev.RevColorSensorV3;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -15,15 +18,18 @@ import org.firstinspires.ftc.robotcore.external.navigation.Pose3D;
 
 
 @Configurable
+@TeleOp
 public class Tele extends LinearOpMode {
     DcMotor rightshooter,leftshooter, frontintake, topturret;
     ElapsedTime timer = new ElapsedTime();
     Limelight3A limelight;
     RevColorSensorV3 rightcolorSensor;
-    public static boolean hoodUP = false;
+    public static boolean hoodUP = false,pidTurretPos = false;
+    public static PIDCoefficients pidCoefficients;
+    BasicPID pid;
     Servo righttransfer, midtransfer,lefttransfer, hood;
     ShooterStates shooterStates = ShooterStates.OFF;
-    public static double hoodup = .965, hooddown = 0.055,shooterspeed = 0, lefttransferservopos = 0.095, midtransferservopos = .13,righttransferservopos = 0.095, TopTurretPower = .35;
+    public static double kp = 0.009,ki = 0,kd = 0,hoodup = .965, hooddown = 0.055,shooterspeed = 0, lefttransferservopos = 0.095, midtransferservopos = .13,righttransferservopos = 0.095, TopTurretPower = .35;
     @Override
     public void runOpMode() {
         limelight = hardwareMap.get(Limelight3A.class, "limelight");
@@ -47,8 +53,13 @@ public class Tele extends LinearOpMode {
             rightshooter.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             leftshooter.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             leftshooter.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            topturret.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            topturret.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             waitForStart();
+        pidCoefficients = new PIDCoefficients(kp,ki,kd);
+        pid = new BasicPID(pidCoefficients);
             hoodUP = false;
+            pidTurretPos = true;
             shooterStates = ShooterStates.OFF;
             hood.setPosition(hooddown);
             timer.reset();
@@ -56,12 +67,23 @@ public class Tele extends LinearOpMode {
 
 
 
+
 //                double heading = Math.toDegrees(pose.heading.toDouble());
 //                telemetry.addData("x", pose.position.x);
 //                telemetry.addData("y", pose.position.y);
 //                telemetry.addData("heading (deg)", heading);
-                follower.setTeleOpDrive(-gamepad1.left_stick_y, -gamepad1.left_stick_x, -gamepad1.right_stick_x, true);
-                follower.update();
+//                follower.setTeleOpDrive(-gamepad1.left_stick_y, -gamepad1.left_stick_x, -gamepad1.right_stick_x, true);
+//                follower.update();
+                //478
+                if (gamepad2.dpad_left && pidTurretPos) {
+                    pidTurretPos = false;
+                } else if (gamepad2.dpad_left && !pidTurretPos) {
+                    pidTurretPos = true;
+                } else if (pidTurretPos){
+                    topturret.setPower(pid.calculate(478,topturret.getCurrentPosition()));
+                } else {
+                    topturret.setPower(0);
+                }
                 telemetry.addData("turretpos",topturret.getCurrentPosition());
 
 //                limelight.updateRobotOrientation(heading);
@@ -90,14 +112,6 @@ public class Tele extends LinearOpMode {
                 } else if (gamepad1.y && hoodUP){
                     hood.setPosition(hooddown);
                     hoodUP = false;
-                }
-
-                if (gamepad2.left_trigger > .3){
-                    topturret.setPower(-TopTurretPower);
-                }else if (gamepad2.right_trigger > .3){
-                    topturret.setPower(TopTurretPower);
-                }else {
-                    topturret.setPower(0);
                 }
 
                 if (gamepad1.right_trigger > .3){
