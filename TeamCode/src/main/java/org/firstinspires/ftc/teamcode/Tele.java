@@ -80,13 +80,19 @@ public class Tele extends LinearOpMode {
                 //478 
                 follower.setTeleOpDrive(-gamepad1.left_stick_y, -gamepad1.left_stick_x, -gamepad1.right_stick_x, true);
                 follower.update();
-                if (gamepad2.dpad_left && pidTurretPos) {
-                    pidTurretPos = false;
-                } else if (gamepad2.dpad_left && !pidTurretPos) {
-                    pidTurretPos = true;
-                } else if (pidTurretPos){
-                    topturret.setPower(pid.calculate(478,topturret.getCurrentPosition()));
-                } else {
+if ( if (gamepad2.right_trigger > .3){
+                     topturret.setPower(-.3)
+                } else if (gamepad2.left_trigger > .3){
+                    topturret.setPower(.3)
+                }
+                ///else if (gamepad2.dpad_left && pidTurretPos) {
+                    //pidTurretPos = false;
+            //    } else if (gamepad2.dpad_left && !pidTurretPos) {
+                    //pidTurretPos = true;
+         //       } else if (pidTurretPos){
+                    //topturret.setPower(pid.calculate(478,topturret.getCurrentPosition()));
+ //              } 
+else {
                     topturret.setPower(0);
                 }
                 telemetry.addData("turretpos",topturret.getCurrentPosition());
