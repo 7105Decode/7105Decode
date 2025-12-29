@@ -29,12 +29,15 @@ public class Tele extends LinearOpMode {
     BasicPID pid;
     Servo righttransfer, midtransfer,lefttransfer, hood;
     ShooterStates shooterStates = ShooterStates.OFF;
+    Follower follower;
     public static double kp = 0.009,ki = 0,kd = 0,hoodup = .965, hooddown = 0.055,shooterspeed = 0, lefttransferservopos = 0.095, midtransferservopos = .13,righttransferservopos = 0.095, TopTurretPower = .35;
     @Override
     public void runOpMode() {
         limelight = hardwareMap.get(Limelight3A.class, "limelight");
         telemetry.setMsTransmissionInterval(11);
 
+ follower = Constants.createFollower(hardwareMap);
+        
         limelight.pipelineSwitch(3);
         rightcolorSensor = hardwareMap.get(RevColorSensorV3.class,"rightcolorsensor");
         rightshooter = hardwareMap.get(DcMotor.class,"rightshooter");
@@ -74,7 +77,9 @@ public class Tele extends LinearOpMode {
 //                telemetry.addData("heading (deg)", heading);
 //                follower.setTeleOpDrive(-gamepad1.left_stick_y, -gamepad1.left_stick_x, -gamepad1.right_stick_x, true);
 //                follower.update();
-                //478
+                //478 
+                follower.setTeleOpDrive(-gamepad1.left_stick_y, -gamepad1.left_stick_x, -gamepad1.right_stick_x, true);
+                follower.update();
                 if (gamepad2.dpad_left && pidTurretPos) {
                     pidTurretPos = false;
                 } else if (gamepad2.dpad_left && !pidTurretPos) {
