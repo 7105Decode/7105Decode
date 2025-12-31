@@ -98,8 +98,6 @@ public class Tele extends LinearOpMode {
                 } else {
                     topturret.setPower(0);
                 }
-
-
 //                limelight.updateRobotOrientation(heading);
                 LLResult result = limelight.getLatestResult();
                 if (result.isValid()) {
