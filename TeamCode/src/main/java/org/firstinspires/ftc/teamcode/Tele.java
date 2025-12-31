@@ -5,6 +5,8 @@ import static org.firstinspires.ftc.teamcode.Tuning.follower;
 import com.ThermalEquilibrium.homeostasis.Controllers.Feedback.BasicPID;
 import com.ThermalEquilibrium.homeostasis.Parameters.PIDCoefficients;
 import com.bylazar.configurables.annotations.Configurable;
+import com.pedropathing.follower.Follower;
+import com.pedropathing.geometry.Pose;
 import com.qualcomm.hardware.limelightvision.LLResult;
 import com.qualcomm.hardware.limelightvision.Limelight3A;
 import com.qualcomm.hardware.rev.RevColorSensorV3;
@@ -38,7 +40,7 @@ public class Tele extends LinearOpMode {
         limelight = hardwareMap.get(Limelight3A.class, "limelight");
         telemetry.setMsTransmissionInterval(11);
 
- follower = Constants.createFollower(hardwareMap);
+        follower = Constants.createFollower(hardwareMap);
         
         limelight.pipelineSwitch(3);
         rightcolorSensor = hardwareMap.get(RevColorSensorV3.class,"rightcolorsensor");
@@ -62,6 +64,10 @@ public class Tele extends LinearOpMode {
             leftshooter.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             topturret.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             topturret.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
+        follower.setStartingPose(new Pose(72,72));
+        follower.update();
+
             waitForStart();
         pidCoefficients = new PIDCoefficients(kp,ki,kd);
         pid = new BasicPID(pidCoefficients);
@@ -70,64 +76,56 @@ public class Tele extends LinearOpMode {
             shooterStates = ShooterStates.OFF;
             hood.setPosition(hooddown);
             timer.reset();
+
+        follower.startTeleopDrive(true);
+        follower.update();
+
             while (opModeIsActive()) {
-
-
-
-
 //                double heading = Math.toDegrees(pose.heading.toDouble());
 //                telemetry.addData("x", pose.position.x);
 //                telemetry.addData("y", pose.position.y);
 //                telemetry.addData("heading (deg)", heading);
-//                follower.setTeleOpDrive(-gamepad1.left_stick_y, -gamepad1.left_stick_x, -gamepad1.right_stick_x, true);
-//                follower.update();
-                //478 
                 follower.setTeleOpDrive(-gamepad1.left_stick_y, -gamepad1.left_stick_x, -gamepad1.right_stick_x, true);
                 follower.update();
                 if (gamepad2.right_trigger > .3){
                      topturret.setPower(-.3);
                 } else if (gamepad2.left_trigger > .3){
                     topturret.setPower(.3);
-                }
-                ///else if (gamepad2.dpad_left && pidTurretPos) {
-                    //pidTurretPos = false;
-            //    } else if (gamepad2.dpad_left && !pidTurretPos) {
-                    //pidTurretPos = true;
-         //       } else if (pidTurretPos){
-                    //topturret.setPower(pid.calculate(478,topturret.getCurrentPosition()));
- //              } 
-                else {
+                } else if (gamepad2.right_bumper) {
+                    topturret.setPower(pid.calculate(-478,topturret.getCurrentPosition()));
+                } else if (gamepad2.left_bumper) {
+                    topturret.setPower(pid.calculate(478,topturret.getCurrentPosition()));
+                } else {
                     topturret.setPower(0);
                 }
-                telemetry.addData("turretpos",topturret.getCurrentPosition());
+
 
 //                limelight.updateRobotOrientation(heading);
                 LLResult result = limelight.getLatestResult();
                 if (result.isValid()) {
-                    Pose3D botpose = result.getBotpose_MT2();
-                    double tx = result.getTx();
-                    double yaw =botpose.getOrientation().getYaw();
-                    telemetry.addData("tx", tx);
-                    telemetry.addData("ty", result.getTy());
-                    telemetry.addData("botx",botpose.getPosition().x);
-                    telemetry.addData("boty",botpose.getPosition().y);
-                    telemetry.addData("botYaw",yaw);
+//                    Pose3D botpose = result.getBotpose_MT2();
+//                    double tx = result.getTx();
+//                    double yaw =botpose.getOrientation().getYaw();
+//                    telemetry.addData("tx", tx);
+//                    telemetry.addData("ty", result.getTy());
+//                    telemetry.addData("botx",botpose.getPosition().x);
+//                    telemetry.addData("boty",botpose.getPosition().y);
+//                    telemetry.addData("botYaw",yaw);
 //                telemetry.addData("pid",pid.calculate(apriltag22.getHeading(), yaw));
                 } else {
                     telemetry.addData("Limelight", "No data available");
-                    telemetry.addData("red",rightcolorSensor.red());
-                    telemetry.addData("green",rightcolorSensor.green());
-                    telemetry.addData("blue",rightcolorSensor.blue());
+//                    telemetry.addData("red",rightcolorSensor.red());
+//                    telemetry.addData("green",rightcolorSensor.green());
+//                    telemetry.addData("blue",rightcolorSensor.blue());
                     telemetry.addData("alpha",rightcolorSensor.rawOptical());
-                    telemetry.addData("red on left",leftcolorSensor.red());
-                    telemetry.addData("green on left",leftcolorSensor.green());
-                    telemetry.addData("blue on left",leftcolorSensor.blue());
+//                    telemetry.addData("red on left",leftcolorSensor.red());
+//                    telemetry.addData("green on left",leftcolorSensor.green());
+//                    telemetry.addData("blue on left",leftcolorSensor.blue());
                     telemetry.addData("alpha on left",leftcolorSensor.rawOptical());
-                    telemetry.addData("red on middle", middlecolorSensor.red());
-                    telemetry.addData("green on middle",middlecolorSensor.green());
-                    telemetry.addData("blue on middle",middlecolorSensor.blue());
+//                    telemetry.addData("red on middle", middlecolorSensor.red());
+//                    telemetry.addData("green on middle",middlecolorSensor.green());
+//                    telemetry.addData("blue on middle",middlecolorSensor.blue());
                     telemetry.addData("alpha on middle",middlecolorSensor.rawOptical());
-                
                 }
 
                 if (gamepad1.y&& !hoodUP){
@@ -145,17 +143,6 @@ public class Tele extends LinearOpMode {
                 } else {
                     frontintake.setPower(0);
                 }
-
-//               if (gamepad1.dpad_left){
-//                    rightshooter.setPower(.7);
-//                    leftshooter.setPower(.7);
-//                } else if (gamepad1.dpad_up){
-//                    rightshooter.setPower(1);
-//                    leftshooter.setPower(1);
-//                } else {
-//                    rightshooter.setPower(shooterspeed);
-//                    leftshooter.setPower(shooterspeed);
-//                }
 
                 switch (shooterStates) {
                     case MAX:
@@ -195,30 +182,6 @@ public class Tele extends LinearOpMode {
                 } else if (gamepad2.a){
                     midtransfer.setPosition(.7);
                 }
-//               else if (gamepad1.y){
-//                   righttransfer.setPosition(.6);
-//                   righttransferboolean = true;
-//                   timer.reset();
-//               } else if (timer.seconds() < 1 && righttransferboolean){
-//                   righttransferboolean = false;
-//                   midtransferboolean = true;
-//                   timer.reset();
-//                   righttransfer.setPosition(righttransferservopos);
-//               } else if (timer.seconds() < 1 && midtransferboolean){
-//                   midtransferboolean = false;
-//                   lefttransferboolean = true;
-//                   timer.reset();
-//                   midtransfer.setPosition(.6);
-//               } else if (timer.seconds() < 1 && lefttransferboolean) {
-//                   lefttransferboolean = false;
-//                   extraboolean = true;
-//                   timer.reset();
-//                   midtransfer.setPosition(midtransferservopos);
-//               } else if (timer.seconds() < 1 && extraboolean) {
-//                   extraboolean = false;
-//                   timer.reset();
-//                   lefttransfer.setPosition(.625);
-//               }
                 else {
                     midtransfer.setPosition(midtransferservopos);
                     lefttransfer.setPosition(lefttransferservopos);
