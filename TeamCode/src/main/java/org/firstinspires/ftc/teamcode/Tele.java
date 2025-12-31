@@ -24,6 +24,8 @@ public class Tele extends LinearOpMode {
     ElapsedTime timer = new ElapsedTime();
     Limelight3A limelight;
     RevColorSensorV3 rightcolorSensor;
+    RevColorSensorV3 leftcolorSensor;
+    RevColorSensorV3 middlecolorSensor;
     public static boolean hoodUP = false,pidTurretPos = false;
     public static PIDCoefficients pidCoefficients;
     BasicPID pid;
@@ -40,6 +42,8 @@ public class Tele extends LinearOpMode {
         
         limelight.pipelineSwitch(3);
         rightcolorSensor = hardwareMap.get(RevColorSensorV3.class,"rightcolorsensor");
+        leftcolorSensor = hardwareMap.get(RevColorSensorV3.class,"leftcolorsensor");
+        middlecolorSensor = hardwareMap.get(RevColorSensorV3.class,"middlecolorsensor");
         rightshooter = hardwareMap.get(DcMotor.class,"rightshooter");
         leftshooter = hardwareMap.get(DcMotor.class,"leftshooter");
         topturret = hardwareMap.get(DcMotor.class,"topturret");
@@ -115,6 +119,15 @@ else {
                     telemetry.addData("green",rightcolorSensor.green());
                     telemetry.addData("blue",rightcolorSensor.blue());
                     telemetry.addData("alpha",rightcolorSensor.rawOptical());
+                    telemetry.addData("red on left",leftcolorSensor.red());
+                    telemetry.addData("green on left",leftcolorSensor.green());
+                    telemetry.addData("blue on left",leftcolorSensor.blue());
+                    telemetry.addData("alpha on left",leftcolorSensor.rawOptical());
+                    telemetry.addData("red on middle", middlecolorSensor.red());
+                    telemetry.addData("green on middle",middlecolorSensor.green());
+                    telemetry.addData("blue on middle",middlecolorSensor.blue());
+                    telemetry.addData("alpha on middle",middlecolorSensor.rawOptical());
+                
                 }
 
                 if (gamepad1.y&& !hoodUP){
