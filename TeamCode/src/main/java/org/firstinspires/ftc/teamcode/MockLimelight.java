@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode;
 //import com.acmerobotics.dashboard.FtcDashboard;
 //import com.acmerobotics.dashboard.config.Config;
 //import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
+import com.bylazar.configurables.annotations.Configurable;
 import com.qualcomm.hardware.limelightvision.LLResult;
 import com.qualcomm.hardware.limelightvision.Limelight3A;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -13,6 +14,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.Pose3D;
 
 //@Config
 @TeleOp
+@Configurable
 public class MockLimelight extends LinearOpMode {
     Limelight3A limelight;
 
