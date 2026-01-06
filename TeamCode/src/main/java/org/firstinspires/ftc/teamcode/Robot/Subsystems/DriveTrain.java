@@ -1,27 +1,30 @@
 package org.firstinspires.ftc.teamcode.Robot.Subsystems;
 
+import com.bylazar.configurables.annotations.IgnoreConfigurable;
 import com.pedropathing.follower.Follower;
 import com.pedropathing.geometry.Pose;
+import com.pedropathing.util.PoseHistory;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.seattlesolvers.solverslib.command.SubsystemBase;
 
 import org.firstinspires.ftc.teamcode.Constants;
+import org.firstinspires.ftc.teamcode.Robot.BetterDashboard;
 
 public class DriveTrain extends SubsystemBase {
     Follower follower;
-    Pose pose;
+    @IgnoreConfigurable
+    static PoseHistory poseHistory;
     public DriveTrain(HardwareMap hardwareMap, Pose pose){
         follower = Constants.createFollower(hardwareMap);
         follower.setStartingPose(pose);
+        poseHistory = follower.getPoseHistory();
     }
-//    public void driveTrainTelem(){
-//        BetterDashboard.telemetryPacket.fieldOverlay().setStroke("#4c00b0");
-//        Drawing.drawRobot(BetterDashboard.telemetryPacket.fieldOverlay(), pose);
-//        BetterDashboard.sendTelem("heading", getHeadingDegrees());
-//        BetterDashboard.sendTelem("x",getX());
-//        BetterDashboard.sendTelem("y",getY());
-//    }
+    public void driveTrainTelem(){
+        BetterDashboard.addtelem("heading", getHeadingDegrees());
+        BetterDashboard.addtelem("x",getX());
+        BetterDashboard.addtelem("y",getY());
+    }
     public double getHeadingDegrees(){
         return Math.toRadians(follower.getHeading());
     }

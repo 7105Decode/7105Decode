@@ -3,6 +3,8 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.seattlesolvers.solverslib.command.SubsystemBase;
 
+import org.firstinspires.ftc.teamcode.Robot.BetterDashboard;
+
 public class Turret extends SubsystemBase {
     public static double target = 0;
     DcMotor turret;
@@ -14,8 +16,8 @@ public class Turret extends SubsystemBase {
         turret.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
     public void turretTelemetry() {
-//        BetterDashboard.sendTelem("turretpower",getPower());
-//        BetterDashboard.sendTelem("turretposition",getPosition());
+        BetterDashboard.addtelem("turretpower", getPower());
+        BetterDashboard.addtelem("turretposition",getPosition());
     }
     public double getPosition(){
         return turret.getCurrentPosition();

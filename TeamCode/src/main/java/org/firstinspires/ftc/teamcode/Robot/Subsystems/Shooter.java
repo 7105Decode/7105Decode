@@ -6,6 +6,8 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.seattlesolvers.solverslib.command.SubsystemBase;
 
+import org.firstinspires.ftc.teamcode.Robot.BetterDashboard;
+
 //import org.firstinspires.ftc.teamcode.Robot.BetterDashboard;
 
 @Configurable
@@ -19,9 +21,9 @@ public class Shooter extends SubsystemBase {
         shooter.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         shooter.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
-//    public void shooterTelem() {
-//        BetterDashboard.sendTelem("shooterpower",shooter.getPower());
-//    }
+    public void shooterTelem() {
+        BetterDashboard.addtelem("shooterpower", shooter.getPower());
+    }
     public void setShooterStates(ShooterStates shooterStates){
         switch (shooterStates){
             case MAXSPEED:

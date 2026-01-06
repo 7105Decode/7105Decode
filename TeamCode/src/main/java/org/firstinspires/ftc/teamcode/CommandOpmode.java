@@ -1,12 +1,16 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.bylazar.configurables.annotations.Configurable;
+import com.pedropathing.geometry.Pose;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.seattlesolvers.solverslib.command.CommandOpMode;
+import com.seattlesolvers.solverslib.gamepad.GamepadEx;
+import com.seattlesolvers.solverslib.gamepad.GamepadKeys;
 
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
-import org.firstinspires.ftc.robotcore.external.navigation.Pose2D;
+import org.firstinspires.ftc.teamcode.Robot.Commands.RunShooter;
+import org.firstinspires.ftc.teamcode.Robot.Robot;
+import org.firstinspires.ftc.teamcode.Robot.Subsystems.Shooter;
+
 @TeleOp
 @Configurable
 public class CommandOpmode extends CommandOpMode {
@@ -14,12 +18,16 @@ public class CommandOpmode extends CommandOpMode {
     GamepadEx gamepad,gamepad_2;
     @Override
     public void initialize() {
-        robot = new Robot(hardwareMap,telemetry,new Pose2D(DistanceUnit.INCH,0,0, AngleUnit.DEGREES,0));
+robot= new Robot(hardwareMap,new Pose());
 
         gamepad= new GamepadEx(gamepad1);
         gamepad_2= new GamepadEx(gamepad2);
+        robot.updateRobotInit();
+    }
 
-//        robot.dashboard.updateTelemetry();
+    @Override
+    public void initialize_loop() {
+        robot.updateRobotInit();
     }
 
     @Override
@@ -30,7 +38,6 @@ public class CommandOpmode extends CommandOpMode {
         gamepad.getGamepadButton(GamepadKeys.Button.LEFT_STICK_BUTTON)
                 .whenHeld(new RunShooter(robot.shooter, Shooter.ShooterStates.HALFSPEED))
                 .whenReleased(new RunShooter(robot.shooter, Shooter.ShooterStates.STOP));
-        robot.robotTelem();
-//        robot.dashboard.updateTelemetry();
+        robot.updateRobotRun();
     }
 }

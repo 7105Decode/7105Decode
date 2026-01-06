@@ -1158,54 +1158,6 @@ class Triangle extends OpMode {
  * @author Harrison Womack - 10158 Scott's Bots
  * @version 1.0, 3/12/2024
  */
-class Circle extends OpMode {
-    public static double RADIUS = 10;
-    private PathChain circle;
-
-    public void start() {
-        circle = follower.pathBuilder()
-                .addPath(new BezierCurve(new Pose(72, 72), new Pose(RADIUS + 72, 72), new Pose(RADIUS + 72, RADIUS + 72)))
-                .setHeadingInterpolation(HeadingInterpolator.facingPoint(72, RADIUS + 72))
-                .addPath(new BezierCurve(new Pose(RADIUS + 72, RADIUS + 72), new Pose(RADIUS + 72, (2 * RADIUS) + 72), new Pose(72, (2 * RADIUS) + 72)))
-                .setHeadingInterpolation(HeadingInterpolator.facingPoint(72, RADIUS + 72))
-                .addPath(new BezierCurve(new Pose(72, (2 * RADIUS) + 72), new Pose(-RADIUS + 72, (2 * RADIUS) + 72), new Pose(-RADIUS + 72, RADIUS + 72)))
-                .setHeadingInterpolation(HeadingInterpolator.facingPoint(72, RADIUS + 72))
-                .addPath(new BezierCurve(new Pose(-RADIUS + 72, RADIUS + 72), new Pose(-RADIUS + 72, 72), new Pose(72, 72)))
-                .setHeadingInterpolation(HeadingInterpolator.facingPoint(72, RADIUS + 72))
-                .build();
-        follower.followPath(circle);
-    }
-
-    @Override
-    public void init_loop() {
-        telemetryM.debug("This will run in a roughly circular shape of radius " + RADIUS + ", starting on the right-most edge. ");
-        telemetryM.debug("So, make sure you have enough space to the left, front, and back to run the OpMode.");
-        telemetryM.debug("It will also continuously face the center of the circle to test your heading and centripetal correction.");
-        telemetryM.update(telemetry);
-        follower.update();
-        drawOnlyCurrent();
-    }
-
-    @Override
-    public void init() {
-        follower.setStartingPose(new Pose(72, 72));
-    }
-
-    /**
-     * This runs the OpMode, updating the Follower as well as printing out the debug statements to
-     * the Telemetry, as well as the FTC Dashboard.
-     */
-    @Override
-    public void loop() {
-        follower.update();
-        draw();
-
-        if (follower.atParametricEnd()) {
-            follower.followPath(circle);
-        }
-    }
-}
-
 /**
  * This is the Drawing class. It handles the drawing of stuff on Panels Dashboard, like the robot.
  *
@@ -1227,7 +1179,7 @@ class Drawing {
      * This prepares Panels Field for using Pedro Offsets
      */
     public static void init() {
-        panelsField.setOffsets(PanelsField.INSTANCE.getPresets().getPEDRO_PATHING());
+        panelsField.setOffsets(PanelsField.INSTANCE.getPresets().getROAD_RUNNER());
     }
 
     /**
@@ -1351,3 +1303,53 @@ class Drawing {
         panelsField.update();
     }
 }
+
+class Circle extends OpMode {
+    public static double RADIUS = 10;
+    private PathChain circle;
+
+    public void start() {
+        circle = follower.pathBuilder()
+                .addPath(new BezierCurve(new Pose(72, 72), new Pose(RADIUS + 72, 72), new Pose(RADIUS + 72, RADIUS + 72)))
+                .setHeadingInterpolation(HeadingInterpolator.facingPoint(72, RADIUS + 72))
+                .addPath(new BezierCurve(new Pose(RADIUS + 72, RADIUS + 72), new Pose(RADIUS + 72, (2 * RADIUS) + 72), new Pose(72, (2 * RADIUS) + 72)))
+                .setHeadingInterpolation(HeadingInterpolator.facingPoint(72, RADIUS + 72))
+                .addPath(new BezierCurve(new Pose(72, (2 * RADIUS) + 72), new Pose(-RADIUS + 72, (2 * RADIUS) + 72), new Pose(-RADIUS + 72, RADIUS + 72)))
+                .setHeadingInterpolation(HeadingInterpolator.facingPoint(72, RADIUS + 72))
+                .addPath(new BezierCurve(new Pose(-RADIUS + 72, RADIUS + 72), new Pose(-RADIUS + 72, 72), new Pose(72, 72)))
+                .setHeadingInterpolation(HeadingInterpolator.facingPoint(72, RADIUS + 72))
+                .build();
+        follower.followPath(circle);
+    }
+
+    @Override
+    public void init_loop() {
+        telemetryM.debug("This will run in a roughly circular shape of radius " + RADIUS + ", starting on the right-most edge. ");
+        telemetryM.debug("So, make sure you have enough space to the left, front, and back to run the OpMode.");
+        telemetryM.debug("It will also continuously face the center of the circle to test your heading and centripetal correction.");
+        telemetryM.update(telemetry);
+        follower.update();
+        drawOnlyCurrent();
+    }
+
+    @Override
+    public void init() {
+        follower.setStartingPose(new Pose(72, 72));
+    }
+
+    /**
+     * This runs the OpMode, updating the Follower as well as printing out the debug statements to
+     * the Telemetry, as well as the FTC Dashboard.
+     */
+    @Override
+    public void loop() {
+        follower.update();
+        draw();
+
+        if (follower.atParametricEnd()) {
+            follower.followPath(circle);
+        }
+    }
+
+}
+

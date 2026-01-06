@@ -13,28 +13,30 @@ import com.qualcomm.hardware.rev.RevColorSensorV3;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Pose3D;
 
 
 @Configurable
 @TeleOp
 public class Tele extends LinearOpMode {
-    DcMotor rightshooter,leftshooter, frontintake, topturret;
+    DcMotorEx rightshooter,leftshooter, frontintake, topturret;
     ElapsedTime timer = new ElapsedTime();
     Limelight3A limelight;
     RevColorSensorV3 rightcolorSensor;
     RevColorSensorV3 leftcolorSensor;
     RevColorSensorV3 middlecolorSensor;
     public static boolean hoodUP = false,pidTurretPos = false;
-    public static PIDCoefficients pidCoefficients;
-    BasicPID pid;
-    Servo righttransfer, midtransfer,lefttransfer, hood;
+    public static PIDCoefficients pidCoefficients, shooterCoef;
+    BasicPID pid, shooterpid;
+    Servo righttransfer, midtransfer,lefttransfer, hood, rightled,midled,leftled;
     ShooterStates shooterStates = ShooterStates.OFF;
     Follower follower;
-    public static double kp = 0.009,ki = 0,kd = 0,hoodup = .965, hooddown = 0.055,shooterspeed = 0, lefttransferservopos = 0.095, midtransferservopos = .13,righttransferservopos = 0.095, TopTurretPower = .35;
+    public static double shooterkp = 0.02,shooterki = 0,shooterkd = 0,kp = 0.009,ki = 0,kd = 0,hoodup = .965, hooddown = 0.055,shooterspeed = 0, lefttransferservopos = 0.095, midtransferservopos = .13,righttransferservopos = 0.095, TopTurretPower = .35;
     @Override
     public void runOpMode() {
         limelight = hardwareMap.get(Limelight3A.class, "limelight");
@@ -46,14 +48,17 @@ public class Tele extends LinearOpMode {
         rightcolorSensor = hardwareMap.get(RevColorSensorV3.class,"rightcolorsensor");
         leftcolorSensor = hardwareMap.get(RevColorSensorV3.class,"leftcolorsensor");
         middlecolorSensor = hardwareMap.get(RevColorSensorV3.class,"middlecolorsensor");
-        rightshooter = hardwareMap.get(DcMotor.class,"rightshooter");
-        leftshooter = hardwareMap.get(DcMotor.class,"leftshooter");
-        topturret = hardwareMap.get(DcMotor.class,"topturret");
-        frontintake = hardwareMap.get(DcMotor.class,"frontintake");
+        rightshooter = hardwareMap.get(DcMotorEx.class,"rightshooter");
+        leftshooter = hardwareMap.get(DcMotorEx.class,"leftshooter");
+        topturret = hardwareMap.get(DcMotorEx.class,"topturret");
+        frontintake = hardwareMap.get(DcMotorEx.class,"frontintake");
         righttransfer = hardwareMap.get(Servo.class,"righttransfer");
         midtransfer = hardwareMap.get(Servo.class,"midtransfer");
         lefttransfer = hardwareMap.get(Servo.class,"lefttransfer");
         hood = hardwareMap.get(Servo.class,"hood");
+        rightled = hardwareMap.get(Servo.class,"rightled");
+        midled = hardwareMap.get(Servo.class,"midled");
+        leftled = hardwareMap.get(Servo.class,"leftled");
 
 
             limelight.start();
@@ -71,6 +76,8 @@ public class Tele extends LinearOpMode {
             waitForStart();
         pidCoefficients = new PIDCoefficients(kp,ki,kd);
         pid = new BasicPID(pidCoefficients);
+        shooterCoef = new PIDCoefficients(kp,ki,kd);
+        shooterpid = new BasicPID(shooterCoef);
             hoodUP = false;
             pidTurretPos = true;
             shooterStates = ShooterStates.OFF;
@@ -81,6 +88,7 @@ public class Tele extends LinearOpMode {
         follower.update();
 
             while (opModeIsActive()) {
+//                rightled.setPosition(.5);
 //                double heading = Math.toDegrees(pose.heading.toDouble());
 //                telemetry.addData("x", pose.position.x);
 //                telemetry.addData("y", pose.position.y);
@@ -99,8 +107,6 @@ public class Tele extends LinearOpMode {
                     topturret.setPower(0);
                 }
 //                limelight.updateRobotOrientation(heading);
-                LLResult result = limelight.getLatestResult();
-                if (result.isValid()) {
 //                    Pose3D botpose = result.getBotpose_MT2();
 //                    double tx = result.getTx();
 //                    double yaw =botpose.getOrientation().getYaw();
@@ -110,26 +116,83 @@ public class Tele extends LinearOpMode {
 //                    telemetry.addData("boty",botpose.getPosition().y);
 //                    telemetry.addData("botYaw",yaw);
 //                telemetry.addData("pid",pid.calculate(apriltag22.getHeading(), yaw));
-                } else {
-                    telemetry.addData("Limelight", "No data available");
+                telemetry.addData("rightshootervel", rightshooter.getVelocity(AngleUnit.DEGREES));
+                telemetry.addData("leftshootervel",leftshooter.getVelocity(AngleUnit.DEGREES));
+                    telemetry.addData("turret",topturret.getCurrentPosition()   );
 //                    telemetry.addData("red",rightcolorSensor.red());
 //                    telemetry.addData("green",rightcolorSensor.green());
 //                    telemetry.addData("blue",rightcolorSensor.blue());
-                    telemetry.addData("alpha",rightcolorSensor.rawOptical());
+//                    telemetry.addData("alpha",rightcolorSensor.rawOptical());
 //                    telemetry.addData("red on left",leftcolorSensor.red());
 //                    telemetry.addData("green on left",leftcolorSensor.green());
 //                    telemetry.addData("blue on left",leftcolorSensor.blue());
-                    telemetry.addData("alpha on left",leftcolorSensor.rawOptical());
+//                    telemetry.addData("alpha on left",leftcolorSensor.rawOptical());
 //                    telemetry.addData("red on middle", middlecolorSensor.red());
 //                    telemetry.addData("green on middle",middlecolorSensor.green());
 //                    telemetry.addData("blue on middle",middlecolorSensor.blue());
-                    telemetry.addData("alpha on middle",middlecolorSensor.rawOptical());
+//                    telemetry.addData("alpha on middle",middlecolorSensor.rawOptical());
+                if(rightcolorSensor.rawOptical() >= 300){
+                    if (rightcolorSensor.red() >= 80){
+                        rightled.setPosition(.722);
+                    } else if (rightcolorSensor.red() >= 60) {
+                        rightled.setPosition(.5);
+                    }
+                } else if (rightcolorSensor.rawOptical() > 180) {
+                    if (rightcolorSensor.red() >= 47){
+                        rightled.setPosition(.722);
+                    } else if (rightcolorSensor.red() >= 26) {
+                        rightled.setPosition(.5);
+                    }
+                }else if (rightcolorSensor.rawOptical() > 130) {
+                    if (rightcolorSensor.red() >= 37){
+                        rightled.setPosition(.722);
+                    } else if (rightcolorSensor.red() >= 26) {
+                        rightled.setPosition(.5);
+                    }
+                } else {
+                    rightled.setPosition(0);
+                }
+                if(middlecolorSensor.rawOptical() > 135){
+                    if (middlecolorSensor.green() >= 90){
+                        midled.setPosition(.5);
+                    } else if (middlecolorSensor.green() >=60) {
+                        midled.setPosition(.722);
+                    }
+                } else if (middlecolorSensor.rawOptical() >= 112) {
+                    if (middlecolorSensor.green() >= 80){
+                        midled.setPosition(.5);
+                    } else if (middlecolorSensor.green() >=50) {
+                        midled.setPosition(.722);
+                    }
+                } else if (middlecolorSensor.rawOptical() > 90) {
+                    if (middlecolorSensor.green() >= 75){
+                        midled.setPosition(.5);
+                    } else if (middlecolorSensor.green() >=50) {
+                        midled.setPosition(.722);
+                    }
+                } else {
+                    midled.setPosition(0);
+                }
+                if (leftcolorSensor.rawOptical() > 170){
+                    if (leftcolorSensor.red() >=69){
+                        leftled.setPosition(.722);
+                    } else if (leftcolorSensor.red()>= 49) {
+                        leftled.setPosition(.5);
+                    }
+                } else if(leftcolorSensor.rawOptical() > 120){
+                    if (leftcolorSensor.red() >=52){
+                        leftled.setPosition(.722);
+                    } else if (leftcolorSensor.red()>= 35) {
+                        leftled.setPosition(.5);
+                    }
+                }else {
+                    leftled.setPosition(0);
                 }
 
-                if (gamepad1.y&& !hoodUP){
+                if (gamepad2.y&& !hoodUP){
                     hood.setPosition(hoodup);
                     hoodUP = true;
-                } else if (gamepad1.y && hoodUP){
+                } else if (gamepad2.y && hoodUP){
                     hood.setPosition(hooddown);
                     hoodUP = false;
                 }
@@ -146,7 +209,6 @@ public class Tele extends LinearOpMode {
                     case MAX:
                         rightshooter.setPower(1);
                         leftshooter.setPower(1);
-
                         while (gamepad1.dpad_down){
                             shooterStates = ShooterStates.OFF;
                         } while (gamepad1.dpad_left) {
@@ -173,9 +235,9 @@ public class Tele extends LinearOpMode {
                         break;
                 }
 
-                if (gamepad2.b){
+                if (gamepad2.x){
                     righttransfer.setPosition(.7);
-                } else if (gamepad2.x){
+                } else if (gamepad2.b){
                     lefttransfer.setPosition(.7);
                 } else if (gamepad2.a){
                     midtransfer.setPosition(.7);

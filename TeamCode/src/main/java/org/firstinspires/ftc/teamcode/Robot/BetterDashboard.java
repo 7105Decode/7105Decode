@@ -1,40 +1,43 @@
 package org.firstinspires.ftc.teamcode.Robot;
 
-import static org.firstinspires.ftc.teamcode.Tuning.follower;
-
+import com.bylazar.configurables.PanelsConfigurables;
 import com.bylazar.configurables.annotations.IgnoreConfigurable;
+import com.bylazar.telemetry.PanelsTelemetry;
 import com.bylazar.telemetry.TelemetryManager;
 import com.pedropathing.follower.Follower;
 import com.pedropathing.util.PoseHistory;
-import com.qualcomm.hardware.limelightvision.Limelight3A;
+import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.seattlesolvers.solverslib.command.SubsystemBase;
 
-import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.DrawingCopy;
+import org.firstinspires.ftc.teamcode.Tuning;
 
-import java.util.ArrayList;
 
 public class BetterDashboard extends SubsystemBase {
     @IgnoreConfigurable
-    static PoseHistory poseHistory;
-
-    @IgnoreConfigurable
     static TelemetryManager telemetryM;
-
-    @IgnoreConfigurable
-    static ArrayList<String> changes = new ArrayList<>();
-//    public static TelemetryPacket telemetryPacket;
     public double loopTime;
-    public BetterDashboard(Follower follower){
-        poseHistory = follower.getPoseHistory();
+    public BetterDashboard(){
+        telemetryM = PanelsTelemetry.INSTANCE.getTelemetry();
+        DrawingCopy.init();
     }
-    public static void sendTelem(String name, Object packet){
+    public void initloopupdate(){
+        Tuning.drawOnlyCurrent();
+        dashboardTelem();
+        telemetryM.update();
+    }
+    public void initrunupdate(){
+        Tuning.draw();
+        dashboardTelem();
+        telemetryM.update();
+    }
+
+    public static void addtelem(String name, Object packet){
+        telemetryM.addData(name,packet);
     }
     public void dashboardTelem(){
         double loop = System.nanoTime();
-        sendTelem("Loop Time ", 1000000000 / (loop - loopTime));
+        addtelem("Loop Time ", 1000000000 / (loop - loopTime));
         loopTime = loop;
-    }
-    public void updateTelemetry(){
-
     }
 }
