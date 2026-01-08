@@ -10,6 +10,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.seattlesolvers.solverslib.command.SubsystemBase;
 
 import org.firstinspires.ftc.teamcode.DrawingCopy;
+import org.firstinspires.ftc.teamcode.Robot.Subsystems.DriveTrain;
 import org.firstinspires.ftc.teamcode.Tuning;
 
 
@@ -22,12 +23,10 @@ public class BetterDashboard extends SubsystemBase {
         DrawingCopy.init();
     }
     public void initloopupdate(){
-        Tuning.drawOnlyCurrent();
         dashboardTelem();
         telemetryM.update();
     }
     public void initrunupdate(){
-        Tuning.draw();
         dashboardTelem();
         telemetryM.update();
     }

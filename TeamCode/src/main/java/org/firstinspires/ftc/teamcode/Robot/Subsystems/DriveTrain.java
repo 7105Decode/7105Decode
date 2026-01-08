@@ -9,6 +9,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.seattlesolvers.solverslib.command.SubsystemBase;
 
 import org.firstinspires.ftc.teamcode.Constants;
+import org.firstinspires.ftc.teamcode.DrawingCopy;
 import org.firstinspires.ftc.teamcode.Robot.BetterDashboard;
 
 public class DriveTrain extends SubsystemBase {
@@ -18,9 +19,15 @@ public class DriveTrain extends SubsystemBase {
     public DriveTrain(HardwareMap hardwareMap, Pose pose){
         follower = Constants.createFollower(hardwareMap);
         follower.setStartingPose(pose);
+        follower.startTeleopDrive(true);
+        follower.update();
         poseHistory = follower.getPoseHistory();
     }
+    public void initloop(){
+        drawOnlyCurrent();
+    }
     public void driveTrainTelem(){
+        draw();
         BetterDashboard.addtelem("heading", getHeadingDegrees());
         BetterDashboard.addtelem("x",getX());
         BetterDashboard.addtelem("y",getY());
@@ -39,5 +46,16 @@ public class DriveTrain extends SubsystemBase {
     }
     public void fieldCentricDrive(Gamepad gamepad){
         follower.setTeleOpDrive(-gamepad.left_stick_y, -gamepad.left_stick_x, -gamepad.right_stick_x, true);
+    }
+    public void drawOnlyCurrent() {
+        try {
+            DrawingCopy.drawRobot(follower.getPose());
+            DrawingCopy.sendPacket();
+        } catch (Exception e) {
+            throw new RuntimeException("Drawing failed " + e);
+        }
+    }
+    public void draw() {
+        DrawingCopy.drawDebug(follower);
     }
 }

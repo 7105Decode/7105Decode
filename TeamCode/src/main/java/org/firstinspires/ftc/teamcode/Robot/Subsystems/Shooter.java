@@ -15,7 +15,7 @@ public class Shooter extends SubsystemBase {
     public DcMotor shooter;
     public static double MaxSpinSpeed = 1, HalfSpinSpeed = .5;
     public Shooter(HardwareMap hardwareMap){
-        shooter = hardwareMap.get(DcMotor.class,"shooter");
+        shooter = hardwareMap.get(DcMotor.class,"rightshooter");
     }
     public void resetShooter(){
         shooter.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);

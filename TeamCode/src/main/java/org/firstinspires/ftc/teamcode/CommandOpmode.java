@@ -4,6 +4,8 @@ import com.bylazar.configurables.annotations.Configurable;
 import com.pedropathing.geometry.Pose;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.seattlesolvers.solverslib.command.CommandOpMode;
+import com.seattlesolvers.solverslib.command.CommandScheduler;
+import com.seattlesolvers.solverslib.command.InstantCommand;
 import com.seattlesolvers.solverslib.gamepad.GamepadEx;
 import com.seattlesolvers.solverslib.gamepad.GamepadKeys;
 
@@ -18,26 +20,25 @@ public class CommandOpmode extends CommandOpMode {
     GamepadEx gamepad,gamepad_2;
     @Override
     public void initialize() {
-robot= new Robot(hardwareMap,new Pose());
+robot= new Robot(Robot.OpModeType.TELEOP,hardwareMap,new Pose());
 
         gamepad= new GamepadEx(gamepad1);
         gamepad_2= new GamepadEx(gamepad2);
-        robot.updateRobotInit();
+        CommandScheduler.getInstance().enable();
+//        robot.updateRobotInit();
     }
 
     @Override
     public void initialize_loop() {
-        robot.updateRobotInit();
+
+        schedule(gamepad.isDown(GamepadKeys.Button.A)));
+        register(robot.shooter, robot.driveTrain, robot.dashboard);
     }
 
     @Override
     public void run() {
-        gamepad.getGamepadButton(GamepadKeys.Button.RIGHT_STICK_BUTTON)
-                .whenHeld(new RunShooter(robot.shooter, Shooter.ShooterStates.MAXSPEED))
-                .whenReleased(new RunShooter(robot.shooter, Shooter.ShooterStates.STOP));
-        gamepad.getGamepadButton(GamepadKeys.Button.LEFT_STICK_BUTTON)
-                .whenHeld(new RunShooter(robot.shooter, Shooter.ShooterStates.HALFSPEED))
-                .whenReleased(new RunShooter(robot.shooter, Shooter.ShooterStates.STOP));
+       super.run();
         robot.updateRobotRun();
+
     }
 }
