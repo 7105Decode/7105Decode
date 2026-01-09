@@ -6,40 +6,45 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.Robot.Subsystems.DriveTrain;
 import org.firstinspires.ftc.teamcode.Robot.Subsystems.Shooter;
+import org.firstinspires.ftc.teamcode.Robot.Subsystems.Transfer;
 
 public class Robot {
     public Shooter shooter;
     public DriveTrain driveTrain;
-//    public boolean tele = false;
     public BetterDashboard dashboard;
-    public Robot(OpModeType type,HardwareMap hardwareMap, Pose pose){
-        if (type == OpModeType.TELEOP) {
-            initTele();
-//            tele = true;
-        } else {
-            initAuto();
-//            tele = false;
-        }
+    public Transfer transfer;
+    Telemetry telemetry;
+    public Robot(OpModeType type,HardwareMap hardwareMap, Pose pose,Telemetry telemetry){
         dashboard = new BetterDashboard();
         driveTrain = new DriveTrain(hardwareMap,pose);
         shooter = new Shooter(hardwareMap);
+        transfer = new Transfer(hardwareMap);
+        this.telemetry = telemetry;
+        if (type == OpModeType.TELEOP) {
+            initLoopTele();
+        } else {
+            initLoopAuto();
+        }
     }
-    public void initTele() {
+    public void initLoopTele() {
         driveTrain.initloop();
-//        shooter.shooterTelem();
-        dashboard.initloopupdate();
+        shooter.shooterTelem();
+        dashboard.dashboardTelem();
+        BetterDashboard.telemetryM.update(telemetry);
     }
 
-    public void initAuto() {
+    public void initLoopAuto() {
         driveTrain.initloop();
-//        shooter.shooterTelem();
-        dashboard.initloopupdate();
+        shooter.shooterTelem();
+        dashboard.dashboardTelem();
+        BetterDashboard.telemetryM.update(telemetry);
     }
 
     public void updateRobotRun(){
         driveTrain.driveTrainTelem();
         shooter.shooterTelem();
-        dashboard.initrunupdate();
+        dashboard.dashboardTelem();
+        BetterDashboard.telemetryM.update(telemetry);
     }
 
     public enum OpModeType {

@@ -26,6 +26,12 @@ public class DriveTrain extends SubsystemBase {
     public void initloop(){
         drawOnlyCurrent();
     }
+
+    @Override
+    public void periodic() {
+        driveTrainTelem();
+    }
+
     public void driveTrainTelem(){
         draw();
         BetterDashboard.addtelem("heading", getHeadingDegrees());

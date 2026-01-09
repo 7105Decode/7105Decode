@@ -16,20 +16,25 @@ import org.firstinspires.ftc.teamcode.Tuning;
 
 public class BetterDashboard extends SubsystemBase {
     @IgnoreConfigurable
-    static TelemetryManager telemetryM;
+    public static TelemetryManager telemetryM;
     public double loopTime;
     public BetterDashboard(){
         telemetryM = PanelsTelemetry.INSTANCE.getTelemetry();
         DrawingCopy.init();
     }
-    public void initloopupdate(){
-        dashboardTelem();
-        telemetryM.update();
-    }
-    public void initrunupdate(){
-        dashboardTelem();
-        telemetryM.update();
-    }
+//    public void initloopupdate(){
+//        dashboardTelem();
+//        telemetryM.update();
+//    }
+//    public void initrunupdate(){
+//        dashboardTelem();
+//        telemetryM.update();
+//    }
+
+//    @Override
+//    public void periodic() {
+//        dashboardTelem();
+//    }
 
     public static void addtelem(String name, Object packet){
         telemetryM.addData(name,packet);

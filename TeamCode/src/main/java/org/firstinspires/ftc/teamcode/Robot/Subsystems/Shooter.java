@@ -21,6 +21,12 @@ public class Shooter extends SubsystemBase {
         shooter.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         shooter.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
+
+    @Override
+    public void periodic() {
+        shooterTelem();
+    }
+
     public void shooterTelem() {
         BetterDashboard.addtelem("shooterpower", shooter.getPower());
     }
