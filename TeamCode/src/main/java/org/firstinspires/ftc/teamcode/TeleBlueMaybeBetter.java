@@ -34,6 +34,9 @@ public class TeleBlueMaybeBetter extends LinearOpMode {
     BasicPID pid,shooterpid,turretpid;
     Servo righttransfer, midtransfer,lefttransfer, hood, rightled,midled,leftled;
     ShooterStates shooterStates = ShooterStates.OFF;
+    TransferStates transferStates = TransferStates.DOWN;
+    IntakeStates intakeStates = IntakeStates.OFF;
+    HoodStates hoodStates = HoodStates.DOWN;
     Follower follower;
     public static double targetvel = 0, error = 0,tx = 0,kp = 0.009,ki = 0,kd = 0,hoodup = .965, hooddown = 0.055,shooterspeed = 0, lefttransferservopos = 0.095, midtransferservopos = .13,righttransferservopos = 0.095, TopTurretPower = .35;
     @Override
@@ -101,19 +104,6 @@ public class TeleBlueMaybeBetter extends LinearOpMode {
                 } else{
                     topturret.setPower(0);
                 }
-//                if (tx >= 2){
-////                    topturret.setPower(-.15);
-//                    topturret.setPower(turretpid.calculate(0,tx));
-//                } else if (tx <= -2) {
-////                    topturret.setPower(.15);
-//
-//                } else if (tx >= 10) {
-//                    topturret.setPower(-.3);
-//                } else if (tx <= -10) {
-//                    topturret.setPower(.3);
-//                } else {
-//                    topturret.setPower(0);
-//                }
             } else if (gamepad2.right_trigger > .3){
                 topturret.setPower(-.3);
             } else if (gamepad2.left_trigger > .3){
@@ -125,19 +115,7 @@ public class TeleBlueMaybeBetter extends LinearOpMode {
             } else {
                 topturret.setPower(0);
             }
-//                limelight.updateRobotOrientation(heading);
-//            LLResult result = limelight.getLatestResult();
-//            if (result.isValid()) {
-//                    Pose3D botpose = result.getBotpose_MT2();
-//                    double tx = result.getTx();
-//                    double yaw =botpose.getOrientation().getYaw();
-//                    telemetry.addData("tx", tx);
-//                    telemetry.addData("ty", result.getTy());
-//                    telemetry.addData("botx",botpose.getPosition().x);
-//                    telemetry.addData("boty",botpose.getPosition().y);
-//                    telemetry.addData("botYaw",yaw);
-//                telemetry.addData("pid",pid.calculate(apriltag22.getHeading(), yaw));
-//            } else {
+
             telemetry.addData("rightshootervel", rightshooter.getVelocity());
             telemetry.addData("leftshootervel",leftshooter.getVelocity());
 //                telemetry.addData("Limelight", "No data available");
@@ -213,20 +191,46 @@ public class TeleBlueMaybeBetter extends LinearOpMode {
                 leftled.setPosition(0);
             }
 
-            if (gamepad2.y&& !hoodUP){
-                hood.setPosition(hoodup);
-                hoodUP = true;
-            } else if (gamepad2.y && hoodUP){
-                hood.setPosition(hooddown);
-                hoodUP = false;
+            switch (hoodStates){
+                case DOWN:
+                    hood.setPosition(hooddown);
+                    if (gamepad2.dpad_up){
+                        hoodStates = HoodStates.UP;
+                    }
+                    break;
+                case UP:
+                    hood.setPosition(hoodup);
+                    if (gamepad2.dpad_down){
+                        hoodStates = HoodStates.DOWN;
+                    }
+                    break;
             }
 
-            if (gamepad1.right_trigger > .3){
-                frontintake.setPower(1);
-            } else if (gamepad1.left_trigger > .3){
-                frontintake.setPower(-1);
-            } else {
-                frontintake.setPower(0);
+            switch (intakeStates){
+                case OFF:
+                    frontintake.setPower(0);
+                    if (gamepad1.right_trigger > .4){
+                        intakeStates = IntakeStates.INTAKE;
+                    } else if (gamepad1.left_trigger > .4) {
+                        intakeStates = IntakeStates.OUT;
+                    }
+                    break;
+                case INTAKE:
+                    frontintake.setPower(1);
+                    if (gamepad1.right_trigger > .4){
+                        intakeStates = IntakeStates.OFF;
+                    } else if (gamepad1.left_trigger > .4) {
+                        intakeStates = IntakeStates.OUT;
+                    }
+                    break;
+                case OUT:
+                    frontintake.setPower(-1);
+                    if (gamepad1.right_trigger > .4){
+                        intakeStates = IntakeStates.INTAKE;
+                    } else if (gamepad1.left_trigger > .4) {
+                        intakeStates = IntakeStates.OFF;
+                    }
+                    break;
             }
 
             switch (shooterStates) {
@@ -256,42 +260,64 @@ public class TeleBlueMaybeBetter extends LinearOpMode {
                     while (gamepad1.dpad_up){
                         shooterStates = ShooterStates.MAX;
                     } while (gamepad1.dpad_left) {
-                    shooterStates = ShooterStates.SLOWERSPEED;
+                         shooterStates = ShooterStates.SLOWERSPEED;
                 }
                     break;
             }
+            switch (transferStates){
+                case DOWN:
+                    righttransfer.setPosition(righttransferservopos);
+                    midtransfer.setPosition(midtransferservopos);
+                    lefttransfer.setPosition(lefttransferservopos);
 
-            if (gamepad2.x){
-                righttransfer.setPosition(.7);
-            } else if (gamepad2.b){
-                lefttransfer.setPosition(.7);
-            } else if (gamepad2.a){
-                midtransfer.setPosition(.7);
+                    if (gamepad2.x){
+                        transferStates = TransferStates.RIGHTUP;
+                    } else if (gamepad2.b) {
+                        transferStates = TransferStates.LEFTUP;
+                    } else if (gamepad2.a) {
+                        transferStates = TransferStates.MIDUP;
+                    }
+                    break;
+                case MIDUP:
+                    righttransfer.setPosition(righttransferservopos);
+                    midtransfer.setPosition(.7);
+                    lefttransfer.setPosition(lefttransferservopos);
+                    if (gamepad2.x){
+                        transferStates = TransferStates.RIGHTUP;
+                    } else if (gamepad2.b) {
+                        transferStates = TransferStates.LEFTUP;
+                    } else if (gamepad2.y) {
+                        transferStates = TransferStates.DOWN
+                        ;
+                    }
+                    break;
+                case RIGHTUP:
+                    righttransfer.setPosition(.7);
+                    midtransfer.setPosition(midtransferservopos);
+                    lefttransfer.setPosition(lefttransferservopos);
+                    if (gamepad2.a){
+                        transferStates = TransferStates.MIDUP;
+                    } else if (gamepad2.b) {
+                        transferStates = TransferStates.LEFTUP;
+                    } else if (gamepad2.y) {
+                        transferStates = TransferStates.DOWN
+                        ;
+                    }
+                    break;
+                case LEFTUP:
+                    righttransfer.setPosition(righttransferservopos);
+                    midtransfer.setPosition(midtransferservopos);
+                    lefttransfer.setPosition(.7);
+                    if (gamepad2.x){
+                        transferStates = TransferStates.RIGHTUP;
+                    } else if (gamepad2.a) {
+                        transferStates = TransferStates.MIDUP;
+                    } else if (gamepad2.y) {
+                        transferStates = TransferStates.DOWN
+                        ;
+                    }
+                    break;
             }
-            else {
-                midtransfer.setPosition(midtransferservopos);
-                lefttransfer.setPosition(lefttransferservopos);
-                righttransfer.setPosition(righttransferservopos);
-            }
-
-
-//               This was for testing the drive motors.
-
-//                if (gamepad2.right_bumper){
-//                    drive.leftFront.setPower(1);
-//                } else if (gamepad2.left_bumper) {
-//                    drive.leftBack.setPower(1);
-//                } else if (gamepad2.left_trigger>.3) {
-//                    drive.rightFront.setPower(1); // correct
-//                } else if (gamepad2.right_trigger > .3) {
-//                    drive.rightBack.setPower(1);
-//                } else {
-//                    drive.leftFront.setPower(0);
-//                    drive.leftBack.setPower(0);
-//                    drive.rightBack.setPower(0);
-//                    drive.rightFront.setPower(0);
-//                }
-
             telemetry.update();
         }
     }
@@ -299,5 +325,20 @@ public class TeleBlueMaybeBetter extends LinearOpMode {
         MAX,
         SLOWERSPEED,
         OFF
+    }
+    public enum HoodStates{
+        UP,
+        DOWN
+    }
+    public enum IntakeStates{
+        INTAKE,
+        OUT,
+        OFF
+    }
+    public enum TransferStates{
+        LEFTUP,
+        RIGHTUP,
+        MIDUP,
+        DOWN
     }
 }
