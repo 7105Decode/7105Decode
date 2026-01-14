@@ -13,7 +13,7 @@ import org.firstinspires.ftc.teamcode.DrawingCopy;
 import org.firstinspires.ftc.teamcode.Robot.BetterDashboard;
 
 public class DriveTrain extends SubsystemBase {
-    Follower follower;
+    public Follower follower;
     @IgnoreConfigurable
     static PoseHistory poseHistory;
     public DriveTrain(HardwareMap hardwareMap, Pose pose){

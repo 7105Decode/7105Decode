@@ -1,11 +1,12 @@
 package org.firstinspires.ftc.teamcode.Opmodes;
 
 import com.pedropathing.geometry.Pose;
+import com.seattlesolvers.solverslib.command.CommandOpMode;
 
 import org.firstinspires.ftc.teamcode.Robot.Commands.FollowPath_PP;
 import org.firstinspires.ftc.teamcode.Robot.Robot;
 
-public class RedShortAuto extends CommandOpmode {
+public class RedShortAuto extends CommandOpMode {
     Robot robot;
     FollowPath_PP firstpath,secondpath,thirdpath;
     @Override

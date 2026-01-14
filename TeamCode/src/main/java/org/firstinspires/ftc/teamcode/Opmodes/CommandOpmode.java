@@ -41,7 +41,7 @@ public class CommandOpmode extends CommandOpMode {
     @Override
     public void run() {
         super.run();
-        exampleButton.whenPressed(new RunRightTransferServo(robot.transfer, Transfer.RightTransferStates.TRANSFER));
+//        exampleButton.whenPressed(new RunRightTransferServo(robot.transfer, Transfer.RightTransferStates.TRANSFER));
         robot.updateRobotRun();
     }
 }
