@@ -3,20 +3,17 @@ package org.firstinspires.ftc.teamcode.Robot.Commands;
 
 import com.pedropathing.follower.Follower;
 import com.pedropathing.paths.Path;
-import com.pedropathing.paths.PathChain;
-import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.seattlesolvers.solverslib.command.CommandBase;
 
 import org.firstinspires.ftc.teamcode.Constants;
-import org.firstinspires.ftc.teamcode.Robot.Subsystems.DriveTrain;
 
-public class FollowPathBuilder_PP extends CommandBase {
+public class FollowPath_PP extends CommandBase {
     Follower follower;
     Path path;
 
     double headingtolerance;
-    public FollowPathBuilder_PP(Path path, HardwareMap hardwareMap, double headingtolerance){
+    public FollowPath_PP(Path path, HardwareMap hardwareMap, double headingtolerance){
         this.path = path;
         this.headingtolerance = headingtolerance;
         follower = Constants.createFollower(hardwareMap);

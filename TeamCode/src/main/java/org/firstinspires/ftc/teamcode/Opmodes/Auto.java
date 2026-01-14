@@ -1,9 +1,4 @@
-package org.firstinspires.ftc.teamcode;
-
-import static org.firstinspires.ftc.teamcode.Tele.hoodup;
-import static org.firstinspires.ftc.teamcode.Tele.lefttransferservopos;
-import static org.firstinspires.ftc.teamcode.Tele.midtransferservopos;
-import static org.firstinspires.ftc.teamcode.Tele.righttransferservopos;
+package org.firstinspires.ftc.teamcode.Opmodes;
 
 import com.ThermalEquilibrium.homeostasis.Controllers.Feedback.BasicPID;
 import com.ThermalEquilibrium.homeostasis.Parameters.PIDCoefficients;
@@ -11,9 +6,10 @@ import com.pedropathing.follower.Follower;
 import com.pedropathing.geometry.Pose;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
+
+import org.firstinspires.ftc.teamcode.Constants;
 
 @Autonomous
 public class Auto extends LinearOpMode {

@@ -25,6 +25,7 @@ import android.graphics.Color;
 import android.util.Size;
 
 import com.bylazar.configurables.annotations.Configurable;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -73,6 +74,7 @@ import java.util.List;
  */
 
 @Configurable
+@Disabled
 @TeleOp(name = "Concept: Vision Color-Locator (Circle)", group = "Concept")
 public class ConceptVisionColorLocator_Circle extends LinearOpMode {
     public static double loopTime = 0,minRange = 50, maxRange = 20000, minH=0,minS=126,minV = 143,maxH=255,maxS=155,maxV = 255;

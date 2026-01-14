@@ -1,12 +1,12 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.Opmodes;
 
-import static org.firstinspires.ftc.teamcode.Tele.hoodup;
-import static org.firstinspires.ftc.teamcode.Tele.kd;
-import static org.firstinspires.ftc.teamcode.Tele.ki;
-import static org.firstinspires.ftc.teamcode.Tele.kp;
-import static org.firstinspires.ftc.teamcode.Tele.lefttransferservopos;
-import static org.firstinspires.ftc.teamcode.Tele.midtransferservopos;
-import static org.firstinspires.ftc.teamcode.Tele.righttransferservopos;
+import static org.firstinspires.ftc.teamcode.Opmodes.Tele.hoodup;
+import static org.firstinspires.ftc.teamcode.Opmodes.Tele.kd;
+import static org.firstinspires.ftc.teamcode.Opmodes.Tele.ki;
+import static org.firstinspires.ftc.teamcode.Opmodes.Tele.kp;
+import static org.firstinspires.ftc.teamcode.Opmodes.Tele.lefttransferservopos;
+import static org.firstinspires.ftc.teamcode.Opmodes.Tele.midtransferservopos;
+import static org.firstinspires.ftc.teamcode.Opmodes.Tele.righttransferservopos;
 
 import com.ThermalEquilibrium.homeostasis.Controllers.Feedback.BasicPID;
 import com.ThermalEquilibrium.homeostasis.Parameters.PIDCoefficients;
@@ -17,6 +17,8 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
+
+import org.firstinspires.ftc.teamcode.Constants;
 
 @Autonomous
 public class MaybeBetterAutoBlueSide extends LinearOpMode {
