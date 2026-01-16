@@ -29,7 +29,7 @@ public class DrawingCopy {
      * This prepares Panels Field for using Pedro Offsets
      */
     public static void init() {
-        panelsField.setOffsets(PanelsField.INSTANCE.getPresets().getROAD_RUNNER());
+        panelsField.setOffsets(PanelsField.INSTANCE.getPresets().getPEDRO_PATHING());
     }
 
     /**

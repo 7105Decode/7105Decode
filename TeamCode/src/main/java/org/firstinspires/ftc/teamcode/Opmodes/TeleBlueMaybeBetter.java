@@ -41,7 +41,7 @@ public class TeleBlueMaybeBetter extends LinearOpMode {
     HoodStates hoodStates = HoodStates.DOWN;
     ParkingStates parkingStates = ParkingStates.DISENGAGE;
     Follower follower;
-    public static double transferthreshold = 1.2,leftvel = 0, lpadpos=.274,rpadppos=0.265,targetvel = 2280, error = 0,tx = 0,kp = 0.009,ki = 0,kd = 0,hoodup = .965, hooddown = 0.055,shooterspeed = 0, lefttransferservopos = 0.095, midtransferservopos = .13,righttransferservopos = 0.095, TopTurretPower = .35;
+    public static double transferthreshold = 1.2,leftvel = 0, lpadpos=.274,rpadppos=0.265,targetvel = 2280, error = 0,tx = 0,kp = 0.009,ki = 0,kd = 0,hoodup = .965, hooddown = 0.055,shooterspeed = 0, lefttransferservopos = 0.04, midtransferservopos = .13,righttransferservopos = 0.095, TopTurretPower = .35;
     @Override
     public void runOpMode() {
         limelight = hardwareMap.get(Limelight3A.class, "limelight");
