@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.Opmodes;
 
 import com.bylazar.configurables.annotations.Configurable;
 import com.pedropathing.geometry.Pose;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.seattlesolvers.solverslib.command.CommandOpMode;
 import com.seattlesolvers.solverslib.command.button.Button;
@@ -15,6 +16,7 @@ import org.firstinspires.ftc.teamcode.Robot.Subsystems.Transfer;
 
 @TeleOp
 @Configurable
+@Disabled
 public class CommandOpmode extends CommandOpMode {
     // in your implementation of CommandOpMode
     Robot robot;

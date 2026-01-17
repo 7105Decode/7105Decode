@@ -5,12 +5,14 @@ import com.ThermalEquilibrium.homeostasis.Parameters.PIDCoefficients;
 import com.pedropathing.follower.Follower;
 import com.pedropathing.geometry.Pose;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.Constants;
 
+@Disabled
 @Autonomous
 public class Auto extends LinearOpMode {
     Follower follower;

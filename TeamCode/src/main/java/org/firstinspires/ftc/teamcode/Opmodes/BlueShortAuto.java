@@ -7,6 +7,7 @@ import com.pedropathing.geometry.BezierLine;
 import com.pedropathing.geometry.Pose;
 import com.pedropathing.paths.Path;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.seattlesolvers.solverslib.command.Command;
 import com.seattlesolvers.solverslib.command.CommandOpMode;
 import com.seattlesolvers.solverslib.command.SequentialCommandGroup;
@@ -16,6 +17,7 @@ import org.firstinspires.ftc.teamcode.Robot.Commands.FollowPath_PP;
 import org.firstinspires.ftc.teamcode.Robot.Robot;
 
 @Autonomous
+@Disabled
 @Configurable
 public class BlueShortAuto extends CommandOpMode {
     Robot robot;

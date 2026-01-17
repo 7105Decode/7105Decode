@@ -1,9 +1,12 @@
 package org.firstinspires.ftc.teamcode.Opmodes;
 
 
+import static org.firstinspires.ftc.teamcode.Opmodes.TeleRedMaybeBetter.kd;
+import static org.firstinspires.ftc.teamcode.Opmodes.TeleRedMaybeBetter.ki;
+import static org.firstinspires.ftc.teamcode.Opmodes.TeleRedMaybeBetter.kp;
 import static org.firstinspires.ftc.teamcode.Opmodes.TeleRedMaybeBetter.turretkd;
 import static org.firstinspires.ftc.teamcode.Opmodes.TeleRedMaybeBetter.turretki;
-import static org.firstinspires.ftc.teamcode.Opmodes.TeleRedMaybeBetter.turretkp;
+import static org.firstinspires.ftc.teamcode.Opmodes.TeleRedMaybeBetter.shooterkp;
 
 import com.ThermalEquilibrium.homeostasis.Controllers.Feedback.BasicPID;
 import com.ThermalEquilibrium.homeostasis.Parameters.PIDCoefficients;
@@ -32,15 +35,17 @@ public class TeleBlueMaybeBetter extends LinearOpMode {
     RevColorSensorV3 leftcolorSensor;
     RevColorSensorV3 middlecolorSensor;
     public static boolean hoodUP = false,pidTurretPos = false;
-    public static PIDCoefficients pidCoefficients,shooterCoef,turretpidCo;
-    BasicPID pid,shooterpid,turretpid;
+    public static PIDCoefficients pidCoefficients,shooterCoef;
+    BasicPID pid,shooterpid;
     Servo righttransfer, midtransfer,lefttransfer, hood, rightled,midled,leftled, rightpad, leftpad;
     ShooterStates shooterStates = ShooterStates.OFF;
     TransferStates transferStates = TransferStates.DOWN;
     HoodStates hoodStates = HoodStates.DOWN;
     ParkingStates parkingStates = ParkingStates.DISENGAGE;
     Follower follower;
-    public static double transferthreshold = 1.2,leftvel = 0, lpadpos=.274,rpadppos=0.265,targetvel = -2280, error = 0, ty = 0,kp = 0.024,ki = 0,kd = 0,hoodup = .965, hooddown = 0.055,shooterspeed = 0, lefttransferservopos = 0.04, midtransferservopos = .13,righttransferservopos = 0.095, TopTurretPower = .35;
+
+    public static boolean gotRightColor = false, gotMidColor = false, gotLeftColor = false;
+    public static double ty = 0,transferthreshold = 1.2,leftvel = 0, lpadpos=.274,rpadppos=0.265,targetvel = -2280,hoodup = .965, hooddown = 0.055,shooterspeed = 0, lefttransferservopos = 0.04, midtransferservopos = .13,righttransferservopos = 0.095;
     @Override
     public void runOpMode() {
         limelight = hardwareMap.get(Limelight3A.class, "limelight");
@@ -81,15 +86,16 @@ public class TeleBlueMaybeBetter extends LinearOpMode {
         waitForStart();
         pidCoefficients = new PIDCoefficients(kp,ki,kd);
         pid = new BasicPID(pidCoefficients);
-        shooterCoef = new PIDCoefficients(kp,ki,kd);
+        shooterCoef = new PIDCoefficients(shooterkp,ki,kd);
         shooterpid = new BasicPID(shooterCoef);
-        turretpidCo = new PIDCoefficients(turretkp,turretki,turretkd);
-        turretpid = new BasicPID(turretpidCo);
         hoodUP = false;
         pidTurretPos = true;
         shooterStates = ShooterStates.OFF;
         hood.setPosition(hooddown);
         timer.reset();
+        gotLeftColor = false;
+        gotRightColor = false;
+        gotMidColor = false;
 
         follower.startTeleopDrive(true);
         follower.update();
@@ -100,10 +106,6 @@ public class TeleBlueMaybeBetter extends LinearOpMode {
             LLResult result = limelight.getLatestResult();
             if (result.isValid()) {
                 ty = result.getTy();
-//                if (topturret.getCurrentPosition() < 900 && topturret.getCurrentPosition() > -900){
-                    telemetry.addData("ty",ty);
-//                    topturret.setPower(turretpid.calculate(0,tx));
-//                    topturret.setPower(turretpid.calculate(0, Math.abs(ty)));
                     if (ty <= -8.5){
                         topturret.setPower(-.3);
                     } else if (ty > -8.5 && ty < .3) {
@@ -115,91 +117,93 @@ public class TeleBlueMaybeBetter extends LinearOpMode {
                     } else{
                     topturret.setPower(0);
                 }
+                telemetry.addData("ty",ty);
             } else if (gamepad2.right_trigger > .3){
                 topturret.setPower(-.3);
             } else if (gamepad2.left_trigger > .3){
                 topturret.setPower(.3);
-            } else if (gamepad2.right_bumper) {
-                topturret.setPower(pid.calculate(-484,topturret.getCurrentPosition()));
-            } else if (gamepad2.left_bumper) {
-                topturret.setPower(pid.calculate(484,topturret.getCurrentPosition()));
             } else {
                 topturret.setPower(0);
             }
 
+            if (gamepad2.right_bumper){
+                topturret.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                topturret.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            }
+
             leftvel = leftshooter.getVelocity();
             telemetry.addData("leftshootervel",leftvel);
-//            telemetry.addData("leftshootererror",targetvel - leftvel);
-//                telemetry.addData("Limelight", "No data available");
-//                    telemetry.addData("red",rightcolorSensor.red());
-//                    telemetry.addData("green",rightcolorSensor.green());
-//                    telemetry.addData("blue",rightcolorSensor.blue());
-//                    telemetry.addData("alpha",rightcolorSensor.rawOptical());
-//                    telemetry.addData("red on left",leftcolorSensor.red());
-//                    telemetry.addData("green on left",leftcolorSensor.green());
-//                    telemetry.addData("blue on left",leftcolorSensor.blue());
-//                    telemetry.addData("alpha on left",leftcolorSensor.rawOptical());
-//                    telemetry.addData("red on middle", middlecolorSensor.red());
-//                    telemetry.addData("green on middle",middlecolorSensor.green());
-//                    telemetry.addData("blue on middle",middlecolorSensor.blue());
-//                    telemetry.addData("alpha on middle",middlecolorSensor.rawOptical());
-//            }
-            telemetry.addData("turret",topturret.getCurrentPosition()   );
-            if(rightcolorSensor.rawOptical() >= 300){
+            if(rightcolorSensor.rawOptical() >= 300 && !gotRightColor){
                 if (rightcolorSensor.red() >= 80){
                     rightled.setPosition(.722);
+                    gotRightColor = true;
                 } else if (rightcolorSensor.red() >= 60) {
                     rightled.setPosition(.5);
+                    gotRightColor = true;
                 }
             } else if (rightcolorSensor.rawOptical() > 180) {
                 if (rightcolorSensor.red() >= 47){
                     rightled.setPosition(.722);
+                    gotRightColor = true;
                 } else if (rightcolorSensor.red() >= 26) {
                     rightled.setPosition(.5);
+                    gotRightColor = true;
                 }
             }else if (rightcolorSensor.rawOptical() > 130) {
                 if (rightcolorSensor.red() >= 37){
                     rightled.setPosition(.722);
+                    gotRightColor = true;
                 } else if (rightcolorSensor.red() >= 26) {
                     rightled.setPosition(.5);
+                    gotRightColor = true;
                 }
-            } else {
+            } else if (gotRightColor) {
                 rightled.setPosition(0);
             }
-            if(middlecolorSensor.rawOptical() > 135){
+            if(middlecolorSensor.rawOptical() > 135 && !gotMidColor){
                 if (middlecolorSensor.green() >= 90){
                     midled.setPosition(.5);
+                    gotMidColor = true;
                 } else if (middlecolorSensor.green() >=60) {
                     midled.setPosition(.722);
+                    gotMidColor = true;
                 }
             } else if (middlecolorSensor.rawOptical() >= 112) {
                 if (middlecolorSensor.green() >= 80){
                     midled.setPosition(.5);
+                    gotMidColor = true;
                 } else if (middlecolorSensor.green() >=50) {
                     midled.setPosition(.722);
+                    gotMidColor = true;
                 }
             } else if (middlecolorSensor.rawOptical() > 90) {
                 if (middlecolorSensor.green() >= 75){
                     midled.setPosition(.5);
+                    gotMidColor = true;
                 } else if (middlecolorSensor.green() >=50) {
                     midled.setPosition(.722);
+                    gotMidColor = true;
                 }
-            } else {
+            } else if (gotMidColor){
                 midled.setPosition(0);
             }
-            if (leftcolorSensor.rawOptical() > 170){
+            if (leftcolorSensor.rawOptical() > 170 && !gotLeftColor){
                 if (leftcolorSensor.red() >=69){
                     leftled.setPosition(.722);
+                    gotLeftColor = true;
                 } else if (leftcolorSensor.red()>= 49) {
                     leftled.setPosition(.5);
+                    gotLeftColor = true;
                 }
             } else if(leftcolorSensor.rawOptical() > 120){
                 if (leftcolorSensor.red() >=52){
                     leftled.setPosition(.722);
+                    gotLeftColor = true;
                 } else if (leftcolorSensor.red()>= 35) {
                     leftled.setPosition(.5);
+                    gotLeftColor = true;
                 }
-            }else {
+            }else if (gotLeftColor) {
                 leftled.setPosition(0);
             }
 
@@ -245,11 +249,11 @@ public class TeleBlueMaybeBetter extends LinearOpMode {
             switch (shooterStates) {
                 case MAX:
                     targetvel = -2280;
-                    kp = 0.024;
-                    shooterCoef = new PIDCoefficients(kp,ki,kd);
+                    kp = 0.03;
+                    shooterCoef = new PIDCoefficients(shooterkp,ki,kd);
                     shooterpid = new BasicPID(shooterCoef);
-                    rightshooter.setPower(-1*shooterpid.calculate(targetvel,leftshooter.getVelocity()));
-                    leftshooter.setPower(-1*shooterpid.calculate(targetvel,leftshooter.getVelocity()));
+                    rightshooter.setPower(-1*shooterpid.calculate(targetvel,leftvel));
+                    leftshooter.setPower(-1*shooterpid.calculate(targetvel,leftvel));
 //                    rightshooter.setPower(1);
 //                    leftshooter.setPower(1);
                     if (gamepad1.dpad_down){
@@ -260,11 +264,11 @@ public class TeleBlueMaybeBetter extends LinearOpMode {
                     break;
                 case SLOWERSPEED:
                     targetvel = -1560;
-                    kp = 0.008;
-                    shooterCoef = new PIDCoefficients(kp,ki,kd);
+                    kp = 0.012;
+                    shooterCoef = new PIDCoefficients(shooterkp,ki,kd);
                     shooterpid = new BasicPID(shooterCoef);
-                    rightshooter.setPower(-1*shooterpid.calculate(targetvel,leftshooter.getVelocity()));
-                    leftshooter.setPower(-1*shooterpid.calculate(targetvel,leftshooter.getVelocity()));
+                    rightshooter.setPower(-1*shooterpid.calculate(targetvel,leftvel));
+                    leftshooter.setPower(-1*shooterpid.calculate(targetvel,leftvel));
                     if (gamepad1.dpad_up){
                         shooterStates = ShooterStates.MAX;
                     } else if (gamepad1.dpad_down) {
@@ -303,43 +307,27 @@ public class TeleBlueMaybeBetter extends LinearOpMode {
                     righttransfer.setPosition(righttransferservopos);
                     midtransfer.setPosition(.7);
                     lefttransfer.setPosition(lefttransferservopos);
+                    gotMidColor = false;
                     if (timer.seconds() >= transferthreshold) {
                         transferStates = TransferStates.DOWN;
-                    } else if (gamepad2.x){
-                        timer.reset();
-                        transferStates = TransferStates.RIGHTUP;
-                    } else if (gamepad2.b) {
-                        timer.reset();
-                        transferStates = TransferStates.LEFTUP;
                     }
                     break;
                 case RIGHTUP:
                     righttransfer.setPosition(.7);
                     midtransfer.setPosition(midtransferservopos);
                     lefttransfer.setPosition(lefttransferservopos);
+                    gotRightColor = false;
                     if (timer.seconds() >= transferthreshold) {
                         transferStates = TransferStates.DOWN;
-                    } else if (gamepad2.a){
-                        timer.reset();
-                        transferStates = TransferStates.MIDUP;
-                    } else if (gamepad2.b) {
-                        timer.reset();
-                        transferStates = TransferStates.LEFTUP;
                     }
                     break;
                 case LEFTUP:
                     righttransfer.setPosition(righttransferservopos);
                     midtransfer.setPosition(midtransferservopos);
                     lefttransfer.setPosition(.7);
+                    gotLeftColor = false;
                     if (timer.seconds() >= transferthreshold) {
-                        transferStates = TransferStates.DOWN
-                        ;
-                    } else if (gamepad2.x){
-                        timer.reset();
-                        transferStates = TransferStates.RIGHTUP;
-                    } else if (gamepad2.a) {
-                        timer.reset();
-                        transferStates = TransferStates.MIDUP;
+                        transferStates = TransferStates.DOWN;
                     }
                     break;
             }
