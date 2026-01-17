@@ -319,10 +319,13 @@ public class TeleRedMaybeBetter extends LinearOpMode {
                     timer.reset();
 
                     if (gamepad2.x){
+                        timer.reset();
                         transferStates = TransferStates.RIGHTUP;
                     } else if (gamepad2.b) {
+                        timer.reset();
                         transferStates = TransferStates.LEFTUP;
                     } else if (gamepad2.a) {
+                        timer.reset();
                         transferStates = TransferStates.MIDUP;
                     }
                     break;
@@ -333,8 +336,10 @@ public class TeleRedMaybeBetter extends LinearOpMode {
                     if (timer.seconds() >= transferthreshold) {
                         transferStates = TransferStates.DOWN;
                     } else if (gamepad2.x){
+                        timer.reset();
                         transferStates = TransferStates.RIGHTUP;
                     } else if (gamepad2.b) {
+                        timer.reset();
                         transferStates = TransferStates.LEFTUP;
                     }
                     break;
@@ -345,8 +350,10 @@ public class TeleRedMaybeBetter extends LinearOpMode {
                     if (timer.seconds() >= transferthreshold) {
                         transferStates = TransferStates.DOWN;
                     } else if (gamepad2.a){
+                        timer.reset();
                         transferStates = TransferStates.MIDUP;
                     } else if (gamepad2.b) {
+                        timer.reset();
                         transferStates = TransferStates.LEFTUP;
                     }
                     break;
@@ -358,8 +365,10 @@ public class TeleRedMaybeBetter extends LinearOpMode {
                         transferStates = TransferStates.DOWN
                         ;
                     } else if (gamepad2.x){
+                        timer.reset();
                         transferStates = TransferStates.RIGHTUP;
                     } else if (gamepad2.a) {
+                        timer.reset();
                         transferStates = TransferStates.MIDUP;
                     }
                     break;
