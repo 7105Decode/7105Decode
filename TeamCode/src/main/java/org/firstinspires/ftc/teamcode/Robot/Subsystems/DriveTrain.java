@@ -6,13 +6,15 @@ import com.pedropathing.geometry.Pose;
 import com.pedropathing.util.PoseHistory;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.seattlesolvers.solverslib.command.SubsystemBase;
+import com.rowanmcalpin.nextftc.core.Subsystem;
 
 import org.firstinspires.ftc.teamcode.Constants;
 import org.firstinspires.ftc.teamcode.DrawingCopy;
 import org.firstinspires.ftc.teamcode.Robot.BetterDashboard;
 
-public class DriveTrain extends SubsystemBase {
+public class DriveTrain extends Subsystem {
+    public static final DriveTrain INSTANCE = new DriveTrain();
+    private DriveTrain() { }
     public Follower follower;
     @IgnoreConfigurable
     static PoseHistory poseHistory;

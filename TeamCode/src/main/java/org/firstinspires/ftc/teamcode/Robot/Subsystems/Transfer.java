@@ -3,11 +3,12 @@ package org.firstinspires.ftc.teamcode.Robot.Subsystems;
 import com.bylazar.configurables.annotations.Configurable;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
-import com.seattlesolvers.solverslib.command.SubsystemBase;
+import com.rowanmcalpin.nextftc.core.Subsystem;
 
 @Configurable
-public class Transfer extends SubsystemBase {
-
+public class Transfer extends Subsystem {
+    public static final Transfer INSTANCE = new Transfer();
+    private Transfer() { }
     public static double lefttransferservopos = .155, midtransferservopos = .13,righttransferservopos = .13;
     Servo righttransfer,lefttransfer,midtransfer;
     public Transfer(HardwareMap hardwareMap){

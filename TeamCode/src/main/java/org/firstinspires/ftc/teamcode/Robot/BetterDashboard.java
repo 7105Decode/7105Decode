@@ -1,27 +1,19 @@
 package org.firstinspires.ftc.teamcode.Robot;
 
-import com.bylazar.configurables.PanelsConfigurables;
 import com.bylazar.configurables.annotations.IgnoreConfigurable;
-import com.bylazar.telemetry.PanelsTelemetry;
 import com.bylazar.telemetry.TelemetryManager;
-import com.pedropathing.follower.Follower;
-import com.pedropathing.util.PoseHistory;
-import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.seattlesolvers.solverslib.command.SubsystemBase;
+import com.rowanmcalpin.nextftc.core.Subsystem;
 
-import org.firstinspires.ftc.teamcode.DrawingCopy;
-import org.firstinspires.ftc.teamcode.Robot.Subsystems.DriveTrain;
-import org.firstinspires.ftc.teamcode.Tuning;
-
-
-public class BetterDashboard extends SubsystemBase {
+public class BetterDashboard extends Subsystem {
+    public static final BetterDashboard INSTANCE = new BetterDashboard();
+    private BetterDashboard() { }
     @IgnoreConfigurable
     public static TelemetryManager telemetryM;
     public double loopTime;
-    public BetterDashboard(){
-        telemetryM = PanelsTelemetry.INSTANCE.getTelemetry();
-        DrawingCopy.init();
-    }
+//    public BetterDashboard(){
+//        telemetryM = PanelsTelemetry.INSTANCE.getTelemetry();
+//        DrawingCopy.init();
+//    }
 //    public void initloopupdate(){
 //        dashboardTelem();
 //        telemetryM.update();

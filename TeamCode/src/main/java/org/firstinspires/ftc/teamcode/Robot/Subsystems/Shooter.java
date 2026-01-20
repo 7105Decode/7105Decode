@@ -4,14 +4,15 @@ package org.firstinspires.ftc.teamcode.Robot.Subsystems;
 import com.bylazar.configurables.annotations.Configurable;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.seattlesolvers.solverslib.command.SubsystemBase;
+import com.rowanmcalpin.nextftc.core.Subsystem;
 
 import org.firstinspires.ftc.teamcode.Robot.BetterDashboard;
 
-//import org.firstinspires.ftc.teamcode.Robot.BetterDashboard;
 
 @Configurable
-public class Shooter extends SubsystemBase {
+public class Shooter extends Subsystem {
+    public static final Shooter INSTANCE = new Shooter();
+    private Shooter() { }
     public DcMotor shooter;
     public static double MaxSpinSpeed = 1, HalfSpinSpeed = .5;
     public Shooter(HardwareMap hardwareMap){
