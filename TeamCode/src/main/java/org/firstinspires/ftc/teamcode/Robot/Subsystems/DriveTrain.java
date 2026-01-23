@@ -19,12 +19,18 @@ public class DriveTrain extends Subsystem {
     @IgnoreConfigurable
     static PoseHistory poseHistory;
     public DriveTrain(HardwareMap hardwareMap, Pose pose){
-        follower = Constants.createFollower(hardwareMap);
-        follower.setStartingPose(pose);
+    }
+//    new Path
+
+    @Override
+    public void initialize() {
+//        follower = Constants.createFollower(hardwareMap);
+//        follower.setStartingPose(pose);
         follower.startTeleopDrive(true);
         follower.update();
         poseHistory = follower.getPoseHistory();
     }
+
     public void initloop(){
         drawOnlyCurrent();
     }

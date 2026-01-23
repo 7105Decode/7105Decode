@@ -13,7 +13,7 @@ public class Turret extends Subsystem {
     private Turret() { }
     public static double nintydegrees_right = 750,nintydegrees_left = -750, turretforward = 0;
     public MotorEx turret;
-    public String name = "turret";
+    public String name = "topturret";
     @Override
     public void initialize() {
         turret = new MotorEx(name);
