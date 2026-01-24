@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.Robot.Subsystems;
 
+import com.bylazar.configurables.annotations.Configurable;
 import com.bylazar.configurables.annotations.IgnoreConfigurable;
 import com.pedropathing.follower.Follower;
 import com.pedropathing.geometry.Pose;
@@ -12,13 +13,13 @@ import org.firstinspires.ftc.teamcode.Constants;
 import org.firstinspires.ftc.teamcode.DrawingCopy;
 import org.firstinspires.ftc.teamcode.Robot.BetterPanels;
 
+@Configurable
 public class DriveTrain extends Subsystem {
     public static final DriveTrain INSTANCE = new DriveTrain();
     private DriveTrain() { }
     public static Follower follower;
     @IgnoreConfigurable
     static PoseHistory poseHistory;
-//    new Path
 
     public static void createFollower(HardwareMap hardwareMap){
         follower = Constants.createFollower(hardwareMap);
@@ -29,16 +30,13 @@ public class DriveTrain extends Subsystem {
 //        follower = Constants.createFollower(hardwareMap);
 //        follower.setStartingPose(pose);
     }
-
     public void setStartPose(Pose pose){
         follower.setStartingPose(pose);
     }
-
     @Override
     public void periodic() {
         driveTrainTelem();
     }
-
     public void driveTrainTelem(){
         draw();
         BetterPanels.addtelem("heading", getHeadingDegrees());

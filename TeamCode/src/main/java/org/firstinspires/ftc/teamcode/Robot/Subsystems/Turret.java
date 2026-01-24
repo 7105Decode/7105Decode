@@ -1,27 +1,32 @@
 package org.firstinspires.ftc.teamcode.Robot.Subsystems;
+
+import com.bylazar.configurables.annotations.Configurable;
 import com.qualcomm.hardware.limelightvision.Limelight3A;
+import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.rowanmcalpin.nextftc.core.Subsystem;
 import com.rowanmcalpin.nextftc.ftc.hardware.controllables.MotorEx;
 
 import org.firstinspires.ftc.teamcode.Robot.BetterPanels;
 
+@Configurable
 public class Turret extends Subsystem {
     public static final Turret INSTANCE = new Turret();
     private Turret() { }
     public static double nintydegrees_right = 750,nintydegrees_left = -750, turretforward = 0;
     public MotorEx turret;
-//    public Limelight3A limelight;
+    public static Limelight3A limelight;
     public String topturretname = "topturret";
     @Override
     public void initialize() {
         turret = new MotorEx(topturretname);
-//        limelight =
     }
     public void turretTelemetry() {
         BetterPanels.addtelem("turretpower", getPower());
         BetterPanels.addtelem("turretposition",getPosition());
     }
-
+    public static void initLimelight(HardwareMap hardwareMap){
+        limelight = hardwareMap.get(Limelight3A.class,"limelight");
+    }
     public void resetEncoder(){
         turret.resetEncoder();
     }

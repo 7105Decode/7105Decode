@@ -1,10 +1,12 @@
 package org.firstinspires.ftc.teamcode.Robot;
 
+import com.bylazar.configurables.annotations.Configurable;
 import com.bylazar.configurables.annotations.IgnoreConfigurable;
 import com.bylazar.telemetry.PanelsTelemetry;
 import com.bylazar.telemetry.TelemetryManager;
 import com.rowanmcalpin.nextftc.core.Subsystem;
 
+@Configurable
 public class BetterPanels extends Subsystem {
     public static final BetterPanels INSTANCE = new BetterPanels();
     private BetterPanels() { }

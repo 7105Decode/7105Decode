@@ -1,14 +1,9 @@
 package org.firstinspires.ftc.teamcode.Robot.Subsystems;
 
-
 import com.bylazar.configurables.annotations.Configurable;
 import com.rowanmcalpin.nextftc.core.Subsystem;
 import com.rowanmcalpin.nextftc.ftc.hardware.controllables.MotorEx;
-import com.rowanmcalpin.nextftc.ftc.hardware.controllables.MotorGroup;
-
 import org.firstinspires.ftc.teamcode.Robot.BetterPanels;
-
-
 @Configurable
 public class Shooter extends Subsystem {
     public static final Shooter INSTANCE = new Shooter();

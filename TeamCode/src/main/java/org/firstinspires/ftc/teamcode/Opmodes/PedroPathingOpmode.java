@@ -1,9 +1,11 @@
 package org.firstinspires.ftc.teamcode.Opmodes;
 
 import static org.firstinspires.ftc.teamcode.Robot.Subsystems.DriveTrain.createFollower;
+import static org.firstinspires.ftc.teamcode.Robot.Subsystems.Turret.initLimelight;
 
 import com.pedropathing.geometry.Pose;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.rowanmcalpin.nextftc.core.command.Command;
 import com.rowanmcalpin.nextftc.core.command.groups.ParallelGroup;
 import com.rowanmcalpin.nextftc.core.command.groups.SequentialGroup;
@@ -12,14 +14,15 @@ import com.rowanmcalpin.nextftc.pedro.PedroOpMode;
 
 import org.firstinspires.ftc.teamcode.Robot.BetterPanels;
 import org.firstinspires.ftc.teamcode.Robot.Subsystems.DriveTrain;
+import org.firstinspires.ftc.teamcode.Robot.Subsystems.Intake;
 import org.firstinspires.ftc.teamcode.Robot.Subsystems.Shooter;
 import org.firstinspires.ftc.teamcode.Robot.Subsystems.Transfer;
 import org.firstinspires.ftc.teamcode.Robot.Subsystems.Turret;
 
-@Autonomous
+@TeleOp
 public class PedroPathingOpmode extends PedroOpMode {
         public PedroPathingOpmode() {
-            super(Transfer.INSTANCE, Turret.INSTANCE, DriveTrain.INSTANCE,BetterPanels.INSTANCE,Shooter.INSTANCE);
+            super(Transfer.INSTANCE, Turret.INSTANCE, DriveTrain.INSTANCE,BetterPanels.INSTANCE,Shooter.INSTANCE, Intake.INSTANCE);
 }
 
         private final Pose startPose = new Pose(9.0, 60.0, Math.toRadians(0.0));
@@ -49,6 +52,7 @@ public class PedroPathingOpmode extends PedroOpMode {
         @Override
         public void onInit() {
             createFollower(hardwareMap);
+            initLimelight(hardwareMap);
 //            DriveTrain.follower.setStartingPose(startPose);
 //            buildPaths();
         }
