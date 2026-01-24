@@ -2,45 +2,54 @@ package org.firstinspires.ftc.teamcode.Robot.Subsystems;
 
 
 import com.bylazar.configurables.annotations.Configurable;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.rowanmcalpin.nextftc.core.Subsystem;
+import com.rowanmcalpin.nextftc.ftc.hardware.controllables.MotorEx;
+import com.rowanmcalpin.nextftc.ftc.hardware.controllables.MotorGroup;
 
-import org.firstinspires.ftc.teamcode.Robot.BetterDashboard;
+import org.firstinspires.ftc.teamcode.Robot.BetterPanels;
 
 
 @Configurable
 public class Shooter extends Subsystem {
     public static final Shooter INSTANCE = new Shooter();
     private Shooter() { }
-    public DcMotor shooter;
+    public MotorEx rightshooter,leftshooter;
+//    MotorGroup shooterGroup;
     public static double MaxSpinSpeed = 1, HalfSpinSpeed = .5;
-    public Shooter(HardwareMap hardwareMap){
-        shooter = hardwareMap.get(DcMotor.class,"rightshooter");
-    }
-    public void resetShooter(){
-        shooter.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        shooter.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-    }
+    public String rightshootername = "rightshooter", leftshootername = "leftshooter";
 
+    @Override
+    public void initialize() {
+        rightshooter = new MotorEx(rightshootername);
+        leftshooter = new MotorEx(leftshootername);
+//        shooterGroup = new MotorGroup(leftshootername, rightshootername);
+    }
     @Override
     public void periodic() {
         shooterTelem();
     }
+    public void resetShooter(){
+        leftshooter.resetEncoder();
+    }
+
+    public double shooterVel(){
+        return leftshooter.getVelocity();
+    }
+
 
     public void shooterTelem() {
-        BetterDashboard.addtelem("shooterpower", shooter.getPower());
+        BetterPanels.addtelem("shootervel", shooterVel());
     }
     public void setShooterStates(ShooterStates shooterStates){
         switch (shooterStates){
             case MAXSPEED:
-                shooter.setPower(MaxSpinSpeed);
+                rightshooter.setPower(MaxSpinSpeed);
                 break;
             case HALFSPEED:
-                shooter.setPower(HalfSpinSpeed);
+                rightshooter.setPower(HalfSpinSpeed);
                 break;
             case STOP:
-                shooter.setPower(0);
+                rightshooter.setPower(0);
                 break;
         }
     }

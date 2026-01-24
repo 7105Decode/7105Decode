@@ -1,12 +1,13 @@
 package org.firstinspires.ftc.teamcode.Robot;
 
 import com.bylazar.configurables.annotations.IgnoreConfigurable;
+import com.bylazar.telemetry.PanelsTelemetry;
 import com.bylazar.telemetry.TelemetryManager;
 import com.rowanmcalpin.nextftc.core.Subsystem;
 
-public class BetterDashboard extends Subsystem {
-    public static final BetterDashboard INSTANCE = new BetterDashboard();
-    private BetterDashboard() { }
+public class BetterPanels extends Subsystem {
+    public static final BetterPanels INSTANCE = new BetterPanels();
+    private BetterPanels() { }
     @IgnoreConfigurable
     public static TelemetryManager telemetryM;
     public double loopTime;
@@ -23,10 +24,17 @@ public class BetterDashboard extends Subsystem {
 //        telemetryM.update();
 //    }
 
-//    @Override
-//    public void periodic() {
-//        dashboardTelem();
-//    }
+
+    @Override
+    public void initialize() {
+        telemetryM = PanelsTelemetry.INSTANCE.getTelemetry();
+        dashboardTelem();
+    }
+
+    @Override
+    public void periodic() {
+        dashboardTelem();
+    }
 
     public static void addtelem(String name, Object packet){
         telemetryM.addData(name,packet);

@@ -10,29 +10,28 @@ import com.rowanmcalpin.nextftc.core.Subsystem;
 
 import org.firstinspires.ftc.teamcode.Constants;
 import org.firstinspires.ftc.teamcode.DrawingCopy;
-import org.firstinspires.ftc.teamcode.Robot.BetterDashboard;
+import org.firstinspires.ftc.teamcode.Robot.BetterPanels;
 
 public class DriveTrain extends Subsystem {
     public static final DriveTrain INSTANCE = new DriveTrain();
     private DriveTrain() { }
-    public Follower follower;
+    public static Follower follower;
     @IgnoreConfigurable
     static PoseHistory poseHistory;
-    public DriveTrain(HardwareMap hardwareMap, Pose pose){
-    }
 //    new Path
+
+    public static void createFollower(HardwareMap hardwareMap){
+        follower = Constants.createFollower(hardwareMap);
+    }
 
     @Override
     public void initialize() {
 //        follower = Constants.createFollower(hardwareMap);
 //        follower.setStartingPose(pose);
-        follower.startTeleopDrive(true);
-        follower.update();
-        poseHistory = follower.getPoseHistory();
     }
 
-    public void initloop(){
-        drawOnlyCurrent();
+    public void setStartPose(Pose pose){
+        follower.setStartingPose(pose);
     }
 
     @Override
@@ -42,9 +41,9 @@ public class DriveTrain extends Subsystem {
 
     public void driveTrainTelem(){
         draw();
-        BetterDashboard.addtelem("heading", getHeadingDegrees());
-        BetterDashboard.addtelem("x",getX());
-        BetterDashboard.addtelem("y",getY());
+        BetterPanels.addtelem("heading", getHeadingDegrees());
+        BetterPanels.addtelem("x",getX());
+        BetterPanels.addtelem("y",getY());
     }
     public double getHeadingDegrees(){
         return Math.toRadians(follower.getHeading());
