@@ -2,22 +2,22 @@ package org.firstinspires.ftc.teamcode.Robot.Commands;
 
 import static org.firstinspires.ftc.teamcode.Robot.Subsystems.Intake.intakeSpeed;
 
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.rowanmcalpin.nextftc.core.Subsystem;
 import com.rowanmcalpin.nextftc.core.command.Command;
-
 import org.firstinspires.ftc.teamcode.Robot.Subsystems.Intake;
-
 import java.util.Set;
-
 public class RunIntakeTele extends Command {
 
     private final Set<Subsystem> subsystems;
-    private final boolean interruptible = true;
+    public boolean interruptible = false;
     Gamepad gamepad1;
     public RunIntakeTele(Set<Subsystem> subsystems, Gamepad gamepad1) {
         this.subsystems = subsystems;
         this.gamepad1 = gamepad1;
+        interruptible = false;
     }
     @Override
     public boolean isDone() {
