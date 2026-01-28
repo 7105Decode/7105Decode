@@ -1,14 +1,12 @@
 package org.firstinspires.ftc.teamcode.Opmodes;
 
 import static org.firstinspires.ftc.teamcode.Robot.Subsystems.DriveTrain.createFollower;
-import static org.firstinspires.ftc.teamcode.Robot.Subsystems.Turret.initLimelight;
+import static org.firstinspires.ftc.teamcode.Robot.Subsystems.Turret.startlimelight;
 
 import com.pedropathing.geometry.BezierLine;
 import com.pedropathing.geometry.Pose;
 import com.pedropathing.paths.Path;
-import com.pedropathing.paths.PathChain;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.rowanmcalpin.nextftc.core.command.Command;
 import com.rowanmcalpin.nextftc.core.command.groups.ParallelGroup;
 import com.rowanmcalpin.nextftc.core.command.groups.SequentialGroup;
@@ -34,14 +32,12 @@ public class PedroPathingOpmode extends PedroOpMode {
         FollowPath followPath = new FollowPath(DriveTrain.INSTANCE,path);
         public Command secondRoutine() {
             return new SequentialGroup(
-                    new ParallelGroup(followPath,Transfer.INSTANCE.transfer_LeftArtifact()),
-                    new Delay(1),
-                    new ParallelGroup(Transfer.INSTANCE.down_LeftArtifact()));
+                    followPath);
         }
         @Override
         public void onInit() {
             createFollower(hardwareMap);
-            initLimelight(hardwareMap);
+            startlimelight();
         }
 
         @Override

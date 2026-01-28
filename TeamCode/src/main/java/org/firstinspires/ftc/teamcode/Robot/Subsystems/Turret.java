@@ -1,9 +1,11 @@
 package org.firstinspires.ftc.teamcode.Robot.Subsystems;
 
 import com.bylazar.configurables.annotations.Configurable;
+import com.qualcomm.hardware.limelightvision.LLResult;
 import com.qualcomm.hardware.limelightvision.Limelight3A;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.rowanmcalpin.nextftc.core.Subsystem;
+import com.rowanmcalpin.nextftc.ftc.OpModeData;
 import com.rowanmcalpin.nextftc.ftc.hardware.controllables.MotorEx;
 
 import org.firstinspires.ftc.teamcode.Robot.BetterPanels;
@@ -15,20 +17,34 @@ public class Turret extends Subsystem {
     public static double nintydegrees_right = 750,nintydegrees_left = -750, turretforward = 0;
     public MotorEx turret;
     public static Limelight3A limelight;
+    LLResult result;
     public String topturretname = "topturret";
+    public boolean startLimelight = false;
     @Override
     public void initialize() {
+//        result = limelight.getLatestResult();
         turret = new MotorEx(topturretname);
+        limelight = OpModeData.hardwareMap.get(Limelight3A.class,"limelight");
+    }
+    @Override
+    public void periodic() {
+        result = limelight.getLatestResult();
+    }
+    public static void startlimelight(){
+        limelight.start();
     }
     public void turretTelemetry() {
         BetterPanels.addtelem("turretpower", getPower());
         BetterPanels.addtelem("turretposition",getPosition());
     }
-    public static void initLimelight(HardwareMap hardwareMap){
-        limelight = hardwareMap.get(Limelight3A.class,"limelight");
-    }
     public void resetEncoder(){
         turret.resetEncoder();
+    }
+    public double getTy(){
+        return result.getTy();
+    }
+    public double getTx(){
+        return result.getTx();
     }
     public double getPosition(){
         return turret.getCurrentPosition();

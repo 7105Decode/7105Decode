@@ -16,7 +16,7 @@ public class FollowPath extends Command {
     }
     @Override
     public boolean isDone() {
-        return DriveTrain.follower.atParametricEnd() &&DriveTrain.follower.getHeadingError() < 5; // Whether or not the command is done
+        return !DriveTrain.follower.isBusy(); // Whether or not the command is done
     }
     @Override
     public void start() {
@@ -28,6 +28,5 @@ public class FollowPath extends Command {
 
     @Override
     public void stop(boolean interrupted) {
-
     }
 }
