@@ -23,7 +23,7 @@ public class FollowPath extends Command {
     }
     @Override
     public void update() {
-       z
+
     }
 
     @Override

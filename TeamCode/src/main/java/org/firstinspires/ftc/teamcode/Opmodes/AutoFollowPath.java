@@ -29,7 +29,7 @@ public class AutoFollowPath extends PedroOpMode /* (Claw, Lift) */ {
         buildPaths();
 
         SequentialGroup routine = new SequentialGroup(
-                new FollowPath(move)
+//                new FollowPath(move)
                 // more commands...
         );
 
