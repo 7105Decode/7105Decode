@@ -4,10 +4,8 @@ import com.ThermalEquilibrium.homeostasis.Controllers.Feedback.BasicPID;
 import com.ThermalEquilibrium.homeostasis.Parameters.PIDCoefficients;
 import com.bylazar.configurables.annotations.Configurable;
 import com.rowanmcalpin.nextftc.core.Subsystem;
-import com.rowanmcalpin.nextftc.core.command.Command;
-import com.rowanmcalpin.nextftc.core.control.controllers.PIDFController;
 import com.rowanmcalpin.nextftc.ftc.hardware.controllables.MotorEx;
-import org.firstinspires.ftc.teamcode.Robot.BetterPanels;
+import org.firstinspires.ftc.teamcode.Robot.MoreConvenientTelemetry;
 @Configurable
 public class Shooter extends Subsystem {
     public static final Shooter INSTANCE = new Shooter();
@@ -51,7 +49,7 @@ public class Shooter extends Subsystem {
         leftshooter.setPower(-1*shooterpid.calculate(targetvel,shooterVel()));
     }
     public void shooterTelem() {
-        BetterPanels.addtelem("shootervel", shooterVel());
+        MoreConvenientTelemetry.addtelem("shootervel", shooterVel());
     }
     public void setShooterStates(ShooterStates shooterStates){
         switch (shooterStates){

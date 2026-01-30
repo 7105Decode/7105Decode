@@ -6,26 +6,16 @@ import com.bylazar.telemetry.PanelsTelemetry;
 import com.bylazar.telemetry.TelemetryManager;
 import com.rowanmcalpin.nextftc.core.Subsystem;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
+
 @Configurable
-public class BetterPanels extends Subsystem {
-    public static final BetterPanels INSTANCE = new BetterPanels();
-    private BetterPanels() { }
+public class MoreConvenientTelemetry extends Subsystem {
+    public static final MoreConvenientTelemetry INSTANCE = new MoreConvenientTelemetry();
+    private MoreConvenientTelemetry() { }
     @IgnoreConfigurable
     public static TelemetryManager telemetryM;
+    public static Telemetry telemetry;
     public double loopTime;
-//    public BetterDashboard(){
-//        telemetryM = PanelsTelemetry.INSTANCE.getTelemetry();
-//        DrawingCopy.init();
-//    }
-//    public void initloopupdate(){
-//        dashboardTelem();
-//        telemetryM.update();
-//    }
-//    public void initrunupdate(){
-//        dashboardTelem();
-//        telemetryM.update();
-//    }
-
 
     @Override
     public void initialize() {
@@ -37,9 +27,13 @@ public class BetterPanels extends Subsystem {
     public void periodic() {
         dashboardTelem();
     }
+    public void setTelemetry(Telemetry telemetry){
+        this.telemetry = telemetry;
+    }
 
     public static void addtelem(String name, Object packet){
         telemetryM.addData(name,packet);
+        telemetry.addData(name,packet);
     }
     public void dashboardTelem(){
         double loop = System.nanoTime();

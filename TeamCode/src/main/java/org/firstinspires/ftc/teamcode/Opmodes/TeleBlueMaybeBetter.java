@@ -45,7 +45,7 @@ public class TeleBlueMaybeBetter extends LinearOpMode {
     Follower follower;
 
     public static boolean gotRightColor = false, gotMidColor = false, gotLeftColor = false;
-    public static double ty = 0,transferthreshold = 1.2,leftvel = 0, lpadpos=.274,rpadppos=0.265,targetvel = -2280,hoodup = .965, hooddown = 0.055,shooterspeed = 0, lefttransferservopos = 0.04, midtransferservopos = .13,righttransferservopos = 0.095;
+    public static double ty = 0,transferthreshold = 1,leftvel = 0, lpadpos=.274,rpadppos=0.265,targetvel = -2280,hoodup = .965, hooddown = 0.055,shooterspeed = 0, lefttransferservopos = 0.085, midtransferservopos = 0.095,righttransferservopos = 0.11;
     @Override
     public void runOpMode() {
         limelight = hardwareMap.get(Limelight3A.class, "limelight");
@@ -157,7 +157,7 @@ public class TeleBlueMaybeBetter extends LinearOpMode {
                     rightled.setPosition(.5);
                     gotRightColor = true;
                 }
-            } else if (gotRightColor) {
+            } else if (!gotRightColor) {
                 rightled.setPosition(0);
             }
             if(middlecolorSensor.rawOptical() > 135 && !gotMidColor){
@@ -184,7 +184,7 @@ public class TeleBlueMaybeBetter extends LinearOpMode {
                     midled.setPosition(.722);
                     gotMidColor = true;
                 }
-            } else if (gotMidColor){
+            } else if (!gotMidColor){
                 midled.setPosition(0);
             }
             if (leftcolorSensor.rawOptical() > 170 && !gotLeftColor){
@@ -203,7 +203,7 @@ public class TeleBlueMaybeBetter extends LinearOpMode {
                     leftled.setPosition(.5);
                     gotLeftColor = true;
                 }
-            }else if (gotLeftColor) {
+            }else if (!gotLeftColor) {
                 leftled.setPosition(0);
             }
 

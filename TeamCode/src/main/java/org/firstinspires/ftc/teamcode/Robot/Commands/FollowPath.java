@@ -7,7 +7,7 @@ import org.firstinspires.ftc.teamcode.Robot.Subsystems.DriveTrain;
 
 public class FollowPath extends Command {
     private final Subsystem subsystem;
-    public boolean interruptible;
+    public boolean interruptible, done;
     Path path;
     public FollowPath(Subsystem subsystem, Path path) {
         this.subsystem = subsystem;
@@ -16,14 +16,18 @@ public class FollowPath extends Command {
     }
     @Override
     public boolean isDone() {
-        return !DriveTrain.follower.isBusy(); // Whether or not the command is done
+        return done; // Whether or not the command is done
     }
     @Override
     public void start() {
+        done = false;
     }
     @Override
     public void update() {
-
+        if (!DriveTrain.follower.isBusy()){
+            done = true;
+        }
+        DriveTrain.follower.followPath(path,true);
     }
 
     @Override

@@ -5,12 +5,11 @@ import com.qualcomm.robotcore.hardware.Gamepad;
 import com.rowanmcalpin.nextftc.core.Subsystem;
 import com.rowanmcalpin.nextftc.ftc.hardware.controllables.MotorEx;
 
-import org.firstinspires.ftc.teamcode.Robot.BetterPanels;
 @Configurable
 public class Intake extends Subsystem {
     public static final Intake INSTANCE = new Intake();
     private Intake() { }
-    public MotorEx intake;
+    public static MotorEx intake;
     public static double intakeSpeed = 1;
     public String intakename = "frontintake";
     @Override
@@ -22,7 +21,13 @@ public class Intake extends Subsystem {
     }
     public void intakeTelem() {
     }
-    public void runIntakeTele(Gamepad gamepad1){
-
+    public static void runIntakeTele(Gamepad gamepad1){
+        if (gamepad1.left_trigger > .4){
+            intake.setPower(-intakeSpeed);
+        } else if (gamepad1.right_trigger > .4) {
+            intake.setPower(intakeSpeed);
+        } else {
+            intake.setPower(0);
+        }
     }
 }

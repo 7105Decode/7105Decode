@@ -11,7 +11,7 @@ import com.rowanmcalpin.nextftc.core.Subsystem;
 
 import org.firstinspires.ftc.teamcode.Constants;
 import org.firstinspires.ftc.teamcode.DrawingCopy;
-import org.firstinspires.ftc.teamcode.Robot.BetterPanels;
+import org.firstinspires.ftc.teamcode.Robot.MoreConvenientTelemetry;
 
 @Configurable
 public class DriveTrain extends Subsystem {
@@ -21,7 +21,7 @@ public class DriveTrain extends Subsystem {
     @IgnoreConfigurable
     static PoseHistory poseHistory;
 
-    public static void createFollower(HardwareMap hardwareMap){
+    public void createFollower(HardwareMap hardwareMap){
         follower = Constants.createFollower(hardwareMap);
     }
 
@@ -39,9 +39,9 @@ public class DriveTrain extends Subsystem {
     }
     public void driveTrainTelem(){
         draw();
-        BetterPanels.addtelem("heading", getHeadingDegrees());
-        BetterPanels.addtelem("x",getX());
-        BetterPanels.addtelem("y",getY());
+        MoreConvenientTelemetry.addtelem("heading", getHeadingDegrees());
+        MoreConvenientTelemetry.addtelem("x",getX());
+        MoreConvenientTelemetry.addtelem("y",getY());
     }
     public double getHeadingDegrees(){
         return Math.toRadians(follower.getHeading());
@@ -57,6 +57,9 @@ public class DriveTrain extends Subsystem {
     }
     public void fieldCentricDrive(Gamepad gamepad){
         follower.setTeleOpDrive(-gamepad.left_stick_y, -gamepad.left_stick_x, -gamepad.right_stick_x, true);
+    }
+    public void updateFollower(){
+        follower.update();
     }
     public void drawOnlyCurrent() {
         try {

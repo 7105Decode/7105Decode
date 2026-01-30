@@ -3,44 +3,43 @@ package org.firstinspires.ftc.teamcode.Robot.Subsystems;
 import com.bylazar.configurables.annotations.Configurable;
 import com.qualcomm.hardware.limelightvision.LLResult;
 import com.qualcomm.hardware.limelightvision.Limelight3A;
-import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.rowanmcalpin.nextftc.core.Subsystem;
 import com.rowanmcalpin.nextftc.ftc.OpModeData;
 import com.rowanmcalpin.nextftc.ftc.hardware.controllables.MotorEx;
 
-import org.firstinspires.ftc.teamcode.Robot.BetterPanels;
+import org.firstinspires.ftc.teamcode.Robot.MoreConvenientTelemetry;
 
 @Configurable
 public class Turret extends Subsystem {
     public static final Turret INSTANCE = new Turret();
     private Turret() { }
     public static double nintydegrees_right = 750,nintydegrees_left = -750, turretforward = 0;
-    public MotorEx turret;
-    public static Limelight3A limelight;
-    LLResult result;
+    public static  MotorEx turret;
+    public Limelight3A limelight;
+    public static LLResult result;
     public String topturretname = "topturret";
     public boolean startLimelight = false;
     @Override
     public void initialize() {
-//        result = limelight.getLatestResult();
         turret = new MotorEx(topturretname);
         limelight = OpModeData.hardwareMap.get(Limelight3A.class,"limelight");
+        limelight.start();
     }
     @Override
     public void periodic() {
         result = limelight.getLatestResult();
     }
-    public static void startlimelight(){
-        limelight.start();
-    }
+//    public static void startlimelight(){
+//        limelight.start();
+//    }
     public void turretTelemetry() {
-        BetterPanels.addtelem("turretpower", getPower());
-        BetterPanels.addtelem("turretposition",getPosition());
+        MoreConvenientTelemetry.addtelem("turretpower", getPower());
+        MoreConvenientTelemetry.addtelem("turretposition",getPosition());
     }
     public void resetEncoder(){
         turret.resetEncoder();
     }
-    public double getTy(){
+    public static double getTy(){
         return result.getTy();
     }
     public double getTx(){
@@ -51,6 +50,19 @@ public class Turret extends Subsystem {
     }
     public double getPower(){
         return turret.getPower();
+    }
+    public static void aprilTagBangBangTeleop(){
+        if (getTy() <= -8.5 && result.isValid()) {
+            turret.setPower(-.3);
+        } else if (getTy() > -8.5 && getTy() < .3) {
+            turret.setPower(-.09);
+        } else if (getTy() >= 9.5) {
+            turret.setPower(.3);
+        } else if (getTy() > .7) {
+            turret.setPower(.09);
+        } else {
+            turret.setPower(0);
+        }
     }
     public double getError(double reference){
         return reference - getPosition();
