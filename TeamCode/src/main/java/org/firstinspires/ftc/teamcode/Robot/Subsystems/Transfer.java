@@ -5,6 +5,8 @@ import com.qualcomm.hardware.rev.RevColorSensorV3;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.rowanmcalpin.nextftc.core.Subsystem;
 import com.rowanmcalpin.nextftc.core.command.Command;
+import com.rowanmcalpin.nextftc.core.command.groups.ParallelGroup;
+import com.rowanmcalpin.nextftc.core.command.utility.delays.Delay;
 import com.rowanmcalpin.nextftc.ftc.OpModeData;
 import com.rowanmcalpin.nextftc.ftc.hardware.ServoToPosition;
 
@@ -64,9 +66,12 @@ public class Transfer extends Subsystem {
                 leftreadytransferpos, // POSITION TO MOVE TO
                 this); // IMPLEMENTED SUBSYSTEM
     }
-    public Command readyForTransfer_MidArtifact() {
+    public Command enableMidTransfer() {
         return new ServoToPosition(midtransfer, // SERVO TO MOVE
                 midreadytransferpos, // POSITION TO MOVE TO
                 this); // IMPLEMENTED SUBSYSTEM
+    }
+    public Command readyForTransfer_MidArtifact(Command firstTransfer, Command secondTransfer){
+        return new ParallelGroup(firstTransfer,new Delay(.7).then(secondTransfer));
     }
 }
