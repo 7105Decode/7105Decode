@@ -1,18 +1,19 @@
 package org.firstinspires.ftc.teamcode.Robot.Commands;
 
+import static org.firstinspires.ftc.teamcode.Robot.Subsystems.Turret.aprilTagBangBangTeleop;
+
 import com.qualcomm.hardware.limelightvision.LLResult;
 import com.qualcomm.hardware.limelightvision.Limelight3A;
+import com.qualcomm.robotcore.hardware.Gamepad;
 import com.rowanmcalpin.nextftc.core.Subsystem;
 import com.rowanmcalpin.nextftc.core.command.Command;
 
 import org.firstinspires.ftc.teamcode.Robot.Subsystems.Turret;
 
 public class TrackAprilTag_BangBang extends Command {
-    Limelight3A limelight;
-    Subsystem subsystem;
-    public TrackAprilTag_BangBang(Limelight3A limelight, Turret turret){
-        this.limelight = limelight;
-        this.subsystem = turret;
+    Gamepad gamepad;
+    public TrackAprilTag_BangBang(Gamepad gamepad){
+        this.gamepad = gamepad;
     }
     @Override
     public void start() {
@@ -20,7 +21,7 @@ public class TrackAprilTag_BangBang extends Command {
     }
     @Override
     public void update() {
-
+        aprilTagBangBangTeleop(gamepad);
     }
 
 

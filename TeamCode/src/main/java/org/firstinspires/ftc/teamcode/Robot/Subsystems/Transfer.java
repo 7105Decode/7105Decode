@@ -22,7 +22,7 @@ public class Transfer extends Subsystem {
         midtransfer = OpModeData.INSTANCE.getHardwareMap().get(Servo.class, "midtransfer");
         rightsensor = OpModeData.INSTANCE.getHardwareMap().get(RevColorSensorV3.class,"rightcolorsensor");
         leftsensor = OpModeData.INSTANCE.getHardwareMap().get(RevColorSensorV3.class,"leftcolorsensor");
-        midsensor = OpModeData.INSTANCE.getHardwareMap().get(RevColorSensorV3.class,"midcolorsensor");
+        midsensor = OpModeData.INSTANCE.getHardwareMap().get(RevColorSensorV3.class,"middlecolorsensor");
     }
     public Command transfer_RightArtifact() {
         return new ServoToPosition(righttransfer, // SERVO TO MOVE

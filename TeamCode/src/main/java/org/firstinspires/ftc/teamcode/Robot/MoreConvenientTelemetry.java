@@ -14,7 +14,7 @@ public class MoreConvenientTelemetry extends Subsystem {
     private MoreConvenientTelemetry() { }
     @IgnoreConfigurable
     public static TelemetryManager telemetryM;
-    public static Telemetry telemetry;
+//    public static Telemetry telemetry;
     public double loopTime;
 
     @Override
@@ -27,13 +27,13 @@ public class MoreConvenientTelemetry extends Subsystem {
     public void periodic() {
         dashboardTelem();
     }
-    public void setTelemetry(Telemetry telemetry){
-        this.telemetry = telemetry;
-    }
+//    public void setTelemetry(Telemetry telemetry){
+//        this.telemetry = telemetry;
+//    }
 
     public static void addtelem(String name, Object packet){
         telemetryM.addData(name,packet);
-        telemetry.addData(name,packet);
+//        telemetry.addData(name,packet);
     }
     public void dashboardTelem(){
         double loop = System.nanoTime();
