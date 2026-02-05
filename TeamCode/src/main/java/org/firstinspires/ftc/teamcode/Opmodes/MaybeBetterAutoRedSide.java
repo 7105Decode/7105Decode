@@ -115,23 +115,23 @@ public class MaybeBetterAutoRedSide extends LinearOpMode {
 
             } else if  (timer.seconds() < 16.7){
                 // initial move to first waypoint
-               follower.followPath(new Path(new BeziarLine(startPose,firstmove)));
+               follower.followPath(new Path(new BezierLine(startPose,firstmove)));
                 follower.update();
             } else if (timer.seconds() < 19.0) {
                 // strafe right while spinning intake
-                follower.followPath(new Path(new BeziarLine(firstmove,secondmove)));
+                follower.followPath(new Path(new BezierLine(firstmove,secondmove)));
                 frontintake.setPower(1);
                 follower.update();
             } else if (timer.seconds() < 19.9) {
                 // strafe back left (return a bit) before additional repositioning
-                follower.followPath(new Path(new BeziarLine(secondmove,thirdmove)));
+                follower.followPath(new Path(new BezierLine(secondmove,thirdmove)));
                 // stop intake while repositioning
                 frontintake.setPower(0);
                 follower.update();
             } else if (timer.seconds() < 20.5) {
                 // small move back toward fourth waypoint before spinning shooters
-                follower.followPath(new Path(new BeziarLine(thirdmove,fourthmove)));
-                fllower.update();o
+                follower.followPath(new Path(new BezierLine(thirdmove,fourthmove)));
+                follower.update();
             } else if (timer.seconds() < 22.0) {
                 // spin shooters up
                 frontintake.setPower(0);
@@ -152,8 +152,8 @@ public class MaybeBetterAutoRedSide extends LinearOpMode {
                 // stop shooters and start following a path home if not started
                 rightshooter.setPower(0);
                 leftshooter.setPower(0);
-            }   follower.followPath(new Path(new BeziarLine(fourthmove,fifthmovehmove)));
-                fllower.update();o
+            }   follower.followPath(new Path(new BezierLine(fourthmove,fifthmove)));
+                follower.update();
 
         }
     }
