@@ -117,12 +117,12 @@ public class AutoRedLimelightPreSense extends LinearOpMode {
                 } else {
                     lefttransfer.setPosition(.7);
                 }
-            } else if (timer.seconds() < 6.2) {
+            } else if (timer.seconds() < 5.5) {
                 rightshooter.setPower(-1*shooterpid.calculate(targetvel,leftvel));
                 leftshooter.setPower(-1*shooterpid.calculate(targetvel,leftvel));
                 lefttransfer.setPosition(lefttransferservopos);
                 midtransfer.setPosition(midtransferservopos);
-            } else if (timer.seconds() < 7) {
+            } else if (timer.seconds() < 6.5) {
                 rightshooter.setPower(-1*shooterpid.calculate(targetvel,leftvel));
                 leftshooter.setPower(-1*shooterpid.calculate(targetvel,leftvel));
                 if (greenInMid){
@@ -130,12 +130,12 @@ public class AutoRedLimelightPreSense extends LinearOpMode {
                 } else {
                     righttransfer.setPosition(.7);
                 }
-            } else if (timer.seconds() < 8.2) {
+            } else if (timer.seconds() < 7) {
                 rightshooter.setPower(-1*shooterpid.calculate(targetvel,leftvel));
                 leftshooter.setPower(-1*shooterpid.calculate(targetvel,leftvel));
                 midtransfer.setPosition(midtransferservopos);
                 righttransfer.setPosition(righttransferservopos);
-            } else if (timer.seconds() < 9) {
+            } else if (timer.seconds() < 8.5) {
                 rightshooter.setPower(-1*shooterpid.calculate(targetvel,leftvel));
                 leftshooter.setPower(-1*shooterpid.calculate(targetvel,leftvel));
                 if (greenLast){
@@ -145,7 +145,7 @@ public class AutoRedLimelightPreSense extends LinearOpMode {
                 } else {
                     righttransfer.setPosition(.7);
                 }
-            } else if (timer.seconds() < 10.2) {
+            } else if (timer.seconds() < 9.5) {
                 rightshooter.setPower(0);
                 midtransfer.setPosition(0);
                 leftshooter.setPower(0);
@@ -154,7 +154,7 @@ public class AutoRedLimelightPreSense extends LinearOpMode {
                 rightshooter.setPower(0);
                 leftshooter.setPower(0);
 
-            } else if  (timer.seconds() < 13.2){
+            } else if  (timer.seconds() < 11){
                 topturret.setPower(pid.calculate(900,topturret.getCurrentPosition()));
                 follower.setTeleOpDrive(0.27, 0, 0);
 //                follower.followPath(new Path(new BezierLine(new Pose(77,5, Math.toRadians(0)),new Pose(84,5, Math.toRadians(0)))));
@@ -162,7 +162,7 @@ public class AutoRedLimelightPreSense extends LinearOpMode {
             } else {
                 follower.setTeleOpDrive(0, 0, 0);
                 follower.update();
-            }
+            }   
 
         }
     }

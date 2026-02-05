@@ -10,6 +10,7 @@ public class Shooter extends Subsystem {
     private Shooter() { }
     public MotorEx rightshooter,leftshooter;
 //    MotorGroup shooterGroup;
+     BasicPID shooterpid;
     public static double MaxSpinSpeed = 1, HalfSpinSpeed = .5;
     public String rightshootername = "rightshooter", leftshootername = "leftshooter";
 
@@ -31,6 +32,9 @@ public class Shooter extends Subsystem {
         return leftshooter.getVelocity();
     }
 
+    public pController(){
+        return 
+    }
 
     public void shooterTelem() {
         BetterPanels.addtelem("shootervel", shooterVel());

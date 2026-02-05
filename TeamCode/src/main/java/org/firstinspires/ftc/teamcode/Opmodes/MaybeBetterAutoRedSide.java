@@ -30,10 +30,12 @@ import org.firstinspires.ftc.teamcode.Constants;
 @Autonomous
 public class MaybeBetterAutoRedSide extends LinearOpMode {
     Follower follower;
-    DcMotorEx rightshooter,leftshooter,topturret;
+    DcMotorEx rightshooter,leftshooter,topturret, frontintake;
     Servo righttransfer, midtransfer,lefttransfer, hood;
     BasicPID pid, shooterpid;
     ElapsedTime timer = new ElapsedTime();
+    Pose startPose;
+    boolean endPathStarted = false;
     public static PIDCoefficients pidCoefficients, shooterCoef;
     @Override
     public void runOpMode() throws InterruptedException {
@@ -44,9 +46,11 @@ public class MaybeBetterAutoRedSide extends LinearOpMode {
         righttransfer = hardwareMap.get(Servo.class,"righttransfer");
         midtransfer = hardwareMap.get(Servo.class,"midtransfer");
         lefttransfer = hardwareMap.get(Servo.class,"lefttransfer");
+        frontintake = hardwareMap.get(DcMotorEx.class, "frontintake");
 
         follower = Constants.createFollower(hardwareMap);
-        follower.setStartingPose(new Pose(77,5, Math.toRadians(0)));
+        startPose = new Pose(77,5, Math.toRadians(0));
+        follower.setStartingPose(startPose);
         follower.update();
         righttransfer.setDirection(Servo.Direction.REVERSE);
         rightshooter.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -68,32 +72,32 @@ public class MaybeBetterAutoRedSide extends LinearOpMode {
         targetvel = -2280;
         while (opModeIsActive()){
             leftvel = leftshooter.getVelocity();
-            if (timer.seconds()<1.5){
+            if (timer.seconds()<1){
                 topturret.setPower(pid.calculate(-935,topturret.getCurrentPosition()));
-            } else if (timer.seconds()<3) {
+            } else if (timer.seconds()<1.5) {
                 rightshooter.setPower(-1*shooterpid.calculate(targetvel,leftvel));
                 leftshooter.setPower(-1*shooterpid.calculate(targetvel,leftvel));
-            } else if (timer.seconds() < 9) {
+            } else if (timer.seconds() < 3) {
                 rightshooter.setPower(-1*shooterpid.calculate(targetvel,leftvel));
                 leftshooter.setPower(-1*shooterpid.calculate(targetvel,leftvel));
                 lefttransfer.setPosition(.7);}
-            else if (timer.seconds() < 10.5) {
+            else if (timer.seconds() < 4.5) {
                 rightshooter.setPower(-1*shooterpid.calculate(targetvel,leftvel));
                 leftshooter.setPower(-1*shooterpid.calculate(targetvel,leftvel));
                 lefttransfer.setPosition(lefttransferservopos);
-            } else if (timer.seconds() < 11.5) {
+            } else if (timer.seconds() < 6) {
                 rightshooter.setPower(-1*shooterpid.calculate(targetvel,leftvel));
                 leftshooter.setPower(-1*shooterpid.calculate(targetvel,leftvel));
                 midtransfer.setPosition(.7);
-            } else if (timer.seconds() < 13) {
+            } else if (timer.seconds() < 7.5) {
                 rightshooter.setPower(-1*shooterpid.calculate(targetvel,leftvel));
                 leftshooter.setPower(-1*shooterpid.calculate(targetvel,leftvel));
                 midtransfer.setPosition(midtransferservopos);
-            } else if (timer.seconds() < 14) {
+            } else if (timer.seconds() < 9) {
                 rightshooter.setPower(-1*shooterpid.calculate(targetvel,leftvel));
                 leftshooter.setPower(-1*shooterpid.calculate(targetvel,leftvel));
                 righttransfer.setPosition(.7);
-            } else if (timer.seconds() < 15.5) {
+            } else if (timer.seconds() < 10.5) {
                 rightshooter.setPower(0);
                 leftshooter.setPower(0);
                 righttransfer.setPosition(righttransferservopos);
@@ -101,13 +105,58 @@ public class MaybeBetterAutoRedSide extends LinearOpMode {
                 rightshooter.setPower(0);
                 leftshooter.setPower(0);
 
-            } else if  (timer.seconds() < 17.5){
+            } else if  (timer.seconds() < 16.7){
                 follower.setTeleOpDrive(0, .3, 0);
 //                follower.followPath(new Path(new BezierLine(new Pose(77,5, Math.toRadians(0)),new Pose(77,12, Math.toRadians(0)))));
                 follower.update();
-            } else {
+            } else if (timer.seconds() < 19.0) {
+                // strafe right while spinning intake
+                follower.setTeleOpDrive(0, .3, 0);
+                frontintake.setPower(1);
+                follower.update();
+            } else if (timer.seconds() < 20.3) {
+                // stop intake and spin shooters up
+                frontintake.setPower(0);
+                rightshooter.setPower(-1*shooterpid.calculate(targetvel,leftvel));
+                leftshooter.setPower(-1*shooterpid.calculate(targetvel,leftvel));
                 follower.setTeleOpDrive(0, 0, 0);
                 follower.update();
+            } else if (timer.seconds() < 22.3) {
+                // keep shooters spinning while raising transfer servos
+                rightshooter.setPower(-1*shooterpid.calculate(targetvel,leftvel));
+                leftshooter.setPower(-1*shooterpid.calculate(targetvel,leftvel));
+                lefttransfer.setPosition(.7);
+                midtransfer.setPosition(.7);
+                righttransfer.setPosition(.7);
+                follower.setTeleOpDrive(0, 0, 0);
+                follower.update();
+            } else {
+                // stop shooters and start following a path home if not started
+                rightshooter.setPower(0);
+                leftshooter.setPower(0);
+                if (!endPathStarted) {
+                    endPathStarted = true;
+                    Path goHome = new Path(new BezierLine(follower.getPose(), startPose));
+                    follower.followPath(goHome);
+                }
+                if (!follower.atParametricEnd()) {
+                    follower.update();
+                } else {
+                    // reached home pose; move forward briefly then stop
+                    double timeSinceHome = timer.seconds() - 20.3;
+                    if (timeSinceHome < 1.0) {
+                        follower.setTeleOpDrive(0.3, 0, 0);
+                    } else {
+                        // Final stop: zero all drive and shooter/intake power, update follower, then exit
+                        follower.setTeleOpDrive(0, 0, 0);
+                        rightshooter.setPower(0);
+                        leftshooter.setPower(0);
+                        frontintake.setPower(0);
+                        follower.update();
+                        return;
+                    }
+                    follower.update();
+                }
             }
 
         }
