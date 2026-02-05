@@ -34,7 +34,7 @@ public class MaybeBetterAutoRedSide extends LinearOpMode {
     Servo righttransfer, midtransfer,lefttransfer, hood;
     BasicPID pid, shooterpid;
     ElapsedTime timer = new ElapsedTime();
-    Pose startPose;
+    Pose startPose, firstmove, secondmove, thirdmove, fourthmove, fifthmove, sixthmove, seventhmove;
     boolean endPathStarted = false;
     public static PIDCoefficients pidCoefficients, shooterCoef;
     @Override
@@ -49,9 +49,16 @@ public class MaybeBetterAutoRedSide extends LinearOpMode {
         frontintake = hardwareMap.get(DcMotorEx.class, "frontintake");
 
         follower = Constants.createFollower(hardwareMap);
-        startPose = new Pose(77,5, Math.toRadians(0));
-        follower.setStartingPose(startPose);
-        follower.update();
+      
+
+        startPose = new Pose(83,8, Math.toRadians(0));
+        firstmove = new Pose(100,34, Math.toRadians(0));
+        secondmove = new Pose(128,34, Math.toRadians(0));
+        thirdmove = new Pose(101,34, Math.toRadians(0));
+        fourthmove = new Pose(83,8, Math.toRadians(0));
+        fifthmove = new Pose(83,31, Math.toRadians(0));
+
+
         righttransfer.setDirection(Servo.Direction.REVERSE);
         rightshooter.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         rightshooter.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -68,6 +75,7 @@ public class MaybeBetterAutoRedSide extends LinearOpMode {
         shooterCoef = new PIDCoefficients(shooterkp,ki,kd);
         shooterpid = new BasicPID(shooterCoef);
         follower.startTeleopDrive(true);
+        follower.setStartingPose(startPose);
         follower.update();
         targetvel = -2280;
         while (opModeIsActive()){
@@ -106,22 +114,32 @@ public class MaybeBetterAutoRedSide extends LinearOpMode {
                 leftshooter.setPower(0);
 
             } else if  (timer.seconds() < 16.7){
-                follower.setTeleOpDrive(0, .3, 0);
-//                follower.followPath(new Path(new BezierLine(new Pose(77,5, Math.toRadians(0)),new Pose(77,12, Math.toRadians(0)))));
+                // initial move to first waypoint
+               follower.followPath(new Path(new BeziarLine(startPose,firstmove)));
                 follower.update();
             } else if (timer.seconds() < 19.0) {
                 // strafe right while spinning intake
-                follower.setTeleOpDrive(0, .3, 0);
+                follower.followPath(new Path(new BeziarLine(firstmove,secondmove)));
                 frontintake.setPower(1);
                 follower.update();
-            } else if (timer.seconds() < 20.3) {
-                // stop intake and spin shooters up
+            } else if (timer.seconds() < 19.9) {
+                // strafe back left (return a bit) before additional repositioning
+                follower.followPath(new Path(new BeziarLine(secondmove,thirdmove)));
+                // stop intake while repositioning
+                frontintake.setPower(0);
+                follower.update();
+            } else if (timer.seconds() < 20.5) {
+                // small move back toward fourth waypoint before spinning shooters
+                follower.followPath(new Path(new BeziarLine(thirdmove,fourthmove)));
+                fllower.update();o
+            } else if (timer.seconds() < 22.0) {
+                // spin shooters up
                 frontintake.setPower(0);
                 rightshooter.setPower(-1*shooterpid.calculate(targetvel,leftvel));
                 leftshooter.setPower(-1*shooterpid.calculate(targetvel,leftvel));
                 follower.setTeleOpDrive(0, 0, 0);
                 follower.update();
-            } else if (timer.seconds() < 22.3) {
+            } else if (timer.seconds() < 24.0) {
                 // keep shooters spinning while raising transfer servos
                 rightshooter.setPower(-1*shooterpid.calculate(targetvel,leftvel));
                 leftshooter.setPower(-1*shooterpid.calculate(targetvel,leftvel));
@@ -134,30 +152,8 @@ public class MaybeBetterAutoRedSide extends LinearOpMode {
                 // stop shooters and start following a path home if not started
                 rightshooter.setPower(0);
                 leftshooter.setPower(0);
-                if (!endPathStarted) {
-                    endPathStarted = true;
-                    Path goHome = new Path(new BezierLine(follower.getPose(), startPose));
-                    follower.followPath(goHome);
-                }
-                if (!follower.atParametricEnd()) {
-                    follower.update();
-                } else {
-                    // reached home pose; move forward briefly then stop
-                    double timeSinceHome = timer.seconds() - 20.3;
-                    if (timeSinceHome < 1.0) {
-                        follower.setTeleOpDrive(0.3, 0, 0);
-                    } else {
-                        // Final stop: zero all drive and shooter/intake power, update follower, then exit
-                        follower.setTeleOpDrive(0, 0, 0);
-                        rightshooter.setPower(0);
-                        leftshooter.setPower(0);
-                        frontintake.setPower(0);
-                        follower.update();
-                        return;
-                    }
-                    follower.update();
-                }
-            }
+            }   follower.followPath(new Path(new BeziarLine(fourthmove,fifthmovehmove)));
+                fllower.update();o
 
         }
     }

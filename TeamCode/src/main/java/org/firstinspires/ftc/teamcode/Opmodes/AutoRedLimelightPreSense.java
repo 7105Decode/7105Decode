@@ -59,7 +59,7 @@ public class AutoRedLimelightPreSense extends LinearOpMode {
         lefttransfer = hardwareMap.get(Servo.class,"lefttransfer");
 
         follower = Constants.createFollower(hardwareMap);
-        follower.setStartingPose(new Pose(77,5, Math.toRadians(0)));
+        follower.setStartingPose(new Pose(83,8, Math.toRadians(0)));
         follower.update();
         righttransfer.setDirection(Servo.Direction.REVERSE);
         rightshooter.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -156,13 +156,10 @@ public class AutoRedLimelightPreSense extends LinearOpMode {
 
             } else if  (timer.seconds() < 11){
                 topturret.setPower(pid.calculate(900,topturret.getCurrentPosition()));
-                follower.setTeleOpDrive(0.27, 0, 0);
-//                follower.followPath(new Path(new BezierLine(new Pose(77,5, Math.toRadians(0)),new Pose(84,5, Math.toRadians(0)))));
+                // follower.setTeleOpDrive(0.27, 0, 0);
+               follower.followPath(new Path(new BezierLine(new Pose(77,5, Math.toRadians(0)),new Pose(84,5, Math.toRadians(0)))));
                 follower.update();
-            } else {
-                follower.setTeleOpDrive(0, 0, 0);
-                follower.update();
-            }   
+            } 
 
         }
     }
