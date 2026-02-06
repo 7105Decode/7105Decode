@@ -5,8 +5,11 @@ import com.qualcomm.hardware.limelightvision.LLResult;
 import com.qualcomm.hardware.limelightvision.Limelight3A;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.rowanmcalpin.nextftc.core.Subsystem;
+import com.rowanmcalpin.nextftc.core.command.Command;
+import com.rowanmcalpin.nextftc.core.control.controllers.PIDFController;
 import com.rowanmcalpin.nextftc.ftc.OpModeData;
 import com.rowanmcalpin.nextftc.ftc.hardware.controllables.MotorEx;
+import com.rowanmcalpin.nextftc.ftc.hardware.controllables.RunToPosition;
 
 import org.firstinspires.ftc.teamcode.Robot.MoreConvenientTelemetry;
 
@@ -15,17 +18,21 @@ public class Turret extends Subsystem {
     public static final Turret INSTANCE = new Turret();
     private Turret() { }
     public static double nintydegrees_right = 750,nintydegrees_left = -750,
-            turretforward = 0,rightSideThreshold = 900, leftSideThreshold = -900;
+            turretforward = 0,rightSideThreshold = 900, leftSideThreshold = -900,
+            targetPos = 0;
     public static  MotorEx turret;
     public Limelight3A limelight;
     public static LLResult result;
     public String topturretname = "topturret";
     public boolean startLimelight = false;
+    PIDFController pController;
+
     @Override
     public void initialize() {
         turret = new MotorEx(topturretname);
         limelight = OpModeData.hardwareMap.get(Limelight3A.class,"limelight");
         limelight.start();
+//        pController = new PIDFController();
     }
     @Override
     public void periodic() {
@@ -70,10 +77,10 @@ public class Turret extends Subsystem {
     public double getError(double reference){
         return reference - getCurrentPosition();
     }
-//    public Command runPID() {
-//        return new RunToPosition(turret, // MOTOR TO MOVE
-//                0.0, // TARGET POSITION, IN TICKS
-//                controller, // CONTROLLER TO IMPLEMENT
-//                this); // IMPLEMENTED SUBSYSTEM
-//    }
+    public Command runPID() {
+        return new RunToPosition(turret, // MOTOR TO MOVE
+                targetPos, // TARGET POSITION, IN TICKS
+                pController, // CONTROLLER TO IMPLEMENT
+                this); // IMPLEMENTED SUBSYSTEM
+    }
 }

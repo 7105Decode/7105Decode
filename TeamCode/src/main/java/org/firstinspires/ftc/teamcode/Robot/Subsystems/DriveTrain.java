@@ -1,12 +1,9 @@
 package org.firstinspires.ftc.teamcode.Robot.Subsystems;
 
-import static org.firstinspires.ftc.teamcode.Tuning.follower;
-
 import com.bylazar.configurables.annotations.Configurable;
 import com.bylazar.configurables.annotations.IgnoreConfigurable;
 import com.pedropathing.follower.Follower;
 import com.pedropathing.geometry.Pose;
-import com.pedropathing.paths.Path;
 import com.pedropathing.paths.PathChain;
 import com.pedropathing.util.PoseHistory;
 import com.qualcomm.robotcore.hardware.Gamepad;
@@ -16,8 +13,6 @@ import com.rowanmcalpin.nextftc.core.Subsystem;
 import org.firstinspires.ftc.teamcode.Constants;
 import org.firstinspires.ftc.teamcode.DrawingCopy;
 import org.firstinspires.ftc.teamcode.Robot.MoreConvenientTelemetry;
-
-import dev.nextftc.extensions.pedro.PedroComponent;
 
 @Configurable
 public class DriveTrain extends Subsystem {

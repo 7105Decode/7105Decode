@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.Opmodes;
 
 
+import static org.firstinspires.ftc.teamcode.Opmodes.TeleBlueMaybeBetter.holdpower;
 import static org.firstinspires.ftc.teamcode.Opmodes.TeleBlueMaybeBetter.leftvel;
 import static org.firstinspires.ftc.teamcode.Opmodes.TeleBlueMaybeBetter.lpadpos;
 import static org.firstinspires.ftc.teamcode.Opmodes.TeleBlueMaybeBetter.rpadppos;
@@ -16,6 +17,7 @@ import com.qualcomm.hardware.limelightvision.Limelight3A;
 import com.qualcomm.hardware.rev.RevColorSensorV3;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -35,12 +37,14 @@ public class TeleRedMaybeBetter extends LinearOpMode {
     public static boolean hoodUP = false,pidTurretPos = false;
     public static PIDCoefficients pidCoefficients,shooterCoef;
     BasicPID pid,shooterpid;
-    Servo righttransfer, midtransfer,lefttransfer, hood, rightled,midled,leftled, rightpad, leftpad;
+    Servo righttransfer, midtransfer,lefttransfer, hood, rightled,midled,leftled;
     ShooterStates shooterStates = ShooterStates.OFF;
     TransferStates transferStates = TransferStates.DOWN;
     HoodStates hoodStates = HoodStates.DOWN;
     ParkingStates parkingStates = ParkingStates.DISENGAGE;
     Follower follower;
+
+    CRServo rightkickstand, leftkickstand;
     public static boolean gotRightColor = false, gotMidColor = false, gotLeftColor = false;
     public static double targetvel = 0,ty = 0, shooterkp = 0.024,turretki = 0,turretkd = 0, kp = 0.009,ki = 0,kd = 0,hoodup = .965, hooddown = 0.055,shooterspeed = 0, lefttransferservopos = 0.04, midtransferservopos = .13,righttransferservopos = 0.095, TopTurretPower = .35;
     @Override
@@ -65,8 +69,8 @@ public class TeleRedMaybeBetter extends LinearOpMode {
         rightled = hardwareMap.get(Servo.class,"rightled");
         midled = hardwareMap.get(Servo.class,"midled");
         leftled = hardwareMap.get(Servo.class,"leftled");
-        leftpad = hardwareMap.get(Servo.class,"leftpad");
-        rightpad = hardwareMap.get(Servo.class,"rightpad");
+        rightkickstand = hardwareMap.get(CRServo.class,"rightkickstand");
+        leftkickstand = hardwareMap.get(CRServo.class,"leftkickstand");
 
 
         limelight.start();
@@ -222,18 +226,24 @@ public class TeleRedMaybeBetter extends LinearOpMode {
                     break;
             }
             switch (parkingStates){
-                case ENGAGEPARK:
-                    leftpad.setPosition(.5);
-                    rightpad.setPosition(.5);
+                case GOINGUP:
+                    leftkickstand.setPower(1);
+                    rightkickstand.setPower(1);
                     if (gamepad1.right_bumper){
                         parkingStates = ParkingStates.DISENGAGE;
+                    } else if (gamepad1.left_bumper) {
+                        parkingStates = ParkingStates.HOLD;
                     }
                     break;
+                case HOLD:
+                    leftkickstand.setPower(holdpower);
+                    rightkickstand.setPower(holdpower);
+                    break;
                 case DISENGAGE:
-                    leftpad.setPosition(lpadpos);
-                    rightpad.setPosition(rpadppos);
+                    rightkickstand.setPower(0);
+                    leftkickstand.setPower(0);
                     if (gamepad1.right_bumper){
-                        parkingStates = ParkingStates.ENGAGEPARK;
+                        parkingStates = ParkingStates.GOINGUP;
                     }
                     break;
             }
@@ -343,7 +353,8 @@ public class TeleRedMaybeBetter extends LinearOpMode {
         DOWN
     }
     public enum ParkingStates{
-        ENGAGEPARK,
+        GOINGUP,
+        HOLD,
         DISENGAGE
     }
     public enum TransferStates{

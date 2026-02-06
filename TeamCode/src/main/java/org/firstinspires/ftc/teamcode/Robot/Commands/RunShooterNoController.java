@@ -6,13 +6,12 @@ import com.rowanmcalpin.nextftc.core.command.Command;
 import org.firstinspires.ftc.teamcode.Robot.Subsystems.DriveTrain;
 import org.firstinspires.ftc.teamcode.Robot.Subsystems.Shooter;
 
-public class RunShooter extends Command {
+public class RunShooterNoController extends Command {
     Shooter shooter;
-    double vel, kp;
-    public RunShooter(Shooter shooter, double kp, double vel) {
+    double power;
+    public RunShooterNoController(Shooter shooter, double power) {
         this.shooter = shooter;
-        this.vel = vel;
-        this.kp = kp;
+        this.power = power;
     }
     @Override
     public boolean isDone() {
@@ -20,12 +19,11 @@ public class RunShooter extends Command {
     }
     @Override
     public void start() {
-        shooter.setControllerValue(kp);
-        shooter.setTargetVel(vel);
+        shooter.setPower(power);
     }
     @Override
     public void update() {
-        shooter.runPController();
+        shooter.setPower(power);
     }
 
     @Override

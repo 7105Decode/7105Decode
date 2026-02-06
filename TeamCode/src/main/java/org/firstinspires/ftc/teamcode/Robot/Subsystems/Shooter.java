@@ -11,7 +11,6 @@ public class Shooter extends Subsystem {
     public static final Shooter INSTANCE = new Shooter();
     private Shooter() { }
     public MotorEx rightshooter,leftshooter;
-
     BasicPID shooterpid;
     PIDCoefficients coefficients;
     public static double MaxSpinSpeed = 1, HalfSpinSpeed = .5, kp = 0.03, ki = 0, kd = 0, targetvel = -2280;
@@ -47,6 +46,10 @@ public class Shooter extends Subsystem {
     public void runPController(){
         rightshooter.setPower(-1*shooterpid.calculate(targetvel,shooterVel()));
         leftshooter.setPower(-1*shooterpid.calculate(targetvel,shooterVel()));
+    }
+    public void setPower(double power){
+        rightshooter.setPower(power);
+        leftshooter.setPower(power);
     }
     public void shooterTelem() {
         MoreConvenientTelemetry.addtelem("shootervel", shooterVel());
