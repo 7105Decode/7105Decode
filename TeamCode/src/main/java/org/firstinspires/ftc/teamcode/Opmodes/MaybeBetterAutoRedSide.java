@@ -9,15 +9,13 @@ import static org.firstinspires.ftc.teamcode.Opmodes.Tele.lefttransferservopos;
 import static org.firstinspires.ftc.teamcode.Opmodes.Tele.midtransferservopos;
 import static org.firstinspires.ftc.teamcode.Opmodes.Tele.righttransferservopos;
 import static org.firstinspires.ftc.teamcode.Opmodes.Tele.shooterkp;
-import static org.firstinspires.ftc.teamcode.Opmodes.TeleBlueMaybeBetter.leftvel;
-import static org.firstinspires.ftc.teamcode.Opmodes.TeleRedMaybeBetter.targetvel;
+import static org.firstinspires.ftc.teamcode.Opmodes.TeleBlueBetter.leftvel;
+import static org.firstinspires.ftc.teamcode.Opmodes.TeleRedBetter.targetvel;
 
 import com.ThermalEquilibrium.homeostasis.Controllers.Feedback.BasicPID;
 import com.ThermalEquilibrium.homeostasis.Parameters.PIDCoefficients;
 import com.pedropathing.follower.Follower;
-import com.pedropathing.geometry.BezierLine;
 import com.pedropathing.geometry.Pose;
-import com.pedropathing.paths.Path;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;

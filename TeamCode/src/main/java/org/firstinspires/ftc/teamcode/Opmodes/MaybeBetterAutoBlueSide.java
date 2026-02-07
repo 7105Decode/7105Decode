@@ -8,8 +8,8 @@ import static org.firstinspires.ftc.teamcode.Opmodes.Tele.lefttransferservopos;
 import static org.firstinspires.ftc.teamcode.Opmodes.Tele.midtransferservopos;
 import static org.firstinspires.ftc.teamcode.Opmodes.Tele.righttransferservopos;
 import static org.firstinspires.ftc.teamcode.Opmodes.Tele.shooterkp;
-import static org.firstinspires.ftc.teamcode.Opmodes.TeleBlueMaybeBetter.leftvel;
-import static org.firstinspires.ftc.teamcode.Opmodes.TeleRedMaybeBetter.targetvel;
+import static org.firstinspires.ftc.teamcode.Opmodes.TeleBlueBetter.leftvel;
+import static org.firstinspires.ftc.teamcode.Opmodes.TeleRedBetter.targetvel;
 
 import com.ThermalEquilibrium.homeostasis.Controllers.Feedback.BasicPID;
 import com.ThermalEquilibrium.homeostasis.Parameters.PIDCoefficients;

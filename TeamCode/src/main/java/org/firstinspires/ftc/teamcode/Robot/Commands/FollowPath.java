@@ -18,18 +18,15 @@ public class FollowPath extends Command {
     }
     @Override
     public boolean isDone() {
-        return done; // Whether or not the command is done
+        return !DriveTrain.INSTANCE.follower.isBusy(); // Whether or not the command is done
     }
     @Override
     public void start() {
-        done = false;
         DriveTrain.INSTANCE.followPath(path,true);
     }
     @Override
     public void update() {
-        if (!DriveTrain.INSTANCE.follower.isBusy()){
-            done = true;
-        }
+
     }
 
     @Override

@@ -11,15 +11,18 @@ public class Intake extends Subsystem {
     private Intake() { }
     public static MotorEx intake;
     public static double intakeSpeed = 1;
+    public static boolean runIntakeAuto = false;
     public String intakename = "frontintake";
     @Override
     public void initialize() {
         intake = new MotorEx(intakename);
+        runIntakeAuto =false;
     }
     @Override
     public void periodic() {
-    }
-    public void intakeTelem() {
+        if (runIntakeAuto){
+            intake.setPower(intakeSpeed);
+        }
     }
     public static void runIntakeTele(Gamepad gamepad1){
         if (gamepad1.left_trigger > .4){

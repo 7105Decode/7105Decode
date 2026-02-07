@@ -19,7 +19,7 @@ public class Turret extends Subsystem {
     private Turret() { }
     public static double nintydegrees_right = 750,nintydegrees_left = -750,
             turretforward = 0,rightSideThreshold = 900, leftSideThreshold = -900,
-            targetPos = 0;
+            targetPos = 0, turretKP = .009;
     public static  MotorEx turret;
     public Limelight3A limelight;
     public static LLResult result;
@@ -32,7 +32,7 @@ public class Turret extends Subsystem {
         turret = new MotorEx(topturretname);
         limelight = OpModeData.hardwareMap.get(Limelight3A.class,"limelight");
         limelight.start();
-//        pController = new PIDFController();
+        pController = new PIDFController(turretKP);
     }
     @Override
     public void periodic() {

@@ -1,11 +1,9 @@
 package org.firstinspires.ftc.teamcode.Opmodes;
 
 
-import static org.firstinspires.ftc.teamcode.Opmodes.TeleBlueMaybeBetter.holdpower;
-import static org.firstinspires.ftc.teamcode.Opmodes.TeleBlueMaybeBetter.leftvel;
-import static org.firstinspires.ftc.teamcode.Opmodes.TeleBlueMaybeBetter.lpadpos;
-import static org.firstinspires.ftc.teamcode.Opmodes.TeleBlueMaybeBetter.rpadppos;
-import static org.firstinspires.ftc.teamcode.Opmodes.TeleBlueMaybeBetter.transferthreshold;
+import static org.firstinspires.ftc.teamcode.Opmodes.TeleBlueBetter.holdpower;
+import static org.firstinspires.ftc.teamcode.Opmodes.TeleBlueBetter.leftvel;
+import static org.firstinspires.ftc.teamcode.Opmodes.TeleBlueBetter.transferthreshold;
 
 import com.ThermalEquilibrium.homeostasis.Controllers.Feedback.BasicPID;
 import com.ThermalEquilibrium.homeostasis.Parameters.PIDCoefficients;
@@ -27,9 +25,9 @@ import org.firstinspires.ftc.teamcode.Constants;
 
 @Configurable
 @TeleOp
-public class TeleRedMaybeBetter extends LinearOpMode {
+public class TeleRedBetter extends LinearOpMode {
     DcMotorEx rightshooter,leftshooter, frontintake, topturret;
-    ElapsedTime timer = new ElapsedTime();
+    ElapsedTime timer = new ElapsedTime(), colorSensorResetter = new ElapsedTime();
     Limelight3A limelight;
     RevColorSensorV3 rightcolorSensor;
     RevColorSensorV3 leftcolorSensor;
@@ -46,7 +44,7 @@ public class TeleRedMaybeBetter extends LinearOpMode {
 
     CRServo rightkickstand, leftkickstand;
     public static boolean gotRightColor = false, gotMidColor = false, gotLeftColor = false;
-    public static double targetvel = 0,ty = 0, shooterkp = 0.024,turretki = 0,turretkd = 0, kp = 0.009,ki = 0,kd = 0,hoodup = .965, hooddown = 0.055,shooterspeed = 0, lefttransferservopos = 0.04, midtransferservopos = .13,righttransferservopos = 0.095, TopTurretPower = .35;
+    public static double loopTime,targetvel = 0,ty = 0, shooterkp = 0.024,turretki = 0,turretkd = 0, kp = 0.009,ki = 0,kd = 0,hoodup = .965, hooddown = 0.055,shooterspeed = 0, lefttransferservopos = 0.04, midtransferservopos = .13,righttransferservopos = 0.095, TopTurretPower = .35;
     @Override
     public void runOpMode() {
         limelight = hardwareMap.get(Limelight3A.class, "limelight");
@@ -101,6 +99,7 @@ public class TeleRedMaybeBetter extends LinearOpMode {
 
         follower.startTeleopDrive(true);
         follower.update();
+        colorSensorResetter.reset();
 
         while (opModeIsActive()) {
             follower.setTeleOpDrive(-gamepad1.left_stick_y, -gamepad1.left_stick_x, -gamepad1.right_stick_x, true);
@@ -135,8 +134,9 @@ public class TeleRedMaybeBetter extends LinearOpMode {
                 topturret.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             }
             leftvel = leftshooter.getVelocity();
+            double loop = System.nanoTime();
+            telemetry.addData("Loop Time ", 1000000000 / (loop - loopTime));
             telemetry.addData("leftshootervel",leftvel);
-            telemetry.addData("turret",topturret.getCurrentPosition()   );
             if(rightcolorSensor.rawOptical() >= 300 && !gotRightColor){
                 if (rightcolorSensor.red() >= 80){
                     rightled.setPosition(.722);
@@ -258,26 +258,26 @@ public class TeleRedMaybeBetter extends LinearOpMode {
 
             switch (shooterStates) {
                 case MAX:
-                    targetvel = -2280;
-                    shooterkp = 0.03;
-                    shooterCoef = new PIDCoefficients(shooterkp,ki,kd);
-                    shooterpid = new BasicPID(shooterCoef);
                     rightshooter.setPower(-1*shooterpid.calculate(targetvel,leftvel));
                     leftshooter.setPower(-1*shooterpid.calculate(targetvel,leftvel));
                     if (gamepad1.dpad_down){
                         shooterStates = ShooterStates.OFF;
                     } else if (gamepad1.dpad_left) {
+                        targetvel = -1560;
+                        shooterkp = 0.012;
+                        shooterCoef = new PIDCoefficients(shooterkp,ki,kd);
+                        shooterpid = new BasicPID(shooterCoef);
                         shooterStates = ShooterStates.SLOWERSPEED;
                     }
                     break;
                 case SLOWERSPEED:
-                    targetvel = -1560;
-                    shooterkp = 0.012;
-                    shooterCoef = new PIDCoefficients(shooterkp,ki,kd);
-                    shooterpid = new BasicPID(shooterCoef);
                     rightshooter.setPower(-1*shooterpid.calculate(targetvel,leftvel));
                     leftshooter.setPower(-1*shooterpid.calculate(targetvel,leftvel));
                     if (gamepad1.dpad_up){
+                        targetvel = -2280;
+                        shooterkp = 0.03;
+                        shooterCoef = new PIDCoefficients(shooterkp,ki,kd);
+                        shooterpid = new BasicPID(shooterCoef);
                         shooterStates = ShooterStates.MAX;
                     } else if (gamepad1.dpad_down) {
                         shooterStates = ShooterStates.OFF;
@@ -287,8 +287,16 @@ public class TeleRedMaybeBetter extends LinearOpMode {
                     rightshooter.setPower(shooterspeed);
                     leftshooter.setPower(shooterspeed);
                     if (gamepad1.dpad_up){
+                        targetvel = -2280;
+                        shooterkp = 0.03;
+                        shooterCoef = new PIDCoefficients(shooterkp,ki,kd);
+                        shooterpid = new BasicPID(shooterCoef);
                         shooterStates = ShooterStates.MAX;
                     } else if (gamepad1.dpad_left) {
+                        targetvel = -1560;
+                        shooterkp = 0.012;
+                        shooterCoef = new PIDCoefficients(shooterkp,ki,kd);
+                        shooterpid = new BasicPID(shooterCoef);
                         shooterStates = ShooterStates.SLOWERSPEED;
                     }
                     break;
@@ -299,7 +307,11 @@ public class TeleRedMaybeBetter extends LinearOpMode {
                     midtransfer.setPosition(midtransferservopos);
                     lefttransfer.setPosition(lefttransferservopos);
                     timer.reset();
-
+                    if (colorSensorResetter.seconds() < .2){
+                        gotMidColor = false;
+                        gotRightColor = false;
+                        gotLeftColor = false;
+                    }
                     if (gamepad2.x){
                         timer.reset();
                         transferStates = TransferStates.RIGHTUP;
@@ -315,8 +327,9 @@ public class TeleRedMaybeBetter extends LinearOpMode {
                     righttransfer.setPosition(righttransferservopos);
                     midtransfer.setPosition(.7);
                     lefttransfer.setPosition(lefttransferservopos);
-                    gotMidColor = false;
                     if (timer.seconds() >= transferthreshold) {
+                        gotMidColor = false;
+                        colorSensorResetter.reset();
                         transferStates = TransferStates.DOWN;
                     }
                     break;
@@ -324,19 +337,23 @@ public class TeleRedMaybeBetter extends LinearOpMode {
                     righttransfer.setPosition(.7);
                     midtransfer.setPosition(midtransferservopos);
                     lefttransfer.setPosition(lefttransferservopos);
-                    gotRightColor = false;
                     if (timer.seconds() >= transferthreshold) {
+                        gotRightColor = false;
+                        colorSensorResetter.reset();
                         transferStates = TransferStates.DOWN;
                     }
+                    
+
+
                     break;
                 case LEFTUP:
                     righttransfer.setPosition(righttransferservopos);
                     midtransfer.setPosition(midtransferservopos);
                     lefttransfer.setPosition(.7);
-                    gotLeftColor = false;
                     if (timer.seconds() >= transferthreshold) {
-                        transferStates = TransferStates.DOWN
-                        ;
+                        gotLeftColor = false;
+                        colorSensorResetter.reset();
+                        transferStates = TransferStates.DOWN;
                     }
                     break;
             }

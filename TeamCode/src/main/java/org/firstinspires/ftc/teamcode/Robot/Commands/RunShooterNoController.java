@@ -1,9 +1,7 @@
 package org.firstinspires.ftc.teamcode.Robot.Commands;
 
-import com.pedropathing.paths.Path;
-import com.rowanmcalpin.nextftc.core.Subsystem;
 import com.rowanmcalpin.nextftc.core.command.Command;
-import org.firstinspires.ftc.teamcode.Robot.Subsystems.DriveTrain;
+
 import org.firstinspires.ftc.teamcode.Robot.Subsystems.Shooter;
 
 public class RunShooterNoController extends Command {
@@ -15,11 +13,12 @@ public class RunShooterNoController extends Command {
     }
     @Override
     public boolean isDone() {
-        return false;
+        return Shooter.turnShooterOff;
     }
     @Override
     public void start() {
-        shooter.setPower(power);
+        Shooter.turnShooterOff = false;
+//        shooter.setPower(power);
     }
     @Override
     public void update() {
@@ -28,6 +27,6 @@ public class RunShooterNoController extends Command {
 
     @Override
     public void stop(boolean interrupted) {
-
+        shooter.setPower(0);
     }
 }

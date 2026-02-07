@@ -1,9 +1,7 @@
 package org.firstinspires.ftc.teamcode.Robot.Commands;
 
-import com.pedropathing.paths.Path;
-import com.rowanmcalpin.nextftc.core.Subsystem;
 import com.rowanmcalpin.nextftc.core.command.Command;
-import org.firstinspires.ftc.teamcode.Robot.Subsystems.DriveTrain;
+
 import org.firstinspires.ftc.teamcode.Robot.Subsystems.Shooter;
 
 public class RunShooter extends Command {
@@ -16,16 +14,17 @@ public class RunShooter extends Command {
     }
     @Override
     public boolean isDone() {
-        return false;
+        return true;
     }
     @Override
     public void start() {
         shooter.setControllerValue(kp);
         shooter.setTargetVel(vel);
+        Shooter.turnShooterOff = true;
     }
     @Override
     public void update() {
-        shooter.runPController();
+
     }
 
     @Override

@@ -15,6 +15,7 @@ public class Shooter extends Subsystem {
     PIDCoefficients coefficients;
     public static double MaxSpinSpeed = 1, HalfSpinSpeed = .5, kp = 0.03, ki = 0, kd = 0, targetvel = -2280;
     public String rightshootername = "rightshooter", leftshootername = "leftshooter";
+    public static boolean turnShooterOff = true;
 
     @Override
     public void initialize() {
@@ -22,6 +23,7 @@ public class Shooter extends Subsystem {
         shooterpid = new BasicPID(coefficients);
         rightshooter = new MotorEx(rightshootername);
         leftshooter = new MotorEx(leftshootername);
+        turnShooterOff = true;
     }
     @Override
     public void periodic() {
