@@ -3,7 +3,9 @@ package org.firstinspires.ftc.teamcode.Robot.Subsystems;
 import com.ThermalEquilibrium.homeostasis.Controllers.Feedback.BasicPID;
 import com.ThermalEquilibrium.homeostasis.Parameters.PIDCoefficients;
 import com.bylazar.configurables.annotations.Configurable;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.rowanmcalpin.nextftc.core.Subsystem;
+import com.rowanmcalpin.nextftc.ftc.OpModeData;
 import com.rowanmcalpin.nextftc.ftc.hardware.controllables.MotorEx;
 import org.firstinspires.ftc.teamcode.Robot.MoreConvenientTelemetry;
 @Configurable
@@ -13,7 +15,8 @@ public class Shooter extends Subsystem {
     public MotorEx rightshooter,leftshooter;
     BasicPID shooterpid;
     PIDCoefficients coefficients;
-    public static double MaxSpinSpeed = 1, HalfSpinSpeed = .5, kp = 0.03, ki = 0, kd = 0, targetvel = -2280;
+    public Servo hood;
+    public static double hoodUp = .965,hoodDown = .055,MaxSpinSpeed = 1, HalfSpinSpeed = .5, kp = 0.03, ki = 0, kd = 0, targetvel = -2280;
     public String rightshootername = "rightshooter", leftshootername = "leftshooter";
     public static boolean turnShooterOff = true;
 
@@ -23,11 +26,15 @@ public class Shooter extends Subsystem {
         shooterpid = new BasicPID(coefficients);
         rightshooter = new MotorEx(rightshootername);
         leftshooter = new MotorEx(leftshootername);
+        hood = OpModeData.INSTANCE.getHardwareMap().get(Servo.class,"hood");
         turnShooterOff = true;
     }
     @Override
     public void periodic() {
         shooterTelem();
+        if (!turnShooterOff){
+            setPower(.87);
+        }
     }
     public void resetShooter(){
         leftshooter.resetEncoder();

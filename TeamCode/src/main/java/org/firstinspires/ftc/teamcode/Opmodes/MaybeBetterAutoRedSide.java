@@ -15,7 +15,9 @@ import static org.firstinspires.ftc.teamcode.Opmodes.TeleRedBetter.targetvel;
 import com.ThermalEquilibrium.homeostasis.Controllers.Feedback.BasicPID;
 import com.ThermalEquilibrium.homeostasis.Parameters.PIDCoefficients;
 import com.pedropathing.follower.Follower;
+import com.pedropathing.geometry.BezierLine;
 import com.pedropathing.geometry.Pose;
+import com.pedropathing.paths.Path;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -44,7 +46,7 @@ public class MaybeBetterAutoRedSide extends LinearOpMode {
         lefttransfer = hardwareMap.get(Servo.class,"lefttransfer");
 
         follower = Constants.createFollower(hardwareMap);
-        follower.setStartingPose(new Pose(77,5, Math.toRadians(0)));
+        follower.setStartingPose(new Pose(77,5, Math.toRadians(30)));
         follower.update();
         righttransfer.setDirection(Servo.Direction.REVERSE);
         rightshooter.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -100,8 +102,8 @@ public class MaybeBetterAutoRedSide extends LinearOpMode {
                 leftshooter.setPower(0);
 
             } else if  (timer.seconds() < 17.5){
-                follower.setTeleOpDrive(0, .3, 0);
-//                follower.followPath(new Path(new BezierLine(new Pose(77,5, Math.toRadians(0)),new Pose(77,12, Math.toRadians(0)))));
+//                follower.setTeleOpDrive(0, .3, 0);
+                follower.followPath(new Path(new BezierLine(new Pose(77,5, Math.toRadians(30)),new Pose(90,18, Math.toRadians(30)))));
                 follower.update();
             } else {
                 follower.setTeleOpDrive(0, 0, 0);

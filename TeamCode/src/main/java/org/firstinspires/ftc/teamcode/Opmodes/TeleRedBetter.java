@@ -4,6 +4,7 @@ package org.firstinspires.ftc.teamcode.Opmodes;
 import static org.firstinspires.ftc.teamcode.Opmodes.TeleBlueBetter.holdpower;
 import static org.firstinspires.ftc.teamcode.Opmodes.TeleBlueBetter.leftvel;
 import static org.firstinspires.ftc.teamcode.Opmodes.TeleBlueBetter.transferthreshold;
+import static org.firstinspires.ftc.teamcode.Opmodes.TeleBlueBetter.uppower;
 
 import com.ThermalEquilibrium.homeostasis.Controllers.Feedback.BasicPID;
 import com.ThermalEquilibrium.homeostasis.Parameters.PIDCoefficients;
@@ -27,7 +28,8 @@ import org.firstinspires.ftc.teamcode.Constants;
 @TeleOp
 public class TeleRedBetter extends LinearOpMode {
     DcMotorEx rightshooter,leftshooter, frontintake, topturret;
-    ElapsedTime timer = new ElapsedTime(), colorSensorResetter = new ElapsedTime();
+    ElapsedTime timer = new ElapsedTime(), colorSensorResetter = new ElapsedTime()
+            ,kickStandTimer = new ElapsedTime();;
     Limelight3A limelight;
     RevColorSensorV3 rightcolorSensor;
     RevColorSensorV3 leftcolorSensor;
@@ -227,22 +229,25 @@ public class TeleRedBetter extends LinearOpMode {
             }
             switch (parkingStates){
                 case GOINGUP:
-                    leftkickstand.setPower(1);
-                    rightkickstand.setPower(1);
-                    if (gamepad1.right_bumper){
-                        parkingStates = ParkingStates.DISENGAGE;
-                    } else if (gamepad1.left_bumper) {
+                    rightkickstand.setPower(uppower);
+                    leftkickstand.setPower(uppower);
+                    if (kickStandTimer.seconds() >= 1.2){
                         parkingStates = ParkingStates.HOLD;
                     }
                     break;
                 case HOLD:
                     leftkickstand.setPower(holdpower);
                     rightkickstand.setPower(holdpower);
+                    if (gamepad1.right_bumper){
+                        kickStandTimer.reset();
+                        parkingStates = ParkingStates.GOINGUP;
+                    }
                     break;
                 case DISENGAGE:
                     rightkickstand.setPower(0);
                     leftkickstand.setPower(0);
                     if (gamepad1.right_bumper){
+                        kickStandTimer.reset();
                         parkingStates = ParkingStates.GOINGUP;
                     }
                     break;

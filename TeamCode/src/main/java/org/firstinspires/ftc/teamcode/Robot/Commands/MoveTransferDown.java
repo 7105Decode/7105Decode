@@ -9,12 +9,12 @@ import com.rowanmcalpin.nextftc.core.command.Command;
 
 import org.firstinspires.ftc.teamcode.Robot.Subsystems.Transfer;
 
-public class MoveTransfer extends Command {
+public class MoveTransferDown extends Command {
     ElapsedTime timer = new ElapsedTime();
 
     boolean rightservo, leftservo, midservo;
     double targetpos;
-    public MoveTransfer(boolean rightservo, boolean leftservo, boolean midservo, double targetpos){
+    public MoveTransferDown(boolean rightservo, boolean leftservo, boolean midservo, double targetpos){
         this.leftservo = leftservo;
         this.midservo = midservo;
         this.rightservo = rightservo;
@@ -23,9 +23,14 @@ public class MoveTransfer extends Command {
 
     @Override
     public void start() {
-//        timer.reset();
+        timer.reset();
 //        rightservo =false;
 //        midservo =false;
+//        leftservo = false;
+    }
+
+    @Override
+    public void update() {
         if (rightservo){
             Transfer.INSTANCE.righttransfer.setPosition(targetpos);
         } else if (leftservo) {
@@ -33,15 +38,10 @@ public class MoveTransfer extends Command {
         } else if (midservo) {
             Transfer.INSTANCE.midtransfer.setPosition(targetpos);
         }
-//        leftservo = false;
-    }
-
-    @Override
-    public void update() {
     }
 
     @Override
     public boolean isDone() {
-        return true;
+        return timer.seconds() >= .25;
     }
 }
