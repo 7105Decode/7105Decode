@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.Robot.Subsystems;
 
 import com.bylazar.configurables.annotations.Configurable;
 import com.qualcomm.hardware.limelightvision.LLResult;
+import com.qualcomm.hardware.limelightvision.LLResultTypes;
 import com.qualcomm.hardware.limelightvision.Limelight3A;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.rowanmcalpin.nextftc.core.Subsystem;
@@ -10,6 +11,10 @@ import com.rowanmcalpin.nextftc.core.control.controllers.PIDFController;
 import com.rowanmcalpin.nextftc.ftc.OpModeData;
 import com.rowanmcalpin.nextftc.ftc.hardware.controllables.MotorEx;
 import com.rowanmcalpin.nextftc.ftc.hardware.controllables.RunToPosition;
+
+import org.firstinspires.ftc.robotcore.external.Telemetry;
+
+import java.util.List;
 
 @Configurable
 public class Turret extends Subsystem {
@@ -22,14 +27,13 @@ public class Turret extends Subsystem {
     public Limelight3A limelight;
     public static LLResult result;
     public String topturretname = "topturret";
-    public boolean startLimelight = false;
+    public static boolean startLimelight = false, GPP = false, PGP = false, PPG = false;
     PIDFController pController;
-
+    public static double obeliskID = 0;
     @Override
     public void initialize() {
         turret = new MotorEx(topturretname);
         limelight = OpModeData.hardwareMap.get(Limelight3A.class,"limelight");
-        limelight.start();
         pController = new PIDFController(turretKP);
     }
     @Override
@@ -50,6 +54,20 @@ public class Turret extends Subsystem {
     }
     public double getPower(){
         return turret.getPower();
+    }
+    public void readObelisk(Telemetry telemetry){
+        List<LLResultTypes.FiducialResult> fiducialResults = result.getFiducialResults();
+            for (LLResultTypes.FiducialResult fr : fiducialResults) {
+                obeliskID = fr.getFiducialId();
+                telemetry.addData("fudicial", obeliskID);
+                if (obeliskID == 21 && result.isValid()) {
+                    GPP = true;
+                } else if (obeliskID == 22 && result.isValid()) {
+                    PGP = true;
+                } else {
+                    PPG = true;
+                }
+        }
     }
     public static void aprilTagBangBangTeleop(Gamepad gamepad2){
         if (result.isValid() && getCurrentPosition() > leftSideThreshold && getCurrentPosition() < rightSideThreshold) {

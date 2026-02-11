@@ -28,6 +28,7 @@ public class DriveTrain extends Subsystem {
 
     @Override
     public void initialize() {
+        updateDriveTrain = false;
     }
     public void setStartPose(Pose pose){
         follower.setStartingPose(pose);

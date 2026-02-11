@@ -23,7 +23,13 @@ public class CommandSchedulerTeleop extends PedroOpMode {
     public CommandSchedulerTeleop() {
         super(Transfer.INSTANCE, Turret.INSTANCE, DriveTrain.INSTANCE, Shooter.INSTANCE, Intake.INSTANCE);
     }
-    Command runRobot;
+    Command runRobot(){
+        return new ParallelGroup(
+                new RunDriveTrainTeleop(DriveTrain.INSTANCE,gamepad1),
+                new TrackAprilTag_BangBang(gamepad2),
+                new RunIntakeTele(gamepad1)
+        );
+    }
     @Override
     public void onInit() {
 //        DriveTrain.INSTANCE.createFollower(hardwareMap);
@@ -31,22 +37,16 @@ public class CommandSchedulerTeleop extends PedroOpMode {
 
     @Override
     public void onWaitForStart() {
-        runRobot = new ParallelGroup(
 
-                new RunDriveTrainTeleop(DriveTrain.INSTANCE,gamepad1),
-                new TrackAprilTag_BangBang(gamepad2),
-                new RunIntakeTele(gamepad1)
-        );
     }
 
     @Override
     public void onStartButtonPressed() {
-        runRobot.invoke();
-//        gamepadManager.getGamepad2().getDpadUp().setReleasedCommand(Claw.INSTANCE::open);
+        runRobot().invoke();
+        DriveTrain.updateDriveTrain = true;
     }
 
     @Override
     public void onUpdate() {
-        DriveTrain.INSTANCE.updateFollower();
     }
 }

@@ -17,19 +17,14 @@ public class FollowPath extends Command {
         interruptible = false;
     }
     @Override
-    public boolean isDone() {
-        return !DriveTrain.INSTANCE.follower.isBusy(); // Whether or not the command is done
-    }
-    @Override
     public void start() {
         DriveTrain.INSTANCE.followPath(path,true);
         DriveTrain.updateDriveTrain = true;
     }
     @Override
-    public void update() {
-
+    public boolean isDone() {
+        return !DriveTrain.INSTANCE.follower.isBusy(); // Whether or not the command is done
     }
-
     @Override
     public void stop(boolean interrupted) {
         DriveTrain.updateDriveTrain = false;
