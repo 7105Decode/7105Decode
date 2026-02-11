@@ -20,7 +20,7 @@ public class RunShooter extends Command {
     public void start() {
         shooter.setControllerValue(kp);
         shooter.setTargetVel(vel);
-        Shooter.turnShooterOff = true;
+        Shooter.shooterHighSpeed = true;
     }
     @Override
     public void stop(boolean interrupted) {

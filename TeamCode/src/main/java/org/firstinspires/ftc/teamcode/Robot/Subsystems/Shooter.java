@@ -18,7 +18,7 @@ public class Shooter extends Subsystem {
     public Servo hood;
     public static double hoodUp = .965,hoodDown = .055,MaxSpinSpeed = 1, HalfSpinSpeed = .5, kp = 0.03, ki = 0, kd = 0, targetvel = -2280;
     public String rightshootername = "rightshooter", leftshootername = "leftshooter";
-    public static boolean turnShooterOff = true;
+    public static boolean shooterHighSpeed = false, shooterLowSpeed = false;
 
     @Override
     public void initialize() {
@@ -27,12 +27,13 @@ public class Shooter extends Subsystem {
         rightshooter = new MotorEx(rightshootername);
         leftshooter = new MotorEx(leftshootername);
         hood = OpModeData.INSTANCE.getHardwareMap().get(Servo.class,"hood");
-        turnShooterOff = true;
+        shooterHighSpeed = false;
+        shooterLowSpeed = false;
     }
     @Override
     public void periodic() {
-        if (!turnShooterOff){
-            setPower(.87);
+        if (shooterHighSpeed){
+            runPController();
         }
     }
     public void resetShooter(){

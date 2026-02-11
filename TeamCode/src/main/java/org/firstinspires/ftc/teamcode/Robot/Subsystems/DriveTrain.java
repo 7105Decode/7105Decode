@@ -6,9 +6,11 @@ import com.pedropathing.follower.Follower;
 import com.pedropathing.geometry.Pose;
 import com.pedropathing.paths.PathChain;
 import com.pedropathing.util.PoseHistory;
+import com.qualcomm.hardware.gobilda.GoBildaPinpointDriver;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.rowanmcalpin.nextftc.core.Subsystem;
+import com.rowanmcalpin.nextftc.ftc.OpModeData;
 
 import org.firstinspires.ftc.teamcode.Constants;
 import org.firstinspires.ftc.teamcode.DrawingCopy;
@@ -17,17 +19,16 @@ import org.firstinspires.ftc.teamcode.DrawingCopy;
 public class DriveTrain extends Subsystem {
     public static final DriveTrain INSTANCE = new DriveTrain();
     private DriveTrain() { }
+//    public GoBildaPinpointDriver pinpoint;
     public Follower follower;
     public static boolean updateDriveTrain = false;
-    @IgnoreConfigurable
-    static PoseHistory poseHistory;
-
     public void createFollower(HardwareMap hardwareMap){
         follower = Constants.createFollower(hardwareMap);
     }
 
     @Override
     public void initialize() {
+        DrawingCopy.init();
         updateDriveTrain = false;
     }
     public void setStartPose(Pose pose){

@@ -9,7 +9,7 @@ import com.pedropathing.paths.PathChain;
 public class Paths {
     public static PathChain RedShortPath1, RedShortPath2, RedShortPath3;
 
-    public static Pose RedShortStartPose = new Pose(124.6, 120);
+    public static Pose RedShortStartPose = new Pose(124.6, 120,Math.toRadians(216.5));
 
     public Paths(Follower follower) {
         RedShortPath1 = follower.pathBuilder().addPath(
@@ -18,7 +18,7 @@ public class Paths {
 
                                 new Pose(109.9, 108.7)
                         )
-                ).setConstantHeadingInterpolation(Math.toDegrees(216.5))
+                ).setConstantHeadingInterpolation(Math.toRadians(216.5))
 
                 .build();
 

@@ -12,32 +12,42 @@ import org.firstinspires.ftc.teamcode.Robot.Subsystems.Transfer;
 public class MoveTransfer extends Command {
     ElapsedTime timer = new ElapsedTime();
     boolean rightservo, leftservo, midservo;
-    double targetpos;
-    public MoveTransfer(boolean rightservo, boolean leftservo, boolean midservo, double targetpos){
+    double targetpos, time;
+    Transfer transfer;
+    public MoveTransfer(Transfer transfer,boolean rightservo, boolean leftservo, boolean midservo, double targetpos, double time){
         this.leftservo = leftservo;
+        this.transfer= transfer;
         this.midservo = midservo;
         this.rightservo = rightservo;
         this.targetpos = targetpos;
+        this.time = time;
     }
 
     @Override
     public void start() {
         timer.reset();
         if (rightservo){
-            Transfer.INSTANCE.righttransfer.setPosition(targetpos);
+            transfer.righttransfer.setPosition(targetpos);
         } else if (leftservo) {
-            Transfer.INSTANCE.lefttransfer.setPosition(targetpos);
+            transfer.lefttransfer.setPosition(targetpos);
         } else if (midservo) {
-            Transfer.INSTANCE.midtransfer.setPosition(targetpos);
+            transfer.midtransfer.setPosition(targetpos);
         }
-    }
-    @Override
-    public boolean isDone() {
-        return timer.seconds() > .3;
     }
 
     @Override
-    public void stop(boolean interrupted) {
-        timer.reset();
+    public void update() {
+        if (rightservo){
+            transfer.righttransfer.setPosition(targetpos);
+        } else if (leftservo) {
+            transfer.lefttransfer.setPosition(targetpos);
+        } else if (midservo) {
+            transfer.midtransfer.setPosition(targetpos);
+        }
+    }
+
+    @Override
+    public boolean isDone() {
+        return timer.seconds() > time;
     }
 }
