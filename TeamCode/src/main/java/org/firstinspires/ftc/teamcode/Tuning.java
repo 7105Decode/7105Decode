@@ -159,7 +159,7 @@ class PedroPathingLocalizationTest extends OpMode {
 
         telemetryM.debug("x:" + follower.getPose().getX());
         telemetryM.debug("y:" + follower.getPose().getY());
-        telemetryM.debug("heading:" + follower.getPose().getHeading());
+        telemetryM.debug("headingdegrees:" + Math.toDegrees(follower.getPose().getHeading()));
         telemetryM.debug("total heading:" + follower.getTotalHeading());
 //        telemetryM.debug("forwardpod:" + follower.getConstants().);
 //        telemetryM.debug("total heading:" + follower.getTotalHeading());

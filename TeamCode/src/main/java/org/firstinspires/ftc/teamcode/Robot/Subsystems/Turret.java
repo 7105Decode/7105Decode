@@ -11,8 +11,6 @@ import com.rowanmcalpin.nextftc.ftc.OpModeData;
 import com.rowanmcalpin.nextftc.ftc.hardware.controllables.MotorEx;
 import com.rowanmcalpin.nextftc.ftc.hardware.controllables.RunToPosition;
 
-import org.firstinspires.ftc.teamcode.Robot.MoreConvenientTelemetry;
-
 @Configurable
 public class Turret extends Subsystem {
     public static final Turret INSTANCE = new Turret();
@@ -37,8 +35,6 @@ public class Turret extends Subsystem {
     @Override
     public void periodic() {
         result = limelight.getLatestResult();
-        MoreConvenientTelemetry.addtelem("turretposition", getCurrentPosition());
-        MoreConvenientTelemetry.addtelem("limelight_ty",getTy());
     }
     public void resetEncoder(){
         turret.resetEncoder();

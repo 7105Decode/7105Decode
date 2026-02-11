@@ -12,13 +12,13 @@ import com.rowanmcalpin.nextftc.core.Subsystem;
 
 import org.firstinspires.ftc.teamcode.Constants;
 import org.firstinspires.ftc.teamcode.DrawingCopy;
-import org.firstinspires.ftc.teamcode.Robot.MoreConvenientTelemetry;
 
 @Configurable
 public class DriveTrain extends Subsystem {
     public static final DriveTrain INSTANCE = new DriveTrain();
     private DriveTrain() { }
     public Follower follower;
+    public static boolean updateDriveTrain = false;
     @IgnoreConfigurable
     static PoseHistory poseHistory;
 
@@ -34,13 +34,10 @@ public class DriveTrain extends Subsystem {
     }
     @Override
     public void periodic() {
-        driveTrainTelem();
-    }
-    public void driveTrainTelem(){
-        draw();
-        MoreConvenientTelemetry.addtelem("heading", getHeadingDegrees());
-        MoreConvenientTelemetry.addtelem("x",getX());
-        MoreConvenientTelemetry.addtelem("y",getY());
+        if (updateDriveTrain){
+            draw();
+            DriveTrain.INSTANCE.updateFollower();
+        }
     }
     public double getHeadingDegrees(){
         return Math.toRadians(follower.getHeading());

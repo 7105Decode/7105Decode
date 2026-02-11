@@ -48,7 +48,7 @@ public class TeleBlueBetter extends LinearOpMode {
     CRServo rightkickstand, leftkickstand;
 
     public static boolean gotRightColor = false, gotMidColor = false, gotLeftColor = false;
-    public static double loopTime,ty = 0,uppower = .6,holdpower = .08,transferthreshold = 1,leftvel = 0, lpadpos=.274,rpadppos=0.265,targetvel = -2280,hoodup = .965, hooddown = 0.055,shooterspeed = 0, lefttransferservopos = 0.085, midtransferservopos = 0.095,righttransferservopos = 0.11;
+    public static double loopTime,ty = 0,uppower = .6,holdpower = .08,transferthreshold = 1,leftvel = 0, lpadpos=.274,rpadppos=0.265,targetvel = -2280,hoodup = .965, hooddown = 0.055,shooterspeed = 0, lefttransferservopos = 0.085, midtransferservopos = 0.095,righttransferservopos = 0.115;
     @Override
     public void runOpMode() {
         limelight = hardwareMap.get(Limelight3A.class, "limelight");

@@ -11,7 +11,6 @@ import org.firstinspires.ftc.teamcode.Robot.Subsystems.Transfer;
 
 public class MoveTransfer extends Command {
     ElapsedTime timer = new ElapsedTime();
-
     boolean rightservo, leftservo, midservo;
     double targetpos;
     public MoveTransfer(boolean rightservo, boolean leftservo, boolean midservo, double targetpos){
@@ -23,9 +22,7 @@ public class MoveTransfer extends Command {
 
     @Override
     public void start() {
-//        timer.reset();
-//        rightservo =false;
-//        midservo =false;
+        timer.reset();
         if (rightservo){
             Transfer.INSTANCE.righttransfer.setPosition(targetpos);
         } else if (leftservo) {
@@ -33,15 +30,14 @@ public class MoveTransfer extends Command {
         } else if (midservo) {
             Transfer.INSTANCE.midtransfer.setPosition(targetpos);
         }
-//        leftservo = false;
     }
-
-    @Override
-    public void update() {
-    }
-
     @Override
     public boolean isDone() {
-        return true;
+        return timer.seconds() > .3;
+    }
+
+    @Override
+    public void stop(boolean interrupted) {
+        timer.reset();
     }
 }

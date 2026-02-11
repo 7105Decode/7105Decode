@@ -23,6 +23,7 @@ public class FollowPath extends Command {
     @Override
     public void start() {
         DriveTrain.INSTANCE.followPath(path,true);
+        DriveTrain.updateDriveTrain = true;
     }
     @Override
     public void update() {
@@ -31,5 +32,6 @@ public class FollowPath extends Command {
 
     @Override
     public void stop(boolean interrupted) {
+        DriveTrain.updateDriveTrain = false;
     }
 }

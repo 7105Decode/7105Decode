@@ -13,7 +13,7 @@ public class Transfer extends Subsystem {
     public static final Transfer INSTANCE = new Transfer();
     private Transfer() { }
     RevColorSensorV3 leftsensor, rightsensor,midsensor;
-    public static double leftdownpos = 0.065, rightreadytransferpos,midreadytransferpos,leftreadytransferpos,lefttransferpos = 1, middownpos = 0.09,midtransferpos = .7, rightdownpos = .11, righttransferpos = .7;
+    public static double leftdownpos = 0.07, rightreadytransferpos,midreadytransferpos = .7,leftreadytransferpos,lefttransferpos = .7, middownpos = 0.095,midtransferpos = .7, rightdownpos = .11, righttransferpos = .7;
     public Servo righttransfer,lefttransfer,midtransfer;
     @Override
     public void initialize() {

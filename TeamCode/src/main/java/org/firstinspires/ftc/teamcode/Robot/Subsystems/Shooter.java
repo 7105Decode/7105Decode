@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.rowanmcalpin.nextftc.core.Subsystem;
 import com.rowanmcalpin.nextftc.ftc.OpModeData;
 import com.rowanmcalpin.nextftc.ftc.hardware.controllables.MotorEx;
-import org.firstinspires.ftc.teamcode.Robot.MoreConvenientTelemetry;
+
 @Configurable
 public class Shooter extends Subsystem {
     public static final Shooter INSTANCE = new Shooter();
@@ -31,7 +31,6 @@ public class Shooter extends Subsystem {
     }
     @Override
     public void periodic() {
-        shooterTelem();
         if (!turnShooterOff){
             setPower(.87);
         }
@@ -59,9 +58,6 @@ public class Shooter extends Subsystem {
     public void setPower(double power){
         rightshooter.setPower(power);
         leftshooter.setPower(power);
-    }
-    public void shooterTelem() {
-        MoreConvenientTelemetry.addtelem("shootervel", shooterVel());
     }
     public void setShooterStates(ShooterStates shooterStates){
         switch (shooterStates){

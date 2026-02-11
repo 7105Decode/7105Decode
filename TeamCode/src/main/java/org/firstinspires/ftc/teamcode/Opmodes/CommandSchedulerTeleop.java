@@ -8,7 +8,6 @@ import com.rowanmcalpin.nextftc.core.command.groups.ParallelGroup;
 import com.rowanmcalpin.nextftc.pedro.PedroOpMode;
 
 import org.firstinspires.ftc.teamcode.Robot.Commands.TrackAprilTag_BangBang;
-import org.firstinspires.ftc.teamcode.Robot.MoreConvenientTelemetry;
 import org.firstinspires.ftc.teamcode.Robot.Commands.RunDriveTrainTeleop;
 import org.firstinspires.ftc.teamcode.Robot.Commands.RunIntakeTele;
 import org.firstinspires.ftc.teamcode.Robot.Subsystems.DriveTrain;
@@ -22,7 +21,7 @@ import org.firstinspires.ftc.teamcode.Robot.Subsystems.Turret;
 public class CommandSchedulerTeleop extends PedroOpMode {
 
     public CommandSchedulerTeleop() {
-        super(Transfer.INSTANCE, Turret.INSTANCE, DriveTrain.INSTANCE, MoreConvenientTelemetry.INSTANCE, Shooter.INSTANCE, Intake.INSTANCE);
+        super(Transfer.INSTANCE, Turret.INSTANCE, DriveTrain.INSTANCE, Shooter.INSTANCE, Intake.INSTANCE);
     }
     Command runRobot;
     @Override
@@ -48,7 +47,6 @@ public class CommandSchedulerTeleop extends PedroOpMode {
 
     @Override
     public void onUpdate() {
-        MoreConvenientTelemetry.telemetryM.update();
         DriveTrain.INSTANCE.updateFollower();
     }
 }
