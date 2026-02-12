@@ -22,7 +22,7 @@ public class Turret extends Subsystem {
     private Turret() { }
     public static double nintydegrees_right = 750,nintydegrees_left = -750,
             turretforward = 0,rightSideThreshold = 900, leftSideThreshold = -900,
-            targetPos = 0, turretKP = .009;
+            targetPos = 0, turretKP = .01;
     public static  MotorEx turret;
     public Limelight3A limelight;
     public static LLResult result;
@@ -91,7 +91,7 @@ public class Turret extends Subsystem {
     public double getError(double reference){
         return reference - getCurrentPosition();
     }
-    public Command runPID() {
+    public Command runPID(double targetPos) {
         return new RunToPosition(turret, // MOTOR TO MOVE
                 targetPos, // TARGET POSITION, IN TICKS
                 pController, // CONTROLLER TO IMPLEMENT

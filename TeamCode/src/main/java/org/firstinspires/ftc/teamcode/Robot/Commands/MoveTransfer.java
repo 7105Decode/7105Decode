@@ -36,17 +36,6 @@ public class MoveTransfer extends Command {
     }
 
     @Override
-    public void update() {
-        if (rightservo){
-            transfer.righttransfer.setPosition(targetpos);
-        } else if (leftservo) {
-            transfer.lefttransfer.setPosition(targetpos);
-        } else if (midservo) {
-            transfer.midtransfer.setPosition(targetpos);
-        }
-    }
-
-    @Override
     public boolean isDone() {
         return timer.seconds() > time;
     }

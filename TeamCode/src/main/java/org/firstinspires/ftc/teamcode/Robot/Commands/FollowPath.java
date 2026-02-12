@@ -9,12 +9,13 @@ import com.rowanmcalpin.nextftc.core.command.Command;
 import org.firstinspires.ftc.teamcode.Robot.Subsystems.DriveTrain;
 
 public class FollowPath extends Command {
-    public boolean interruptible, done;
+    public boolean interruptible;
     PathChain path;
-    public FollowPath(PathChain path) {
-//        this.subsystem = subsystem;
+    Subsystem subsystem;
+    public FollowPath(Subsystem subsystem,PathChain path) {
+        this.subsystem = subsystem;
         this.path = path;
-        interruptible = false;
+        interruptible = true;
     }
     @Override
     public void start() {
@@ -27,6 +28,6 @@ public class FollowPath extends Command {
     }
     @Override
     public void stop(boolean interrupted) {
-        DriveTrain.updateDriveTrain = false;
+//        DriveTrain.updateDriveTrain = false;
     }
 }
