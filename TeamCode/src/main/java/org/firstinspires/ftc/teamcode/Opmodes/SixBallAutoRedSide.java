@@ -41,7 +41,7 @@ public class SixBallAutoRedSide extends LinearOpMode {
     public static PIDCoefficients pidCoefficients, shooterCoef;
 
     Pose startpose, firstMove, secondMove, thirdMove, fourthMove, fifthmove, sixthmove, seventhmove;
-    public static double firsty = 34, firstx = 100, secondx = 132, secondy = 35, thirdx = 109, thirdy = 100, fourthx = 123.8, fourthy = 73.7, fifthx = 133.5, fifthy = 24.8, sixthx = 135.1, sixthy = 10.1, seventhx = 86.1, seventhy = 8.2;
+    public static double firsty = 41, firstx = 100, secondx = 132, secondy = 35, thirdx = 85, thirdy = 8, fourthx = 123.8, fourthy = 73.7, fifthx = 133.5, fifthy = 24.8, sixthx = 135.1, sixthy = 10.1, seventhx = 86.1, seventhy = 8.2;
 
     @Override
     public void runOpMode() throws InterruptedException {
