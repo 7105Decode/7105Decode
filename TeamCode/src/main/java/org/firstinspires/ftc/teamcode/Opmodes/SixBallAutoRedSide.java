@@ -34,34 +34,35 @@ import org.firstinspires.ftc.teamcode.Robot.Subsystems.DriveTrain;
 @Configurable
 public class SixBallAutoRedSide extends LinearOpMode {
     Follower follower;
-    DcMotorEx rightshooter,leftshooter,topturret,intake;
-    Servo righttransfer, midtransfer,lefttransfer, hood;
+    DcMotorEx rightshooter, leftshooter, topturret, intake;
+    Servo righttransfer, midtransfer, lefttransfer, hood;
     BasicPID pid, shooterpid;
     ElapsedTime timer = new ElapsedTime();
     public static PIDCoefficients pidCoefficients, shooterCoef;
 
-    Pose startpose, firstMove,secondMove,thirdMove,fourthMove, fifthmove, sixthmove, seventhmove;
-    public static double firsty = 98, firstx = 89,secondx = 109, secondy = 100,thirdx = 109, thirdy = 100,fourthx = 123.8, fourthy = 73.7, fifthx = 133.5, fifthy = 24.8, sixthx = 135.1, sixthy = 10.1, seventhx = 86.1, seventhy = 8.2;   
+    Pose startpose, firstMove, secondMove, thirdMove, fourthMove, fifthmove, sixthmove, seventhmove;
+    public static double firsty = 98, firstx = 89, secondx = 109, secondy = 100, thirdx = 109, thirdy = 100, fourthx = 123.8, fourthy = 73.7, fifthx = 133.5, fifthy = 24.8, sixthx = 135.1, sixthy = 10.1, seventhx = 86.1, seventhy = 8.2;
+
     @Override
     public void runOpMode() throws InterruptedException {
-        rightshooter = hardwareMap.get(DcMotorEx.class,"rightshooter");
-        leftshooter = hardwareMap.get(DcMotorEx.class,"leftshooter");
-        hood = hardwareMap.get(Servo.class,"hood");
-        topturret = hardwareMap.get(DcMotorEx.class,"topturret");
-        righttransfer = hardwareMap.get(Servo.class,"righttransfer");
-        midtransfer = hardwareMap.get(Servo.class,"midtransfer");
-        lefttransfer = hardwareMap.get(Servo.class,"lefttransfer");
-        intake = hardwareMap.get(DcMotorEx.class,"frontintake");
+        rightshooter = hardwareMap.get(DcMotorEx.class, "rightshooter");
+        leftshooter = hardwareMap.get(DcMotorEx.class, "leftshooter");
+        hood = hardwareMap.get(Servo.class, "hood");
+        topturret = hardwareMap.get(DcMotorEx.class, "topturret");
+        righttransfer = hardwareMap.get(Servo.class, "righttransfer");
+        midtransfer = hardwareMap.get(Servo.class, "midtransfer");
+        lefttransfer = hardwareMap.get(Servo.class, "lefttransfer");
+        intake = hardwareMap.get(DcMotorEx.class, "frontintake");
 
         follower = Constants.createFollower(hardwareMap);
-        startpose = new Pose(72,72);
-        firstMove = new Pose(firstx,firsty);
-        secondMove = new Pose(secondx,secondy);
-        thirdMove = new Pose(thirdx,thirdy);
-        fourthMove = new Pose(fourthx,fourthy);
-        fifthmove = new Pose(fifthx,fifty);
-        sixthmove = new Pose(sixthx,sixthy);
-        seventhmove = new Pose(seventhx,seventhy);
+        startpose = new Pose(72, 72);
+        firstMove = new Pose(firstx, firsty);
+        secondMove = new Pose(secondx, secondy);
+        thirdMove = new Pose(thirdx, thirdy);
+        fourthMove = new Pose(fourthx, fourthy);
+        fifthmove = new Pose(fifthx, fifthy);
+        sixthmove = new Pose(sixthx, sixthy);
+        seventhmove = new Pose(seventhx, seventhy);
         follower.setStartingPose(startpose);
         follower.update();
         righttransfer.setDirection(Servo.Direction.REVERSE);
@@ -84,7 +85,7 @@ public class SixBallAutoRedSide extends LinearOpMode {
                 .addPath(new BezierLine(secondMove, thirdMove))
                 .setConstantHeadingInterpolation(startpose.getHeading())
                 .build();
-         PathChain pathSequence4 = follower.pathBuilder()
+        PathChain pathSequence4 = follower.pathBuilder()
                 .addPath(new BezierLine(thirdMove, fourthMove))
                 .setConstantHeadingInterpolation(startpose.getHeading())
                 .build();
@@ -104,151 +105,149 @@ public class SixBallAutoRedSide extends LinearOpMode {
         follower.setStartingPose(startpose);
         follower.update();
         timer.reset();
-        pidCoefficients = new PIDCoefficients(kp,ki,kd);
+        pidCoefficients = new PIDCoefficients(kp, ki, kd);
         pid = new BasicPID(pidCoefficients);
         shooterkp = .024;
-        shooterCoef = new PIDCoefficients(shooterkp,ki,kd);
+        shooterCoef = new PIDCoefficients(shooterkp, ki, kd);
         shooterpid = new BasicPID(shooterCoef);
         targetvel = -2280;
-        follower.followPath(pathSequence,true);
-        while (opModeIsActive()){
+        follower.followPath(pathSequence, true);
+        while (opModeIsActive()) {
             leftvel = leftshooter.getVelocity();
-            if (timer.seconds()<1.5){
-                topturret.setPower(pid.calculate(-935,topturret.getCurrentPosition()));
-                rightshooter.setPower(-1*shooterpid.calculate(targetvel,leftvel));
-                leftshooter.setPower(-1*shooterpid.calculate(targetvel,leftvel));
+            if (timer.seconds() < 1.5) {
+                topturret.setPower(pid.calculate(-935, topturret.getCurrentPosition()));
+                rightshooter.setPower(-1 * shooterpid.calculate(targetvel, leftvel));
+                leftshooter.setPower(-1 * shooterpid.calculate(targetvel, leftvel));
             } else if (timer.seconds() < 2.9) {
-                rightshooter.setPower(-1*shooterpid.calculate(targetvel,leftvel));
-                leftshooter.setPower(-1*shooterpid.calculate(targetvel,leftvel));
-                lefttransfer.setPosition(.7);}
-            else if (timer.seconds() < 3) {
-                rightshooter.setPower(-1*shooterpid.calculate(targetvel,leftvel));
-                leftshooter.setPower(-1*shooterpid.calculate(targetvel,leftvel));
+                rightshooter.setPower(-1 * shooterpid.calculate(targetvel, leftvel));
+                leftshooter.setPower(-1 * shooterpid.calculate(targetvel, leftvel));
+                lefttransfer.setPosition(.7);
+            } else if (timer.seconds() < 3) {
+                rightshooter.setPower(-1 * shooterpid.calculate(targetvel, leftvel));
+                leftshooter.setPower(-1 * shooterpid.calculate(targetvel, leftvel));
                 lefttransfer.setPosition(lefttransferservopos);
             } else if (timer.seconds() < 3.5) {
-                rightshooter.setPower(-1*shooterpid.calculate(targetvel,leftvel));
-                leftshooter.setPower(-1*shooterpid.calculate(targetvel,leftvel));
+                rightshooter.setPower(-1 * shooterpid.calculate(targetvel, leftvel));
+                leftshooter.setPower(-1 * shooterpid.calculate(targetvel, leftvel));
                 midtransfer.setPosition(.7);
             } else if (timer.seconds() < 4.5) {
-                rightshooter.setPower(-1*shooterpid.calculate(targetvel,leftvel));
-                leftshooter.setPower(-1*shooterpid.calculate(targetvel,leftvel));
+                rightshooter.setPower(-1 * shooterpid.calculate(targetvel, leftvel));
+                leftshooter.setPower(-1 * shooterpid.calculate(targetvel, leftvel));
                 midtransfer.setPosition(midtransferservopos);
             } else if (timer.seconds() < 5) {
-                rightshooter.setPower(-1*shooterpid.calculate(targetvel,leftvel));
-                leftshooter.setPower(-1*shooterpid.calculate(targetvel,leftvel));
+                rightshooter.setPower(-1 * shooterpid.calculate(targetvel, leftvel));
+                leftshooter.setPower(-1 * shooterpid.calculate(targetvel, leftvel));
                 righttransfer.setPosition(.7);
             } else if (timer.seconds() < 6.5) {
                 righttransfer.setPosition(righttransferservopos);
                 rightshooter.setPower(0.25);
                 leftshooter.setPower(0.25);
-            } else if  (timer.seconds() < 8){
+            } else if (timer.seconds() < 8) {
                 follower.update();
-            } else if (timer.seconds() < 9.05){
+            } else if (timer.seconds() < 9.05) {
                 intake.setPower(1);
                 follower.breakFollowing();
-            }else if (timer.seconds() < 9.1){
+            } else if (timer.seconds() < 9.1) {
                 intake.setPower(1);
-                follower.followPath(pathSequence2,true);
-            }else if  (timer.seconds() < 11){
+                follower.followPath(pathSequence2, true);
+            } else if (timer.seconds() < 11) {
 //                topturret.setPower(pid.calculate(0,topturret.getCurrentPosition()));
                 intake.setPower(1);
                 follower.update();
-            }else if (timer.seconds() < 12.05){
+            } else if (timer.seconds() < 12.05) {
                 intake.setPower(1);
                 follower.breakFollowing();
-            }else if (timer.seconds() < 12.1){
+            } else if (timer.seconds() < 12.1) {
                 intake.setPower(1);
-                follower.followPath(pathSequence3,true);
-            } else if (timer.seconds() < 13.7){
+                follower.followPath(pathSequence3, true);
+            } else if (timer.seconds() < 13.7) {
                 intake.setPower(1);
-                rightshooter.setPower(-1*shooterpid.calculate(targetvel,leftvel));
-                leftshooter.setPower(-1*shooterpid.calculate(targetvel,leftvel));
+                rightshooter.setPower(-1 * shooterpid.calculate(targetvel, leftvel));
+                leftshooter.setPower(-1 * shooterpid.calculate(targetvel, leftvel));
                 follower.update();
-            }
-
-            else if (timer.seconds() < 16.1) {
-                rightshooter.setPower(-1*shooterpid.calculate(targetvel,leftvel));
-                leftshooter.setPower(-1*shooterpid.calculate(targetvel,leftvel));
-                lefttransfer.setPosition(.7);}
-            else if (timer.seconds() < 16.6) {
-                rightshooter.setPower(-1*shooterpid.calculate(targetvel,leftvel));
-                leftshooter.setPower(-1*shooterpid.calculate(targetvel,leftvel));
+            } else if (timer.seconds() < 16.1) {
+                rightshooter.setPower(-1 * shooterpid.calculate(targetvel, leftvel));
+                leftshooter.setPower(-1 * shooterpid.calculate(targetvel, leftvel));
+                lefttransfer.setPosition(.7);
+            } else if (timer.seconds() < 16.6) {
+                rightshooter.setPower(-1 * shooterpid.calculate(targetvel, leftvel));
+                leftshooter.setPower(-1 * shooterpid.calculate(targetvel, leftvel));
                 lefttransfer.setPosition(lefttransferservopos);
             } else if (timer.seconds() < 17.7) {
-                rightshooter.setPower(-1*shooterpid.calculate(targetvel,leftvel));
-                leftshooter.setPower(-1*shooterpid.calculate(targetvel,leftvel));
+                rightshooter.setPower(-1 * shooterpid.calculate(targetvel, leftvel));
+                leftshooter.setPower(-1 * shooterpid.calculate(targetvel, leftvel));
                 midtransfer.setPosition(.7);
             } else if (timer.seconds() < 18.2) {
-                rightshooter.setPower(-1*shooterpid.calculate(targetvel,leftvel));
-                leftshooter.setPower(-1*shooterpid.calculate(targetvel,leftvel));
+                rightshooter.setPower(-1 * shooterpid.calculate(targetvel, leftvel));
+                leftshooter.setPower(-1 * shooterpid.calculate(targetvel, leftvel));
                 midtransfer.setPosition(midtransferservopos);
             } else if (timer.seconds() < 19.3) {
-                rightshooter.setPower(-1*shooterpid.calculate(targetvel,leftvel));
-                leftshooter.setPower(-1*shooterpid.calculate(targetvel,leftvel));
+                rightshooter.setPower(-1 * shooterpid.calculate(targetvel, leftvel));
+                leftshooter.setPower(-1 * shooterpid.calculate(targetvel, leftvel));
                 righttransfer.setPosition(.7);
             } else if (timer.seconds() < 19.8) {
                 rightshooter.setPower(0);
                 leftshooter.setPower(0);
-                topturret.setPower(pid.calculate(0,topturret.getCurrentPosition()));
+                topturret.setPower(pid.calculate(0, topturret.getCurrentPosition()));
                 righttransfer.setPosition(righttransferservopos);
-            } else if (timer.seconds() < 19.9){
+            } else if (timer.seconds() < 19.9) {
                 follower.breakFollowing();
-            }else if (timer.seconds() < 20){
-                follower.followPath(pathSequence5,true);
-            }else if  (timer.seconds() < 21){
+            } else if (timer.seconds() < 20) {
+                follower.followPath(pathSequence5, true);
+            } else if (timer.seconds() < 21) {
 //                topturret.setPower(pid.calculate(0,topturret.getCurrentPosition()));
-                follower.update();intake.setPower(1);
-                follower.breakFollowing();
-            }else if (timer.seconds() < 22){
+                follower.update();
                 intake.setPower(1);
-                follower.followPath(pathSequence6,true);
-            }else if  (timer.seconds() <22.05){ 
+                follower.breakFollowing();
+            } else if (timer.seconds() < 22) {
+                intake.setPower(1);
+                follower.followPath(pathSequence6, true);
+            } else if (timer.seconds() < 22.05) {
 //                topturret.setPower(pid.calculate(0,topturret.getCurrentPosition()));
                 intake.setPower(1);
                 follower.update();
-            }else if (timer.seconds() < 22.1){
+            } else if (timer.seconds() < 22.1) {
                 intake.setPower(1);
                 follower.breakFollowing();
-            }else if (timer.seconds() < 22.5){
+            } else if (timer.seconds() < 22.5) {
                 intake.setPower(1);
-                follower.followPath(pathSequence7,true);
-            } else if (timer.seconds() < 22.7){
-                rightshooter.setPower(-1*shooterpid.calculate(targetvel,leftvel));
-                leftshooter.setPower(-1*shooterpid.calculate(targetvel,leftvel));
+                follower.followPath(pathSequence7, true);
+            } else if (timer.seconds() < 22.7) {
+                rightshooter.setPower(-1 * shooterpid.calculate(targetvel, leftvel));
+                leftshooter.setPower(-1 * shooterpid.calculate(targetvel, leftvel));
                 follower.update();
-            }else if (timer.seconds() < 23.5){
+            } else if (timer.seconds() < 23.5) {
                 intake.setPower(1);
-             else if (timer.seconds() < 24) {
-                rightshooter.setPower(-1*shooterpid.calculate(targetvel,leftvel));
-                leftshooter.setPower(-1*shooterpid.calculate(targetvel,leftvel));
-                lefttransfer.setPosition(.7);}
-             else if (timer.seconds() < 24.5) {
-                rightshooter.setPower(-1*shooterpid.calculate(targetvel,leftvel));
-                leftshooter.setPower(-1*shooterpid.calculate(targetvel,leftvel));
+            } else if (timer.seconds() < 24) {
+                rightshooter.setPower(-1 * shooterpid.calculate(targetvel, leftvel));
+                leftshooter.setPower(-1 * shooterpid.calculate(targetvel, leftvel));
+                lefttransfer.setPosition(.7);
+            } else if (timer.seconds() < 24.5) {
+                rightshooter.setPower(-1 * shooterpid.calculate(targetvel, leftvel));
+                leftshooter.setPower(-1 * shooterpid.calculate(targetvel, leftvel));
                 lefttransfer.setPosition(lefttransferservopos);
             } else if (timer.seconds() < 25) {
-                rightshooter.setPower(-1*shooterpid.calculate(targetvel,leftvel));
-                leftshooter.setPower(-1*shooterpid.calculate(targetvel,leftvel));
+                rightshooter.setPower(-1 * shooterpid.calculate(targetvel, leftvel));
+                leftshooter.setPower(-1 * shooterpid.calculate(targetvel, leftvel));
                 midtransfer.setPosition(.7);
             } else if (timer.seconds() < 25.5) {
-                rightshooter.setPower(-1*shooterpid.calculate(targetvel,leftvel));
-                leftshooter.setPower(-1*shooterpid.calculate(targetvel,leftvel));
+                rightshooter.setPower(-1 * shooterpid.calculate(targetvel, leftvel));
+                leftshooter.setPower(-1 * shooterpid.calculate(targetvel, leftvel));
                 midtransfer.setPosition(midtransferservopos);
             } else if (timer.seconds() < 26) {
-                rightshooter.setPower(-1*shooterpid.calculate(targetvel,leftvel));
-                leftshooter.setPower(-1*shooterpid.calculate(targetvel,leftvel));
+                rightshooter.setPower(-1 * shooterpid.calculate(targetvel, leftvel));
+                leftshooter.setPower(-1 * shooterpid.calculate(targetvel, leftvel));
                 righttransfer.setPosition(.7);
-            }  else if (timer.seconds() < 27) {
+            } else if (timer.seconds() < 27) {
                 rightshooter.setPower(0);
                 leftshooter.setPower(0);
-                topturret.setPower(pid.calculate(0,topturret.getCurrentPosition()));
+                topturret.setPower(pid.calculate(0, topturret.getCurrentPosition()));
                 righttransfer.setPosition(righttransferservopos);
-               else if (timer.seconds() < 28) {
-               follower.followPath(pathSequence,true);
-                topturret.setPower(pid.calculate(0,topturret.getCurrentPosition()));
+            } else if (timer.seconds() < 28) {
+                follower.followPath(pathSequence, true);
+                topturret.setPower(pid.calculate(0, topturret.getCurrentPosition()));
                 follower.update();
             }
-
         }
     }
 }
