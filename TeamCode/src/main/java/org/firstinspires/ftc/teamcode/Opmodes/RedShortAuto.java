@@ -11,6 +11,7 @@ import com.rowanmcalpin.nextftc.core.command.groups.ParallelGroup;
 import com.rowanmcalpin.nextftc.core.command.groups.SequentialGroup;
 import com.rowanmcalpin.nextftc.ftc.NextFTCOpMode;
 
+import org.firstinspires.ftc.teamcode.Robot.Commands.FishForAprilTagAuto;
 import org.firstinspires.ftc.teamcode.Robot.Commands.MoveTurretWithEncoderThreshold;
 import org.firstinspires.ftc.teamcode.Robot.Commands.FollowPath;
 import org.firstinspires.ftc.teamcode.Robot.Commands.MoveTransfer;
@@ -42,7 +43,7 @@ public class RedShortAuto extends NextFTCOpMode {
                 //move out and turn the turret to the correct position
                 new ParallelGroup(new RunShooter(Shooter.INSTANCE,0.012,-1560),
                         new FollowPath(DriveTrain.INSTANCE,paths.RedShortPreloads),
-                        new MoveTurretWithEncoderThreshold(Turret.INSTANCE,false,-790,40),
+                        new FishForAprilTagAuto(1,false,.3),
                         new MoveTransfer(Transfer.INSTANCE,false,false,true, midfurtherback,.4)
                 ),
 
@@ -60,8 +61,7 @@ public class RedShortAuto extends NextFTCOpMode {
 
                 new ParallelGroup(new FollowPath(DriveTrain.INSTANCE,paths.RedShortScorePPG),
                         new RunShooter(Shooter.INSTANCE,0.012,-1560),
-                        new SequentialGroup(new MoveTurretWithEncoderThreshold(Turret.INSTANCE,false,-1570,40),
-                                new TrackAprilTag_BangBangAuto(1)),
+                        new FishForAprilTagAuto(1,false,.2),
                         new MoveTransfer(Transfer.INSTANCE,false,false,true, midfurtherback,.4)
                 ),
 
@@ -78,13 +78,7 @@ public class RedShortAuto extends NextFTCOpMode {
 
                 new ParallelGroup(new FollowPath(DriveTrain.INSTANCE,paths.RedShortScorePGP),
                         new RunShooter(Shooter.INSTANCE,0.012,-1560),
-                                new TrackAprilTag_BangBangAuto(1),
-
-
-
-
-
-
+                                new FishForAprilTagAuto(1,true,.14),
                         new MoveTransfer(Transfer.INSTANCE,false,false,true, midfurtherback,.4)
                 ),
 

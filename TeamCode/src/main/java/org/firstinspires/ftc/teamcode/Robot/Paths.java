@@ -15,15 +15,14 @@ public class Paths {
         RedShortPreloads = follower.pathBuilder().addPath(
                         new BezierLine(
                                 RedShortStartPose,
-
-                                new Pose(109.9, 108.7)
+                                new Pose(100, 107.5)
                         )
                 ).setConstantHeadingInterpolation(Math.toRadians(216.5))
                 .build();
 
         RedShortCollectPPG = follower.pathBuilder().addPath(
                         new BezierCurve(
-                                new Pose(110, 108.7),
+                                new Pose(100, 107.5),
                                 new Pose(83, 89.7),
                                 new Pose(111.3, 83.5),
                                 new Pose(125.4, 82.6)

@@ -46,7 +46,7 @@ public class TeleRedBetter extends LinearOpMode {
     Follower follower;
     CRServo rightkickstand, leftkickstand;
     public static boolean gotRightColor = false, gotMidColor = false, gotLeftColor = false;
-    public static double feedforwardlong = 1, feedforwardshort = 0,loopTime,targetvel = 0,ty = 0, shooterkp = 0.024,turretki = 0,turretkd = 0, kp = 0.009,ki = 0,kd = 0,hoodup = .965, hooddown = 0.055,shooterspeed = 0, lefttransferservopos = 0.04, midtransferservopos = .13,righttransferservopos = 0.095, TopTurretPower = .35;
+    public static double feedforwardlong = 1,loopTime,targetvel = 0,ty = 0, shooterkp = 0.024, kp = 0.009,ki = 0,kd = 0,hoodup = .965, hooddown = 0.055,shooterspeed = 0, lefttransferservopos = 0.06, midtransferservopos = .13,righttransferservopos = 0.095;
     @Override
     public void runOpMode() {
         limelight = hardwareMap.get(Limelight3A.class, "limelight");
