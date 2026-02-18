@@ -23,6 +23,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.Constants;
+import org.firstinspires.ftc.teamcode.Robot.Subsystems.Transfer;
 
 @Configurable
 @TeleOp
@@ -43,10 +44,9 @@ public class TeleRedBetter extends LinearOpMode {
     HoodStates hoodStates = HoodStates.DOWN;
     ParkingStates parkingStates = ParkingStates.DISENGAGE;
     Follower follower;
-
     CRServo rightkickstand, leftkickstand;
     public static boolean gotRightColor = false, gotMidColor = false, gotLeftColor = false;
-    public static double loopTime,targetvel = 0,ty = 0, shooterkp = 0.024,turretki = 0,turretkd = 0, kp = 0.009,ki = 0,kd = 0,hoodup = .965, hooddown = 0.055,shooterspeed = 0, lefttransferservopos = 0.04, midtransferservopos = .13,righttransferservopos = 0.095, TopTurretPower = .35;
+    public static double feedforwardlong = 1, feedforwardshort = 0,loopTime,targetvel = 0,ty = 0, shooterkp = 0.024,turretki = 0,turretkd = 0, kp = 0.009,ki = 0,kd = 0,hoodup = .965, hooddown = 0.055,shooterspeed = 0, lefttransferservopos = 0.04, midtransferservopos = .13,righttransferservopos = 0.095, TopTurretPower = .35;
     @Override
     public void runOpMode() {
         limelight = hardwareMap.get(Limelight3A.class, "limelight");
@@ -263,8 +263,8 @@ public class TeleRedBetter extends LinearOpMode {
 
             switch (shooterStates) {
                 case MAX:
-                    rightshooter.setPower(-1*shooterpid.calculate(targetvel,leftvel));
-                    leftshooter.setPower(-1*shooterpid.calculate(targetvel,leftvel));
+                    rightshooter.setPower(feedforwardlong);
+                    leftshooter.setPower(feedforwardlong);
                     if (gamepad1.dpad_down){
                         shooterStates = ShooterStates.OFF;
                     } else if (gamepad1.dpad_left) {
@@ -326,6 +326,9 @@ public class TeleRedBetter extends LinearOpMode {
                     } else if (gamepad2.a) {
                         timer.reset();
                         transferStates = TransferStates.MIDUP;
+                    } else if (gamepad2.left_bumper) {
+                        timer.reset();
+                        transferStates = TransferStates.FAST;
                     }
                     break;
                 case MIDUP:
@@ -335,6 +338,30 @@ public class TeleRedBetter extends LinearOpMode {
                     if (timer.seconds() >= transferthreshold) {
                         gotMidColor = false;
                         colorSensorResetter.reset();
+                        transferStates = TransferStates.DOWN;
+                    }
+                    break;
+                case FAST:
+                     if (timer.seconds() <= .45) {
+                    righttransfer.setPosition(.7);
+                    midtransfer.setPosition(Transfer.midfurtherback);
+                } else if (timer.seconds() <= 1.4) {
+                        righttransfer.setPosition(.7);
+                        lefttransfer.setPosition(.34);
+                    }  else if (timer.seconds() <= 2) {
+                         lefttransfer.setPosition(.7);
+//                        midtransfer.setPosition(.43);
+                         righttransfer.setPosition(righttransferservopos);
+                     }  else if (timer.seconds() <= 2.5) {
+                         lefttransfer.setPosition(.7);
+                         midtransfer.setPosition(.43);
+                         righttransfer.setPosition(righttransferservopos);
+                     } else if (timer.seconds() <= 2.9) {
+                         lefttransfer.setPosition(lefttransferservopos);
+                     } else if (timer.seconds() <= 3.5){
+                        midtransfer.setPosition(.7);
+                        lefttransfer.setPosition(lefttransferservopos);
+                    }else {
                         transferStates = TransferStates.DOWN;
                     }
                     break;
@@ -383,6 +410,7 @@ public class TeleRedBetter extends LinearOpMode {
         LEFTUP,
         RIGHTUP,
         MIDUP,
+        FAST,
         DOWN
     }
 }

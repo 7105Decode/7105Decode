@@ -23,11 +23,11 @@ public class Turret extends Subsystem {
     public static double nintydegrees_right = 750,nintydegrees_left = -750,
             turretforward = 0,rightSideThreshold = 900, leftSideThreshold = -900,
             targetPos = 0, turretKP = .01;
-    public static  MotorEx turret;
+    public  MotorEx turret;
     public Limelight3A limelight;
     public static LLResult result;
     public String topturretname = "topturret";
-    public static boolean startLimelight = false, GPP = false, PGP = false, PPG = false;
+    public static boolean doneTrackingAprilTagAuto= false, GPP = false, PGP = false, PPG = false;
     PIDFController pController;
     public static double obeliskID = 0;
     @Override
@@ -49,7 +49,7 @@ public class Turret extends Subsystem {
     public double getTx(){
         return result.getTx();
     }
-    public static double getCurrentPosition(){
+    public double getCurrentPosition(){
         return turret.getCurrentPosition();
     }
     public double getPower(){
@@ -69,7 +69,7 @@ public class Turret extends Subsystem {
                 }
         }
     }
-    public static void aprilTagBangBangTeleop(Gamepad gamepad2){
+    public void aprilTagBangBang_Teleop(Gamepad gamepad2){
         if (result.isValid() && getCurrentPosition() > leftSideThreshold && getCurrentPosition() < rightSideThreshold) {
             if (getTy() <= -8.5) {
                 turret.setPower(-.3);
@@ -84,6 +84,27 @@ public class Turret extends Subsystem {
             turret.setPower(-.3);
         } else if (gamepad2.left_trigger > .3){
             turret.setPower(.3);
+        } else {
+            turret.setPower(0);
+        }
+    }
+    public void aprilTagBangBang_Auto(){
+        if (result.isValid()) {
+            if (getTy() <= -8.5) {
+                doneTrackingAprilTagAuto = false;
+                turret.setPower(-.3);
+            } else if (getTy() > -8.5 && getTy() < .3) {
+                doneTrackingAprilTagAuto = false;
+                turret.setPower(-.09);
+            } else if (getTy() >= 9.5) {
+                doneTrackingAprilTagAuto = false;
+                turret.setPower(.3);
+            } else if (getTy() > .7) {
+                doneTrackingAprilTagAuto = false;
+                turret.setPower(.09);
+            } else {
+                doneTrackingAprilTagAuto = true;
+            }
         } else {
             turret.setPower(0);
         }

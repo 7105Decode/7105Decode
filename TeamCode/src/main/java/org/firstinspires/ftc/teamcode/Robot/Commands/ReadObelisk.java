@@ -9,16 +9,17 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.Robot.Subsystems.Turret;
 
 public class ReadObelisk extends Command {
-    Turret turret;
     Telemetry telemetry;
-    public ReadObelisk(Turret turret, Telemetry telemetry){
-        this.turret = turret;
+    int pipeline;
+    public ReadObelisk(int pipeline, Telemetry telemetry){
+        this.pipeline = pipeline;
         this.telemetry = telemetry;
     }
 
     @Override
     public void start() {
-        turret.limelight.start();
+        Turret.INSTANCE.limelight.pipelineSwitch(pipeline);
+        Turret.INSTANCE.limelight.start();
         Turret.GPP = false;
         Turret.PPG = false;
         Turret.PGP = false;
@@ -26,7 +27,7 @@ public class ReadObelisk extends Command {
 
     @Override
     public void update() {
-        turret.readObelisk(telemetry);
+        Turret.INSTANCE.readObelisk(telemetry);
     }
 
     @Override

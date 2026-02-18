@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.Robot.Subsystems;
 import com.ThermalEquilibrium.homeostasis.Controllers.Feedback.BasicPID;
 import com.ThermalEquilibrium.homeostasis.Parameters.PIDCoefficients;
 import com.bylazar.configurables.annotations.Configurable;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.rowanmcalpin.nextftc.core.Subsystem;
 import com.rowanmcalpin.nextftc.ftc.OpModeData;
@@ -26,6 +27,8 @@ public class Shooter extends Subsystem {
         shooterpid = new BasicPID(coefficients);
         rightshooter = new MotorEx(rightshootername);
         leftshooter = new MotorEx(leftshootername);
+        leftshooter.getMotor().setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        rightshooter.getMotor().setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         hood = OpModeData.INSTANCE.getHardwareMap().get(Servo.class,"hood");
         shooterHighSpeed = false;
         shooterLowSpeed = false;
