@@ -7,7 +7,7 @@ import org.firstinspires.ftc.teamcode.Robot.Subsystems.Shooter;
 public class TurnShooterOff extends Command {
     @Override
     public void start() {
-        Shooter.shooterHighSpeed = false;
+        Shooter.runShooter = false;
     }
 
     @Override

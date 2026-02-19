@@ -19,6 +19,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -46,7 +47,7 @@ public class TeleRedBetter extends LinearOpMode {
     Follower follower;
     CRServo rightkickstand, leftkickstand;
     public static boolean gotRightColor = false, gotMidColor = false, gotLeftColor = false;
-    public static double feedforwardlong = 1,loopTime,targetvel = 0,ty = 0, shooterkp = 0.024, kp = 0.009,ki = 0,kd = 0,hoodup = .965, hooddown = 0.055,shooterspeed = 0, lefttransferservopos = 0.06, midtransferservopos = .13,righttransferservopos = 0.095;
+    public static double feedforwardlong = .88,feedforwardshort = .62,loopTime,targetvel = 0,ty = 0, shooterkp = 0.002, kp = 0.009,ki = 0,kd = 0,hoodup = .965, hooddown = 0.055,shooterspeed = 0, lefttransferservopos = 0.06, midtransferservopos = .13,righttransferservopos = 0.095;
     @Override
     public void runOpMode() {
         limelight = hardwareMap.get(Limelight3A.class, "limelight");
@@ -72,6 +73,7 @@ public class TeleRedBetter extends LinearOpMode {
         rightkickstand = hardwareMap.get(CRServo.class,"rightkickstand");
         leftkickstand = hardwareMap.get(CRServo.class,"leftkickstand");
 
+        rightkickstand.setDirection(DcMotorSimple.Direction.REVERSE);
 
         limelight.start();
         righttransfer.setDirection(Servo.Direction.REVERSE);
@@ -231,7 +233,7 @@ public class TeleRedBetter extends LinearOpMode {
                 case GOINGUP:
                     rightkickstand.setPower(uppower);
                     leftkickstand.setPower(uppower);
-                    if (kickStandTimer.seconds() >= 1.2){
+                    if (kickStandTimer.seconds() >= 1){
                         parkingStates = ParkingStates.HOLD;
                     }
                     break;
@@ -263,24 +265,24 @@ public class TeleRedBetter extends LinearOpMode {
 
             switch (shooterStates) {
                 case MAX:
-                    rightshooter.setPower(feedforwardlong);
-                    leftshooter.setPower(feedforwardlong);
+                    rightshooter.setPower( (-1*shooterpid.calculate(targetvel,leftvel))+ feedforwardlong );
+                    leftshooter.setPower( (-1*shooterpid.calculate(targetvel,leftvel)) + feedforwardlong );
                     if (gamepad1.dpad_down){
                         shooterStates = ShooterStates.OFF;
                     } else if (gamepad1.dpad_left) {
-                        targetvel = -1560;
-                        shooterkp = 0.012;
+                        targetvel = -1600;
+//                        shooterkp = 0.012;
                         shooterCoef = new PIDCoefficients(shooterkp,ki,kd);
                         shooterpid = new BasicPID(shooterCoef);
                         shooterStates = ShooterStates.SLOWERSPEED;
                     }
                     break;
                 case SLOWERSPEED:
-                    rightshooter.setPower(-1*shooterpid.calculate(targetvel,leftvel));
-                    leftshooter.setPower(-1*shooterpid.calculate(targetvel,leftvel));
+                    rightshooter.setPower( (-1*shooterpid.calculate(targetvel,leftvel))+ feedforwardshort);
+                    leftshooter.setPower( (-1*shooterpid.calculate(targetvel,leftvel)) + feedforwardshort );
                     if (gamepad1.dpad_up){
                         targetvel = -2280;
-                        shooterkp = 0.03;
+//                        shooterkp = 0.03;
                         shooterCoef = new PIDCoefficients(shooterkp,ki,kd);
                         shooterpid = new BasicPID(shooterCoef);
                         shooterStates = ShooterStates.MAX;
@@ -293,13 +295,13 @@ public class TeleRedBetter extends LinearOpMode {
                     leftshooter.setPower(shooterspeed);
                     if (gamepad1.dpad_up){
                         targetvel = -2280;
-                        shooterkp = 0.03;
+//                        shooterkp = 0.03;
                         shooterCoef = new PIDCoefficients(shooterkp,ki,kd);
                         shooterpid = new BasicPID(shooterCoef);
                         shooterStates = ShooterStates.MAX;
                     } else if (gamepad1.dpad_left) {
-                        targetvel = -1560;
-                        shooterkp = 0.012;
+                        targetvel = -1600;
+//                        shooterkp = 0;
                         shooterCoef = new PIDCoefficients(shooterkp,ki,kd);
                         shooterpid = new BasicPID(shooterCoef);
                         shooterStates = ShooterStates.SLOWERSPEED;

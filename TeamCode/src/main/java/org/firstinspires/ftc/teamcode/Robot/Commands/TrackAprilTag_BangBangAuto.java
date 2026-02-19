@@ -18,6 +18,7 @@ public class TrackAprilTag_BangBangAuto extends Command {
     }
     @Override
     public void update() {
+        Turret.INSTANCE.result = Turret.INSTANCE.limelight.getLatestResult();
         Turret.INSTANCE.aprilTagBangBang_Auto();
     }
 

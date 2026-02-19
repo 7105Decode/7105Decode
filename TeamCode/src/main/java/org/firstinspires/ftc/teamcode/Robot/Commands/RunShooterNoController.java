@@ -7,7 +7,7 @@ import org.firstinspires.ftc.teamcode.Robot.Subsystems.Shooter;
 public class RunShooterNoController extends Command {
     @Override
     public void start() {
-        Shooter.shooterHighSpeed = false;
+        Shooter.runShooter = false;
     }
     @Override
     public boolean isDone() {

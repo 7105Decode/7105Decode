@@ -16,6 +16,7 @@ public class TrackAprilTag_BangBangTele extends Command {
     }
     @Override
     public void update() {
+        Turret.INSTANCE.result = Turret.INSTANCE.limelight.getLatestResult();
         Turret.INSTANCE.aprilTagBangBang_Teleop(gamepad);
     }
 

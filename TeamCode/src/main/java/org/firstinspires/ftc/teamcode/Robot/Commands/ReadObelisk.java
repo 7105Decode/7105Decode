@@ -27,6 +27,7 @@ public class ReadObelisk extends Command {
 
     @Override
     public void update() {
+        Turret.INSTANCE.result = Turret.INSTANCE.limelight.getLatestResult();
         Turret.INSTANCE.readObelisk(telemetry);
     }
 

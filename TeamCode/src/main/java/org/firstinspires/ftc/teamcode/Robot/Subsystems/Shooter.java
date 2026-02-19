@@ -1,7 +1,5 @@
 package org.firstinspires.ftc.teamcode.Robot.Subsystems;
 
-import com.ThermalEquilibrium.homeostasis.Controllers.Feedback.BasicPID;
-import com.ThermalEquilibrium.homeostasis.Parameters.PIDCoefficients;
 import com.bylazar.configurables.annotations.Configurable;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -14,29 +12,25 @@ public class Shooter extends Subsystem {
     public static final Shooter INSTANCE = new Shooter();
     private Shooter() { }
     public MotorEx rightshooter,leftshooter;
-    BasicPID shooterpid;
-    PIDCoefficients coefficients;
     public Servo hood;
-    public static double hoodUp = .965,hoodDown = .055,MaxSpinSpeed = 1, HalfSpinSpeed = .5, kp = 0.03, ki = 0, kd = 0, targetvel = -2280;
+    public static double hoodUp = .965,hoodDown = .055,MaxSpinSpeed = 1, HalfSpinSpeed = .5,
+            feedforwardlong = .88,feedforwardshort = .62,kp = 0.002, targetvel = -2280, feedforward = 0;
     public String rightshootername = "rightshooter", leftshootername = "leftshooter";
-    public static boolean shooterHighSpeed = false, shooterLowSpeed = false;
+    public static boolean runShooter = false;
 
     @Override
     public void initialize() {
-        coefficients = new PIDCoefficients(kp,ki,kd);
-        shooterpid = new BasicPID(coefficients);
         rightshooter = new MotorEx(rightshootername);
         leftshooter = new MotorEx(leftshootername);
         leftshooter.getMotor().setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         rightshooter.getMotor().setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         hood = OpModeData.INSTANCE.getHardwareMap().get(Servo.class,"hood");
-        shooterHighSpeed = false;
-        shooterLowSpeed = false;
+        runShooter = false;
     }
     @Override
     public void periodic() {
-        if (shooterHighSpeed){
-            runPController();
+        if (runShooter) {
+            calculatePF();
         }
     }
     public void resetShooter(){
@@ -47,6 +41,10 @@ public class Shooter extends Subsystem {
         return leftshooter.getVelocity();
     }
 
+    public double shooterVelError(double targetvel){
+        return (targetvel - shooterVel()) *-1;
+    }
+
     public double setControllerValue(double value){
         kp = value;
         return kp;
@@ -55,9 +53,8 @@ public class Shooter extends Subsystem {
         targetvel = referencevel;
         return targetvel;
     }
-    public void runPController(){
-        rightshooter.setPower(-1*shooterpid.calculate(targetvel,shooterVel()));
-        leftshooter.setPower(-1*shooterpid.calculate(targetvel,shooterVel()));
+    public void setTargetFeedForward(double feedforward){
+        this.feedforward = feedforward;
     }
     public void setPower(double power){
         rightshooter.setPower(power);
@@ -75,6 +72,10 @@ public class Shooter extends Subsystem {
                 rightshooter.setPower(0);
                 break;
         }
+    }
+
+    public void calculatePF(){
+         setPower((shooterVelError(targetvel) * kp) + feedforward);
     }
     public enum ShooterStates {
         MAXSPEED,

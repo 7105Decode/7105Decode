@@ -4,11 +4,11 @@ import com.rowanmcalpin.nextftc.core.command.Command;
 
 import org.firstinspires.ftc.teamcode.Robot.Subsystems.Turret;
 
-public class FishForAprilTagAuto extends Command {
+public class FishForAprilTagRedAuto extends Command {
     int pipeline;
     boolean turnRight;
     double power;
-    public FishForAprilTagAuto(int pipeline,boolean turnRight,double power){
+    public FishForAprilTagRedAuto(int pipeline, boolean turnRight, double power){
         this.pipeline = pipeline;
         this.power = power;
         this.turnRight = turnRight;
@@ -23,7 +23,8 @@ public class FishForAprilTagAuto extends Command {
     }
     @Override
     public void update() {
-        Turret.INSTANCE.fishingForAprilTag_BangBang_Auto(turnRight,power);
+        Turret.INSTANCE.result = Turret.INSTANCE.limelight.getLatestResult();
+        Turret.INSTANCE.fishingForAprilTag_BangBang_RedAuto(turnRight,power);
     }
 
 

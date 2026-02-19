@@ -5,25 +5,24 @@ import com.rowanmcalpin.nextftc.core.command.Command;
 import org.firstinspires.ftc.teamcode.Robot.Subsystems.Shooter;
 
 public class RunShooter extends Command {
-    Shooter shooter;
-    double vel, kp;
-    public RunShooter(Shooter shooter, double kp, double vel) {
-        this.shooter = shooter;
+    double vel,feedforward;
+    public RunShooter(double feedforward, double vel) {
+
+        this.feedforward = feedforward;
         this.vel = vel;
-        this.kp = kp;
     }
     @Override
     public boolean isDone() {
-        return true;
+        return Shooter.runShooter;
     }
     @Override
     public void start() {
-        shooter.setControllerValue(kp);
-        shooter.setTargetVel(vel);
-        Shooter.shooterHighSpeed = true;
+        Shooter.runShooter = true;
+        Shooter.INSTANCE.setTargetVel(vel);
+        Shooter.INSTANCE.setTargetFeedForward(feedforward);
     }
     @Override
     public void stop(boolean interrupted) {
-
+        Shooter.INSTANCE.setPower(0);
     }
 }

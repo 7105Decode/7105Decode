@@ -22,10 +22,11 @@ public class Turret extends Subsystem {
     private Turret() { }
     public static double nintydegrees_right = 750,nintydegrees_left = -750,
             turretforward = 0,rightSideThreshold = 900, leftSideThreshold = -900,
-            targetPos = 0, turretKP = .01, driverPower = .3, limelightHighPower = .3, limelightLowPower = .12;
-    public  MotorEx turret;
+            targetPos = 0, turretKP = .01, driverPower = .3, limelightHighPower = .3, limelightLowPower = .12,
+            kp = 0.025, redSideOffset = -2, blueOffset = 2;
+    public MotorEx turret;
     public Limelight3A limelight;
-    public static LLResult result;
+    public LLResult result;
     public String topturretname = "topturret";
     public static boolean doneTrackingAprilTagAuto= false, GPP = false, PGP = false, PPG = false;
     PIDFController pController;
@@ -36,24 +37,14 @@ public class Turret extends Subsystem {
         limelight = OpModeData.hardwareMap.get(Limelight3A.class,"limelight");
         pController = new PIDFController(turretKP);
     }
-    @Override
-    public void periodic() {
-        result = limelight.getLatestResult();
-    }
     public void resetEncoder(){
         turret.resetEncoder();
     }
-    public static double getTy(){
+    public double getTy(){
         return result.getTy();
-    }
-    public double getTx(){
-        return result.getTx();
     }
     public double getCurrentPosition(){
         return turret.getCurrentPosition();
-    }
-    public double getPower(){
-        return turret.getPower();
     }
     public void readObelisk(Telemetry telemetry){
         List<LLResultTypes.FiducialResult> fiducialResults = result.getFiducialResults();
@@ -88,24 +79,18 @@ public class Turret extends Subsystem {
             turret.setPower(0);
         }
     }
-    public void fishingForAprilTag_BangBang_Auto(boolean turnRight,double power){
+    public void fishingForAprilTag_BangBang_RedAuto(boolean turnRight,double power){
         if (result.isValid()) {
-            if (getTy() <= -8.5) {
-                doneTrackingAprilTagAuto = false;
-                turret.setPower(-power);
-            } else if (getTy() > -8.5 && getTy() < .3) {
-                doneTrackingAprilTagAuto = false;
-                turret.setPower(-limelightLowPower);
-            } else if (getTy() >= 9.5) {
-                doneTrackingAprilTagAuto = false;
-                turret.setPower(power);
-            } else if (getTy() > .7) {
-                doneTrackingAprilTagAuto = false;
-                turret.setPower(limelightLowPower);
-            } else {
-                doneTrackingAprilTagAuto = true;
-                turret.setPower(0);
-            }
+            turret.setPower((redSideOffset - getTy())* -kp);
+        }else if (turnRight){
+            Turret.INSTANCE.turret.setPower(power);
+        } else {
+            Turret.INSTANCE.turret.setPower(-power);
+        }
+    }
+    public void fishingForAprilTag_BangBang_BlueAuto(boolean turnRight,double power){
+        if (result.isValid()) {
+            turret.setPower((redSideOffset - getTy())* -kp);
         }else if (turnRight){
             Turret.INSTANCE.turret.setPower(power);
         } else {
