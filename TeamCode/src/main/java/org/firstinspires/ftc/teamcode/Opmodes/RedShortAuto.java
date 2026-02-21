@@ -42,9 +42,9 @@ public class RedShortAuto extends NextFTCOpMode {
         return new SequentialGroup(
 
                 //move out and turn the turret to the correct position
-                new ParallelGroup(new RunShooter(feedforwardshort,-1600),
+                new ParallelGroup(new RunShooter(feedforwardshort,-1650),
                         new FollowPath(DriveTrain.INSTANCE,paths.RedShortPreloads),
-                        new FishForAprilTagRedAuto(1,false,.33),
+                        new FishForAprilTagRedAuto(1,false,.33,-7),
                         new MoveTransfer(Transfer.INSTANCE,false,false,true, midfurtherback,.4)
                 ),
 
@@ -62,7 +62,7 @@ public class RedShortAuto extends NextFTCOpMode {
 
                 new ParallelGroup(new FollowPath(DriveTrain.INSTANCE,paths.RedShortScorePPG),
                         new RunShooter(feedforwardshort,-1600),
-                        new FishForAprilTagRedAuto(1,false,.3),
+                        new FishForAprilTagRedAuto(1,false,.3, -4.5),
                         new Delay(1.5).then( new ArtifactShaker()),
                         new MoveTransfer(Transfer.INSTANCE,false,false,true, middownpos,.4)
                 ),
@@ -79,9 +79,9 @@ public class RedShortAuto extends NextFTCOpMode {
                 new MoveTransfer(Transfer.INSTANCE,false,false,true,Transfer.middownpos,.2)),
 
                 new ParallelGroup(new FollowPath(DriveTrain.INSTANCE,paths.RedShortScorePGP),
-                        new RunShooter(feedforwardshort,-1600),
+                        new RunShooter(.67,-1800),
                         new Delay(1.5).then( new ArtifactShaker()),
-                                new FishForAprilTagRedAuto(1,true,.14),
+                        new Delay(1.9).then(new FishForAprilTagRedAuto(1,true,.3, -7.5)),
                         new MoveTransfer(Transfer.INSTANCE,false,false,true, middownpos,.4)
                 ),
         new MoveTransfer(Transfer.INSTANCE,false,true,false,Transfer.lefttransferpos,.9),

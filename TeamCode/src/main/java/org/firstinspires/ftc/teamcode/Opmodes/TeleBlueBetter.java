@@ -1,6 +1,8 @@
 package org.firstinspires.ftc.teamcode.Opmodes;
 
 
+import static org.firstinspires.ftc.teamcode.Opmodes.TeleRedBetter.feedforwardlong;
+import static org.firstinspires.ftc.teamcode.Opmodes.TeleRedBetter.feedforwardshort;
 import static org.firstinspires.ftc.teamcode.Opmodes.TeleRedBetter.kd;
 import static org.firstinspires.ftc.teamcode.Opmodes.TeleRedBetter.ki;
 import static org.firstinspires.ftc.teamcode.Opmodes.TeleRedBetter.kp;
@@ -110,24 +112,24 @@ public class TeleBlueBetter extends LinearOpMode {
             follower.setTeleOpDrive(-gamepad1.left_stick_y, -gamepad1.left_stick_x, -gamepad1.right_stick_x, true);
             follower.update();
             LLResult result = limelight.getLatestResult();
-            if (result.isValid()) {
-                ty = result.getTy();
-                    if (ty <= -8.5){
-                        topturret.setPower(-.3);
-                    } else if (ty > -8.5 && ty < .3) {
-                        topturret.setPower(-.09);
-                    } else if (ty >= 9.5) {
-                        topturret.setPower(.3);
-                    } else if (ty > .7) {
-                        topturret.setPower(.09);
-                    } else{
-                    topturret.setPower(0);
-                }
-                telemetry.addData("ty",ty);
-            } else if (gamepad2.right_trigger > .3){
+            if (gamepad2.right_trigger > .3){
                 topturret.setPower(-.3);
             } else if (gamepad2.left_trigger > .3){
                 topturret.setPower(.3);
+            } else if (result.isValid()) {
+                ty = result.getTy();
+                if (ty <= -8.5){
+                    topturret.setPower(-.3);
+                } else if (ty > -8.5 && ty < .3) {
+                    topturret.setPower(-.09);
+                } else if (ty >= 9.5) {
+                    topturret.setPower(.3);
+                } else if (ty > .7) {
+                    topturret.setPower(.09);
+                } else{
+                    topturret.setPower(0);
+                }
+                telemetry.addData("ty",ty);
             } else {
                 topturret.setPower(0);
             }
@@ -241,15 +243,15 @@ public class TeleBlueBetter extends LinearOpMode {
                 case HOLD:
                     rightkickstand.setPower(holdpower);
                     leftkickstand.setPower(holdpower);
-                    if (gamepad1.right_bumper){
+                    if (gamepad1.dpad_down){
                         kickStandTimer.reset();
-                        parkingStates = ParkingStates.GOINGUP;
+                        parkingStates = ParkingStates.DISENGAGE;
                     }
                     break;
                 case DISENGAGE:
                     rightkickstand.setPower(0);
                     leftkickstand.setPower(0);
-                    if (gamepad1.right_bumper){
+                    if (gamepad1.dpad_up){
                         kickStandTimer.reset();
                         parkingStates = ParkingStates.GOINGUP;
                     }
@@ -266,45 +268,41 @@ public class TeleBlueBetter extends LinearOpMode {
 
             switch (shooterStates) {
                 case MAX:
-                    rightshooter.setPower(-1*shooterpid.calculate(targetvel,leftvel));
-                    leftshooter.setPower(-1*shooterpid.calculate(targetvel,leftvel));
+                    rightshooter.setPower( (-1*shooterpid.calculate(targetvel,leftvel))+ feedforwardlong );
+                    leftshooter.setPower( (-1*shooterpid.calculate(targetvel,leftvel)) + feedforwardlong );
 //                    rightshooter.setPower(1);
 //                    leftshooter.setPower(1);
-                    if (gamepad1.dpad_down){
+                    if (gamepad1.a){
                         shooterStates = ShooterStates.OFF;
                     } else if (gamepad1.dpad_left) {
-                        targetvel = -1560;
-                        shooterkp = 0.012;
+                        targetvel = -1600;
                         shooterCoef = new PIDCoefficients(shooterkp,ki,kd);
                         shooterpid = new BasicPID(shooterCoef);
                     shooterStates = ShooterStates.SLOWERSPEED;
                 }
                     break;
                 case SLOWERSPEED:
-                    rightshooter.setPower(-1*shooterpid.calculate(targetvel,leftvel));
-                    leftshooter.setPower(-1*shooterpid.calculate(targetvel,leftvel));
-                    if (gamepad1.dpad_up){
+                    rightshooter.setPower( (-1*shooterpid.calculate(targetvel,leftvel))+ feedforwardshort );
+                    leftshooter.setPower( (-1*shooterpid.calculate(targetvel,leftvel)) + feedforwardshort );
+                    if (gamepad1.a) {
+                        shooterStates = ShooterStates.OFF;
+                    }else if (gamepad1.right_bumper){
                         targetvel = -2280;
-                        kp = 0.03;
                         shooterCoef = new PIDCoefficients(shooterkp,ki,kd);
                         shooterpid = new BasicPID(shooterCoef);
                         shooterStates = ShooterStates.MAX;
-                    } else if (gamepad1.dpad_down) {
-                    shooterStates = ShooterStates.OFF;
-                }
+                    }
                     break;
                 case OFF:
                     rightshooter.setPower(shooterspeed);
                     leftshooter.setPower(shooterspeed);
-                    if (gamepad1.dpad_up){
+                    if (gamepad1.right_bumper){
                         targetvel = -2280;
-                        kp = 0.03;
                         shooterCoef = new PIDCoefficients(shooterkp,ki,kd);
                         shooterpid = new BasicPID(shooterCoef);
                         shooterStates = ShooterStates.MAX;
-                    } else if (gamepad1.dpad_left) {
-                        targetvel = -1560;
-                        shooterkp = 0.012;
+                    } else if (gamepad1.left_bumper) {
+                        targetvel = -1600;
                         shooterCoef = new PIDCoefficients(shooterkp,ki,kd);
                         shooterpid = new BasicPID(shooterCoef);
                          shooterStates = ShooterStates.SLOWERSPEED;

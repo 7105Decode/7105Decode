@@ -109,11 +109,16 @@ public class TeleRedBetter extends LinearOpMode {
             follower.setTeleOpDrive(-gamepad1.left_stick_y, -gamepad1.left_stick_x, -gamepad1.right_stick_x, true);
             follower.update();
             LLResult result = limelight.getLatestResult();
-            if (result.isValid()) {
+
+             if (gamepad2.right_trigger > .3){
+                topturret.setPower(-.3);
+            } else if (gamepad2.left_trigger > .3){
+                topturret.setPower(.3);
+            } else if (result.isValid()) {
                 ty = result.getTy();
-                telemetry.addData("ty",ty);
+                telemetry.addData("ty", ty);
                 ty = result.getTy();
-                if (ty <= -9){
+                if (ty <= -9) {
                     topturret.setPower(-.3);
                 } else if (ty > -9 && ty < -.2) {
                     topturret.setPower(-.09);
@@ -121,14 +126,9 @@ public class TeleRedBetter extends LinearOpMode {
                     topturret.setPower(.3);
                 } else if (ty > .2) {
                     topturret.setPower(.09);
-                } else{
+                } else {
                     topturret.setPower(0);
                 }
-
-            } else if (gamepad2.right_trigger > .3){
-                topturret.setPower(-.3);
-            } else if (gamepad2.left_trigger > .3){
-                topturret.setPower(.3);
             } else {
                 topturret.setPower(0);
             }
@@ -240,15 +240,15 @@ public class TeleRedBetter extends LinearOpMode {
                 case HOLD:
                     leftkickstand.setPower(holdpower);
                     rightkickstand.setPower(holdpower);
-                    if (gamepad1.right_bumper){
+                    if (gamepad1.dpad_down){
                         kickStandTimer.reset();
-                        parkingStates = ParkingStates.GOINGUP;
+                        parkingStates = ParkingStates.DISENGAGE;
                     }
                     break;
                 case DISENGAGE:
                     rightkickstand.setPower(0);
                     leftkickstand.setPower(0);
-                    if (gamepad1.right_bumper){
+                    if (gamepad1.dpad_up){
                         kickStandTimer.reset();
                         parkingStates = ParkingStates.GOINGUP;
                     }
@@ -267,9 +267,9 @@ public class TeleRedBetter extends LinearOpMode {
                 case MAX:
                     rightshooter.setPower( (-1*shooterpid.calculate(targetvel,leftvel))+ feedforwardlong );
                     leftshooter.setPower( (-1*shooterpid.calculate(targetvel,leftvel)) + feedforwardlong );
-                    if (gamepad1.dpad_down){
+                    if (gamepad1.a){
                         shooterStates = ShooterStates.OFF;
-                    } else if (gamepad1.dpad_left) {
+                    } else if (gamepad1.left_bumper) {
                         targetvel = -1600;
 //                        shooterkp = 0.012;
                         shooterCoef = new PIDCoefficients(shooterkp,ki,kd);
@@ -280,31 +280,29 @@ public class TeleRedBetter extends LinearOpMode {
                 case SLOWERSPEED:
                     rightshooter.setPower( (-1*shooterpid.calculate(targetvel,leftvel))+ feedforwardshort);
                     leftshooter.setPower( (-1*shooterpid.calculate(targetvel,leftvel)) + feedforwardshort );
-                    if (gamepad1.dpad_up){
+                    if (gamepad1.a) {
+                        shooterStates = ShooterStates.OFF;
+                    }else if (gamepad1.right_bumper){
                         targetvel = -2280;
 //                        shooterkp = 0.03;
                         shooterCoef = new PIDCoefficients(shooterkp,ki,kd);
                         shooterpid = new BasicPID(shooterCoef);
                         shooterStates = ShooterStates.MAX;
-                    } else if (gamepad1.dpad_down) {
-                        shooterStates = ShooterStates.OFF;
                     }
                     break;
                 case OFF:
                     rightshooter.setPower(shooterspeed);
                     leftshooter.setPower(shooterspeed);
-                    if (gamepad1.dpad_up){
+                    if (gamepad1.right_bumper){
                         targetvel = -2280;
-//                        shooterkp = 0.03;
                         shooterCoef = new PIDCoefficients(shooterkp,ki,kd);
                         shooterpid = new BasicPID(shooterCoef);
-                        shooterStates = ShooterStates.MAX;
-                    } else if (gamepad1.dpad_left) {
+                        shooterStates = TeleRedBetter.ShooterStates.MAX;
+                    } else if (gamepad1.left_bumper) {
                         targetvel = -1600;
-//                        shooterkp = 0;
                         shooterCoef = new PIDCoefficients(shooterkp,ki,kd);
                         shooterpid = new BasicPID(shooterCoef);
-                        shooterStates = ShooterStates.SLOWERSPEED;
+                        shooterStates = TeleRedBetter.ShooterStates.SLOWERSPEED;
                     }
                     break;
             }

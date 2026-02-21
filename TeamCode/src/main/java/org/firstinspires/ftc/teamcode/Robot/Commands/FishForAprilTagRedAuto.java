@@ -7,9 +7,10 @@ import org.firstinspires.ftc.teamcode.Robot.Subsystems.Turret;
 public class FishForAprilTagRedAuto extends Command {
     int pipeline;
     boolean turnRight;
-    double power;
-    public FishForAprilTagRedAuto(int pipeline, boolean turnRight, double power){
+    double power, offset;
+    public FishForAprilTagRedAuto(int pipeline, boolean turnRight, double power,double offset){
         this.pipeline = pipeline;
+        this.offset = offset;
         this.power = power;
         this.turnRight = turnRight;
     }
@@ -24,7 +25,7 @@ public class FishForAprilTagRedAuto extends Command {
     @Override
     public void update() {
         Turret.INSTANCE.result = Turret.INSTANCE.limelight.getLatestResult();
-        Turret.INSTANCE.fishingForAprilTag_BangBang_RedAuto(turnRight,power);
+        Turret.INSTANCE.fishingForAprilTag_RedAuto(turnRight,power,offset);
     }
 
 

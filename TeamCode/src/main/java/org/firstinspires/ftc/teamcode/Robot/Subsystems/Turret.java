@@ -23,7 +23,7 @@ public class Turret extends Subsystem {
     public static double nintydegrees_right = 750,nintydegrees_left = -750,
             turretforward = 0,rightSideThreshold = 900, leftSideThreshold = -900,
             targetPos = 0, turretKP = .01, driverPower = .3, limelightHighPower = .3, limelightLowPower = .12,
-            kp = 0.025, redSideOffset = -2, blueOffset = 2;
+            kp = 0.025, redSideOffsetAuto = -3.3,redSideOffset = -2, blueOffset = 2;
     public MotorEx turret;
     public Limelight3A limelight;
     public LLResult result;
@@ -79,9 +79,12 @@ public class Turret extends Subsystem {
             turret.setPower(0);
         }
     }
-    public void fishingForAprilTag_BangBang_RedAuto(boolean turnRight,double power){
+    public void fishingForAprilTag_RedAuto(boolean turnRight, double power, double offset){
         if (result.isValid()) {
-            turret.setPower((redSideOffset - getTy())* -kp);
+            turret.setPower((offset - getTy())* -kp);
+            if ((offset - getTy()) < (offset + 1) && (offset - getTy()) > (offset - 2)){
+                doneTrackingAprilTagAuto = true;
+            }
         }else if (turnRight){
             Turret.INSTANCE.turret.setPower(power);
         } else {
