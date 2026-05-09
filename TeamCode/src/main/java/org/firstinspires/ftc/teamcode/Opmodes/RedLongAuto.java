@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode.Opmodes;
-import static org.firstinspires.ftc.teamcode.Robot.Subsystems.Shooter.feedforwardshort;
-import static org.firstinspires.ftc.teamcode.Robot.Subsystems.Shooter.hoodDown;
+import static org.firstinspires.ftc.teamcode.Robot.Subsystems.Shooter.hoodUp;
 import static org.firstinspires.ftc.teamcode.Robot.Subsystems.Transfer.middownpos;
 import static org.firstinspires.ftc.teamcode.Robot.Subsystems.Transfer.midfurtherback;
 import static org.firstinspires.ftc.teamcode.Robot.Subsystems.Transfer.midreadytransferpos;
@@ -13,41 +12,42 @@ import com.rowanmcalpin.nextftc.core.command.groups.SequentialGroup;
 import com.rowanmcalpin.nextftc.core.command.utility.delays.Delay;
 import com.rowanmcalpin.nextftc.ftc.NextFTCOpMode;
 
+import org.firstinspires.ftc.teamcode.BlueLongPaths;
+import org.firstinspires.ftc.teamcode.RedLongPaths;
 import org.firstinspires.ftc.teamcode.Robot.Commands.ArtifactShaker;
 import org.firstinspires.ftc.teamcode.Robot.Commands.FishForAprilTagRedAuto;
 import org.firstinspires.ftc.teamcode.Robot.Commands.FollowPath;
+import org.firstinspires.ftc.teamcode.Robot.Commands.FollowPathTimer;
 import org.firstinspires.ftc.teamcode.Robot.Commands.MoveTransfer;
 import org.firstinspires.ftc.teamcode.Robot.Commands.ReadObelisk;
 import org.firstinspires.ftc.teamcode.Robot.Commands.RunIntakeAuto;
 import org.firstinspires.ftc.teamcode.Robot.Commands.RunShooter;
 import org.firstinspires.ftc.teamcode.Robot.Commands.TurnShooterOff;
-import org.firstinspires.ftc.teamcode.Robot.Paths;
 import org.firstinspires.ftc.teamcode.Robot.Subsystems.DriveTrain;
 import org.firstinspires.ftc.teamcode.Robot.Subsystems.Intake;
 import org.firstinspires.ftc.teamcode.Robot.Subsystems.Shooter;
 import org.firstinspires.ftc.teamcode.Robot.Subsystems.Transfer;
 import org.firstinspires.ftc.teamcode.Robot.Subsystems.Turret;
 // optional static import
-@Autonomous(name = "\uD83D\uDFE5ShortAuto")
-public class RedShortAuto extends NextFTCOpMode {
-    public RedShortAuto() {
+@Autonomous(name = "\uD83D\uDFE5LongAuto")
+public class RedLongAuto extends NextFTCOpMode {
+    public RedLongAuto() {
         super(Transfer.INSTANCE, Turret.INSTANCE, DriveTrain.INSTANCE, Shooter.INSTANCE, Intake.INSTANCE);
     }
-    Paths paths;
+    RedLongPaths paths;
     Command readObelisk(){
-        return new ReadObelisk(0,telemetry);
+        return new ReadObelisk(4,telemetry);
     }
     // from the starpose to middle is around -880
     public Command runRobot() {
         return new SequentialGroup(
 
                 //move out and turn the turret to the correct position
-                new ParallelGroup(new RunShooter(feedforwardshort,-1650),
-                        new FollowPath(DriveTrain.INSTANCE,paths.RedShortPreloads),
-                        new FishForAprilTagRedAuto(1,false,.33,-7,3),
+                new ParallelGroup(new RunShooter(.865,-2280),
+                        new FishForAprilTagRedAuto(1,false,.33,-2.5,1.5),
                         new MoveTransfer(Transfer.INSTANCE,false,false,true, midfurtherback,.4)
                 ),
-
+                new Delay(.7),
                 // shooting the preloads
                 new MoveTransfer(Transfer.INSTANCE,false,true,false,Transfer.lefttransferpos,.9),
                 new MoveTransfer(Transfer.INSTANCE,false,true,false,Transfer.leftdownpos,.45),
@@ -55,51 +55,53 @@ public class RedShortAuto extends NextFTCOpMode {
                 new MoveTransfer(Transfer.INSTANCE,true,false,false,Transfer.rightdownpos,.45),
                 new MoveTransfer(Transfer.INSTANCE,false,false,true, midreadytransferpos,.9),
 
-                new ParallelGroup(new FollowPath(DriveTrain.INSTANCE,paths.RedShortCollectPPG),
+                new ParallelGroup(new FollowPath(DriveTrain.INSTANCE,paths.GrabCorner),
+                        new TurnShooterOff(),
+                        new RunIntakeAuto(true),
+                        new MoveTransfer(Transfer.INSTANCE,false,false,true,Transfer.middownpos,.2)),
+
+                new FollowPath(DriveTrain.INSTANCE,paths.BackUp),
+                new FollowPath(DriveTrain.INSTANCE,paths.PrepShift),
+                new FollowPathTimer(DriveTrain.INSTANCE,paths.ShiftLastArtifact,1),
+
+                new Delay(.7),
+
+                new FollowPathTimer(DriveTrain.INSTANCE,paths.GrabLastArtifact,.6),
+                new ParallelGroup(new FollowPath(DriveTrain.INSTANCE,paths.ReturnToShoot),
+                        new Delay(.8).then(new RunShooter(.87,-2280)),
+                        new Delay(.5).then(new MoveTransfer(Transfer.INSTANCE,false,false,true, midfurtherback,.3)).then(new ArtifactShaker())),
+                new FishForAprilTagRedAuto(1,false,.3,-2.5,1.5),
+                new FishForAprilTagRedAuto(1,true,.3,-2.5,1.5),
+
+                new MoveTransfer(Transfer.INSTANCE,true,false,false,righttransferpos,.9),
+                new MoveTransfer(Transfer.INSTANCE,true,false,false,Transfer.rightdownpos,.45),
+                new MoveTransfer(Transfer.INSTANCE,false,true,false,Transfer.lefttransferpos,.9),
+                new MoveTransfer(Transfer.INSTANCE,false,true,false,Transfer.leftdownpos,.45),
+                new MoveTransfer(Transfer.INSTANCE,false,false,true, midreadytransferpos,.9),
+
+              new ParallelGroup(new FollowPath(DriveTrain.INSTANCE,paths.SixPark),
                 new TurnShooterOff(),
-                new RunIntakeAuto(true),
+                new Delay(.6).then(new RunIntakeAuto(true)),
                 new MoveTransfer(Transfer.INSTANCE,false,false,true,Transfer.middownpos,.2)),
 
-                new ParallelGroup(new FollowPath(DriveTrain.INSTANCE,paths.RedShortScorePPG),
-                        new RunShooter(feedforwardshort,-1600),
-                        new FishForAprilTagRedAuto(1,false,.3, -4.5,2),
-                        new Delay(1.5).then( new ArtifactShaker()),
-                        new MoveTransfer(Transfer.INSTANCE,false,false,true, middownpos,.4)
-                ),
+                new ParallelGroup(new FollowPath(DriveTrain.INSTANCE,paths.ShootAgain),
+                        new Delay(.8).then(new RunShooter(.87,-2280)),
+                        new Delay(.5).then(new MoveTransfer(Transfer.INSTANCE,false,false,true, midfurtherback,.3)).then(new ArtifactShaker())),
+
+                new FishForAprilTagRedAuto(1,false,0,-1.6,1.5),
 
                 new MoveTransfer(Transfer.INSTANCE,false,true,false,Transfer.lefttransferpos,.9),
                 new MoveTransfer(Transfer.INSTANCE,false,true,false,Transfer.leftdownpos,.45),
                 new MoveTransfer(Transfer.INSTANCE,true,false,false,righttransferpos,.9),
                 new MoveTransfer(Transfer.INSTANCE,true,false,false,Transfer.rightdownpos,.45),
                 new MoveTransfer(Transfer.INSTANCE,false,false,true, midreadytransferpos,.9),
-
-        new ParallelGroup(new FollowPath(DriveTrain.INSTANCE,paths.RedShortCollectPGP),
-                new TurnShooterOff(),
-                new RunIntakeAuto(true),
-                new MoveTransfer(Transfer.INSTANCE,false,false,true,Transfer.middownpos,.2)),
-
-                new ParallelGroup(new FollowPath(DriveTrain.INSTANCE,paths.RedShortScorePGP),
-                        new RunShooter(.67,-1800),
-                        new Delay(1.5).then( new ArtifactShaker()),
-                        new Delay(1.9).then(new FishForAprilTagRedAuto(1,true,.3, -7.5,2)),
-                        new MoveTransfer(Transfer.INSTANCE,false,false,true, middownpos,.4)
-                ),
-        new MoveTransfer(Transfer.INSTANCE,false,true,false,Transfer.lefttransferpos,.9),
-                new MoveTransfer(Transfer.INSTANCE,false,true,false,Transfer.leftdownpos,.45),
-                new MoveTransfer(Transfer.INSTANCE,true,false,false,righttransferpos,.9),
-                new MoveTransfer(Transfer.INSTANCE,true,false,false,Transfer.rightdownpos,.45),
-                new MoveTransfer(Transfer.INSTANCE,false,false,true, midreadytransferpos,.9),
-                new ParallelGroup(new FollowPath(DriveTrain.INSTANCE,paths.RedShortCollectGPP),
-                        new TurnShooterOff(),
-                        new RunIntakeAuto(true),
-                        new MoveTransfer(Transfer.INSTANCE,false,false,true,Transfer.middownpos,.2))
-        );
+                new MoveTransfer(Transfer.INSTANCE,false,false,true, middownpos,.9));
     }
     @Override
     public void onInit() {
         DriveTrain.INSTANCE.createFollower(hardwareMap);
-        Shooter.INSTANCE.hood.setPosition(hoodDown);
-        paths = new Paths(DriveTrain.INSTANCE.follower);
+        Shooter.INSTANCE.hood.setPosition(hoodUp);
+        paths = new RedLongPaths(DriveTrain.INSTANCE.follower);
 
     }
     @Override
@@ -112,7 +114,7 @@ public class RedShortAuto extends NextFTCOpMode {
     @Override
     public void onStartButtonPressed() {
         Turret.INSTANCE.resetEncoder();
-        DriveTrain.INSTANCE.setStartPose(Paths.RedShortStartPose);
+        DriveTrain.INSTANCE.setStartPose(RedLongPaths.RedLongStartPose);
         DriveTrain.INSTANCE.updateFollower();
         runRobot().invoke();
     }

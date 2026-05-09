@@ -22,6 +22,8 @@ public class Intake extends Subsystem {
     public void periodic() {
         if (runIntakeAuto){
             intake.setPower(intakeSpeed);
+        } else {
+            intake.setPower(0);
         }
     }
     public static void runIntakeTele(Gamepad gamepad1){

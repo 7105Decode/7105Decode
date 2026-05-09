@@ -5,6 +5,7 @@ import static org.firstinspires.ftc.teamcode.Opmodes.TeleBlueBetter.holdpower;
 import static org.firstinspires.ftc.teamcode.Opmodes.TeleBlueBetter.leftvel;
 import static org.firstinspires.ftc.teamcode.Opmodes.TeleBlueBetter.transferthreshold;
 import static org.firstinspires.ftc.teamcode.Opmodes.TeleBlueBetter.uppower;
+import static org.firstinspires.ftc.teamcode.Opmodes.TeleBlueBetter.useencoder;
 
 import com.ThermalEquilibrium.homeostasis.Controllers.Feedback.BasicPID;
 import com.ThermalEquilibrium.homeostasis.Parameters.PIDCoefficients;
@@ -36,7 +37,7 @@ public class TeleRedBetter extends LinearOpMode {
     RevColorSensorV3 rightcolorSensor;
     RevColorSensorV3 leftcolorSensor;
     RevColorSensorV3 middlecolorSensor;
-    public static boolean hoodUP = false,pidTurretPos = false;
+    public static boolean hoodUP = false;
     public static PIDCoefficients pidCoefficients,shooterCoef;
     BasicPID pid,shooterpid;
     Servo righttransfer, midtransfer,lefttransfer, hood, rightled,midled,leftled;
@@ -93,13 +94,13 @@ public class TeleRedBetter extends LinearOpMode {
         shooterCoef = new PIDCoefficients(shooterkp,ki,kd);
         shooterpid = new BasicPID(shooterCoef);
         hoodUP = false;
-        pidTurretPos = true;
         shooterStates = ShooterStates.OFF;
         hood.setPosition(hooddown);
         timer.reset();
         gotLeftColor = false;
         gotRightColor = false;
         gotMidColor = false;
+        useencoder = true;
 
         follower.startTeleopDrive(true);
         follower.update();
@@ -111,26 +112,33 @@ public class TeleRedBetter extends LinearOpMode {
             LLResult result = limelight.getLatestResult();
 
              if (gamepad2.right_trigger > .3){
-                topturret.setPower(-.3);
+                topturret.setPower(-.4);
             } else if (gamepad2.left_trigger > .3){
-                topturret.setPower(.3);
-            } else if (result.isValid()) {
-                ty = result.getTy();
-                telemetry.addData("ty", ty);
+                topturret.setPower(.4);
+            } else if (useencoder){
+                 topturret.setPower(pid.calculate(535, topturret.getCurrentPosition()));
+             }else if (result.isValid()) {
                 ty = result.getTy();
                 if (ty <= -9) {
-                    topturret.setPower(-.3);
+                    topturret.setPower(-.35);
                 } else if (ty > -9 && ty < -.2) {
-                    topturret.setPower(-.09);
+                    topturret.setPower(-.11);
                 } else if (ty >= 9) {
-                    topturret.setPower(.3);
+                    topturret.setPower(.35);
                 } else if (ty > .2) {
-                    topturret.setPower(.09);
+                    topturret.setPower(.11);
                 } else {
                     topturret.setPower(0);
                 }
+                 telemetry.addData("ty", ty);
             } else {
                 topturret.setPower(0);
+            }
+
+            if (gamepad2.dpad_right && useencoder){
+                useencoder=false;
+            } else if (gamepad2.dpad_right) {
+                useencoder=true;
             }
 
             if (gamepad2.right_bumper){

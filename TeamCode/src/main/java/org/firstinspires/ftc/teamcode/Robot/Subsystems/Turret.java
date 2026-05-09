@@ -4,6 +4,7 @@ import com.bylazar.configurables.annotations.Configurable;
 import com.qualcomm.hardware.limelightvision.LLResult;
 import com.qualcomm.hardware.limelightvision.LLResultTypes;
 import com.qualcomm.hardware.limelightvision.Limelight3A;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.rowanmcalpin.nextftc.core.Subsystem;
 import com.rowanmcalpin.nextftc.core.command.Command;
@@ -23,19 +24,22 @@ public class Turret extends Subsystem {
     public static double nintydegrees_right = 750,nintydegrees_left = -750,
             turretforward = 0,rightSideThreshold = 900, leftSideThreshold = -900,
             targetPos = 0, turretKP = .01, driverPower = .3, limelightHighPower = .3, limelightLowPower = .12,
-            kp = 0.025, redSideOffsetAuto = -3.3,redSideOffset = -2, blueOffset = 2;
+            kp = 0.03, redSideOffsetAuto = -3.3,redSideOffset = -2, blueOffset = 1;
     public MotorEx turret;
     public Limelight3A limelight;
     public LLResult result;
     public String topturretname = "topturret";
-    public static boolean doneTrackingAprilTagAuto= false, GPP = false, PGP = false, PPG = false;
+    public static boolean doneTrackingAprilTagAuto= false, turnLimelightOn = false,GPP = false, PGP = false, PPG = false;
     PIDFController pController;
     public static double obeliskID = 0;
     @Override
     public void initialize() {
         turret = new MotorEx(topturretname);
+        turret.getMotor().setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         limelight = OpModeData.hardwareMap.get(Limelight3A.class,"limelight");
         pController = new PIDFController(turretKP);
+        turnLimelightOn = false;
+        doneTrackingAprilTagAuto = false;
     }
     public void resetEncoder(){
         turret.resetEncoder();
@@ -91,9 +95,12 @@ public class Turret extends Subsystem {
             Turret.INSTANCE.turret.setPower(-power);
         }
     }
-    public void fishingForAprilTag_BangBang_BlueAuto(boolean turnRight,double power){
+    public void fishingForAprilTag_BlueAuto(boolean turnRight, double power, double offset){
         if (result.isValid()) {
-            turret.setPower((redSideOffset - getTy())* -kp);
+            turret.setPower((offset - getTy())* -kp);
+            if ((offset - getTy()) < (offset + 2) && (offset - getTy()) > (offset - 1)){
+                doneTrackingAprilTagAuto = true;
+            }
         }else if (turnRight){
             Turret.INSTANCE.turret.setPower(power);
         } else {

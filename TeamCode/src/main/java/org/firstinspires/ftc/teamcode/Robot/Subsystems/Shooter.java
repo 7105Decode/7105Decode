@@ -31,6 +31,8 @@ public class Shooter extends Subsystem {
     public void periodic() {
         if (runShooter) {
             calculatePF();
+        } else {
+            setPower(0);
         }
     }
     public void resetShooter(){
