@@ -30,7 +30,7 @@ public class Turret extends Subsystem {
     public LLResult result;
     public String topturretname = "topturret";
     public static boolean doneTrackingAprilTagAuto= false, turnLimelightOn = false,GPP = false, PGP = false, PPG = false;
-    PIDFController pController;
+    public PIDFController pController;
     public static double obeliskID = 0;
     @Override
     public void initialize() {
