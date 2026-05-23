@@ -80,13 +80,22 @@ public class BlueLongPaths {
                         )
                 ).setLinearHeadingInterpolation(Math.toRadians(180), Math.toRadians(180))
                 .build();
+//        NinePark = follower.pathBuilder().addPath(
+//                        new BezierLine(
+//                                new Pose(43.7, 8.7),
+//
+//                                new Pose(23, 8.7)
+//
+//                        )
+//                ).setLinearHeadingInterpolation(Math.toRadians(180), Math.toRadians(180))
+//                .build();
         NinePark = follower.pathBuilder().addPath(
-                        new BezierLine(
+                        new BezierCurve(
                                 new Pose(43.7, 8.7),
-
-                                new Pose(23, 8.7)
+                                new Pose(24.7, 25.8),
+                                new Pose(26, 10.1)
                         )
-                ).setLinearHeadingInterpolation(Math.toRadians(180), Math.toRadians(180))
+                ).setLinearHeadingInterpolation(Math.toRadians(180), Math.toRadians(0))
                 .build();
         SafePark = follower.pathBuilder().addPath(
                         new BezierCurve(

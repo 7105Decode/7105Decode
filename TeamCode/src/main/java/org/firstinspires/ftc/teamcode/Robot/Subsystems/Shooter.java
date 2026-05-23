@@ -16,7 +16,7 @@ public class Shooter extends Subsystem {
     public static double hoodUp = .965,hoodDown = .055,MaxSpinSpeed = 1, HalfSpinSpeed = .5,
             feedforwardlong = .88,feedforwardshort = .62,kp = 0.002, targetvel = -2280, feedforward = 0;
     public String rightshootername = "rightshooter", leftshootername = "leftshooter";
-    public static boolean runShooter = false;
+    public static boolean runShooter = false, slowerSpeed = false;
 
     @Override
     public void initialize() {
@@ -31,6 +31,9 @@ public class Shooter extends Subsystem {
     public void periodic() {
         if (runShooter) {
             calculatePF();
+        } else if (slowerSpeed) {
+            leftshooter.setPower(.6);
+            rightshooter.setPower(.6);
         } else {
             setPower(0);
         }
