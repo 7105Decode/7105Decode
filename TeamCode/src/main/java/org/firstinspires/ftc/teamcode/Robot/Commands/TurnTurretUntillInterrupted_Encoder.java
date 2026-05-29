@@ -5,11 +5,11 @@ import com.rowanmcalpin.nextftc.core.command.Command;
 
 import org.firstinspires.ftc.teamcode.Robot.Subsystems.Turret;
 
-public class TurnTurret_Encoder extends Command {
+public class TurnTurretUntillInterrupted_Encoder extends Command {
     double targetposition,timeout;
     Turret turret;
     ElapsedTime timer = new ElapsedTime();
-    public TurnTurret_Encoder(Turret turret,double targetposition, double timeout){
+    public TurnTurretUntillInterrupted_Encoder(Turret turret,double targetposition, double timeout){
         this.targetposition = targetposition;
         this.turret = turret;
         this.timeout = timeout;
@@ -18,7 +18,6 @@ public class TurnTurret_Encoder extends Command {
     @Override
     public void start() {
         timer.reset();
-//        turret.pController.reset();
     }
 
     @Override

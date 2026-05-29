@@ -1,11 +1,13 @@
 package org.firstinspires.ftc.teamcode.Robot.Subsystems;
 
+import com.ThermalEquilibrium.homeostasis.Controllers.Feedback.BasicPID;
 import com.bylazar.configurables.annotations.Configurable;
 import com.qualcomm.hardware.limelightvision.LLResult;
 import com.qualcomm.hardware.limelightvision.LLResultTypes;
 import com.qualcomm.hardware.limelightvision.Limelight3A;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Gamepad;
+import com.qualcomm.robotcore.hardware.PIDCoefficients;
 import com.rowanmcalpin.nextftc.core.Subsystem;
 import com.rowanmcalpin.nextftc.core.command.Command;
 import com.rowanmcalpin.nextftc.core.control.controllers.PIDFController;
@@ -23,11 +25,12 @@ public class Turret extends Subsystem {
     private Turret() { }
     public static double nintydegrees_right = 750,nintydegrees_left = -750,
             turretforward = 0,rightSideThreshold = 900, leftSideThreshold = -900,
-            targetPos = 0, turretKP = .01, driverPower = .3, limelightHighPower = .3, limelightLowPower = .12,
+            targetPos = 0, turretKP = 0.009, driverPower = .3, limelightHighPower = .3, limelightLowPower = .12,
             kp = 0.03, redSideOffsetAuto = -3.3,redSideOffset = -2, blueOffset = 1;
     public MotorEx turret;
     public Limelight3A limelight;
     public LLResult result;
+
     public String topturretname = "topturret";
     public static boolean doneTrackingAprilTagAuto= false, turnLimelightOn = false,GPP = false, PGP = false, PPG = false;
     public PIDFController pController;

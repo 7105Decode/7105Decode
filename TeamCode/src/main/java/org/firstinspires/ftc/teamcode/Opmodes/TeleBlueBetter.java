@@ -34,9 +34,7 @@ public class TeleBlueBetter extends LinearOpMode {
     ElapsedTime timer = new ElapsedTime(), colorSensorResetter = new ElapsedTime()
             ,kickStandTimer = new ElapsedTime();
     Limelight3A limelight;
-    RevColorSensorV3 rightcolorSensor;
-    RevColorSensorV3 leftcolorSensor;
-    RevColorSensorV3 middlecolorSensor;
+    RevColorSensorV3 rightcolorSensor,leftcolorSensor,middlecolorSensor;
     public static boolean hoodUP = false;
     public static PIDCoefficients pidCoefficients,shooterCoef;
     BasicPID pid,shooterpid;
@@ -44,6 +42,7 @@ public class TeleBlueBetter extends LinearOpMode {
     ShooterStates shooterStates = ShooterStates.OFF;
     TransferStates transferStates = TransferStates.DOWN;
     HoodStates hoodStates = HoodStates.DOWN;
+    TurretStates turretStates = TurretStates.LOCKPOS;
     ParkingStates parkingStates = ParkingStates.DISENGAGE;
     Follower follower;
 
@@ -112,20 +111,20 @@ public class TeleBlueBetter extends LinearOpMode {
             follower.update();
             LLResult result = limelight.getLatestResult();
             if (gamepad2.right_trigger > .3){
-                topturret.setPower(-.4);
+                topturret.setPower(-.45);
             } else if (gamepad2.left_trigger > .3){
-                topturret.setPower(.4);
+                topturret.setPower(.45);
             } else if (useencoder){
                 topturret.setPower(pid.calculate(-535, topturret.getCurrentPosition()));
             }else if (result.isValid()) {
                 ty = result.getTy();
 //                535
                 if (ty <= -8.5){
-                    topturret.setPower(-.35);
+                    topturret.setPower(-.38);
                 } else if (ty > -8.5 && ty < .3) {
                     topturret.setPower(-.11);
                 } else if (ty >= 9.5) {
-                    topturret.setPower(.35);
+                    topturret.setPower(.38);
                 } else if (ty > .7) {
                     topturret.setPower(.11);
                 } else{
@@ -136,10 +135,19 @@ public class TeleBlueBetter extends LinearOpMode {
                 topturret.setPower(0);
             }
 
-            if (gamepad2.dpad_right && useencoder){
-                useencoder=false;
-            } else if (gamepad2.dpad_right) {
-                useencoder=true;
+            switch (turretStates){
+                case LOCKPOS:
+                    while (gamepad2.dpad_right){
+                        useencoder=false;
+                        turretStates = TurretStates.LIMELIGHT;
+                    }
+                    break;
+                case LIMELIGHT:
+                    while (gamepad2.dpad_right){
+                        useencoder=true;
+                        turretStates = TurretStates.LOCKPOS;
+                    }
+                    break;
             }
 
             if (gamepad2.right_bumper){
@@ -151,7 +159,6 @@ public class TeleBlueBetter extends LinearOpMode {
             double loop = System.nanoTime();
             telemetry.addData("Loop Time ", 1000000000 / (loop - loopTime));
             telemetry.addData("leftshootervel",leftvel);
-            telemetry.addData("turret",topturret.getCurrentPosition());
             if(rightcolorSensor.rawOptical() >= 300 && !gotRightColor){
                 if (rightcolorSensor.red() >= 80){
                     rightled.setPosition(.722);
@@ -364,6 +371,10 @@ public class TeleBlueBetter extends LinearOpMode {
         MAX,
         SLOWERSPEED,
         OFF
+    }
+    public enum TurretStates{
+        LIMELIGHT,
+        LOCKPOS
     }
     public enum HoodStates{
         UP,
