@@ -22,6 +22,7 @@ import org.firstinspires.ftc.teamcode.Robot.Commands.FishForAprilTagRedAuto;
 import org.firstinspires.ftc.teamcode.Robot.Commands.FollowPath;
 import org.firstinspires.ftc.teamcode.Robot.Commands.FollowPathTimer;
 import org.firstinspires.ftc.teamcode.Robot.Commands.MoveTransfer;
+import org.firstinspires.ftc.teamcode.Robot.Commands.MoveTransferCheckforPark;
 import org.firstinspires.ftc.teamcode.Robot.Commands.RunIntakeAuto;
 import org.firstinspires.ftc.teamcode.Robot.Commands.RunShooter;
 import org.firstinspires.ftc.teamcode.Robot.Commands.ShooterAutoSlowerSpeed;
@@ -50,14 +51,13 @@ public class RedLongAuto_Niagra extends NextFTCOpMode {
                 // So for speeding up the wheel a little bit you could try something like
                 // .89 for feedforward and -2340
                 new ParallelGroup(new RunShooter(.865,-2280),
-                        new TurnTurret_Timer(Turret.INSTANCE,1,-920),
-                        new MoveTransfer(Transfer.INSTANCE,false,false,true, midfurtherback,.4)),
+                        new TurnTurret_Timer(Turret.INSTANCE,1,-920)),
                 // below are the transfer servos. So this where we shoot the balls.
-                new MoveTransfer(Transfer.INSTANCE,false,true,false,Transfer.lefttransferpos,.85),
-                new MoveTransfer(Transfer.INSTANCE,false,true,false,Transfer.leftdownpos,.42),
-                new MoveTransfer(Transfer.INSTANCE,true,false,false,righttransferpos,.85),
-                new MoveTransfer(Transfer.INSTANCE,true,false,false,Transfer.rightdownpos,.42),
-                new MoveTransfer(Transfer.INSTANCE,false,false,true, midreadytransferpos,.85),
+                new MoveTransfer(Transfer.INSTANCE,false,true,false,Transfer.lefttransferpos,.82),
+                new MoveTransfer(Transfer.INSTANCE,false,true,false,Transfer.leftdownpos,.38),
+                new MoveTransfer(Transfer.INSTANCE,true,false,false,righttransferpos,.82),
+                new MoveTransfer(Transfer.INSTANCE,true,false,false,Transfer.rightdownpos,.38),
+                new MoveTransfer(Transfer.INSTANCE,false,false,true, midreadytransferpos,.82),
 
                 //This will go grab off the line you may need to adjust the path slightly.
                 new ParallelGroup(new FollowPath(DriveTrain.INSTANCE,paths.GrabLine),
@@ -68,14 +68,13 @@ public class RedLongAuto_Niagra extends NextFTCOpMode {
 
                 //Return to shoot the artifacts grabbed off the line.
                 new ParallelGroup(new FollowPath(DriveTrain.INSTANCE,paths.Shoot),
-                        new TurnTurret_Timer(Turret.INSTANCE,.3,-920),
-                        new Delay(.8).then(new RunShooter(.87,-2280)),
-                        new Delay(.5).then(new MoveTransfer(Transfer.INSTANCE,false,false,true, midfurtherback,.3))),
-                new MoveTransfer(Transfer.INSTANCE,true,false,false,righttransferpos,.85),
-                new MoveTransfer(Transfer.INSTANCE,true,false,false,Transfer.rightdownpos,.42),
-                new MoveTransfer(Transfer.INSTANCE,false,true,false,Transfer.lefttransferpos,.85),
-                new MoveTransfer(Transfer.INSTANCE,false,true,false,Transfer.leftdownpos,.42),
-                new MoveTransfer(Transfer.INSTANCE,false,false,true, midreadytransferpos,.85),
+                        new Delay(.8).then(new RunShooter(.87,-2280))),
+                new ParallelGroup(new MoveTransfer(Transfer.INSTANCE,true,false,false,righttransferpos,.82)
+                ,new TurnTurret_Timer(Turret.INSTANCE,.4,-945)),
+                new MoveTransfer(Transfer.INSTANCE,true,false,false,Transfer.rightdownpos,.38),
+                new MoveTransfer(Transfer.INSTANCE,false,true,false,Transfer.lefttransferpos,.82),
+                new MoveTransfer(Transfer.INSTANCE,false,true,false,Transfer.leftdownpos,.38),
+                new MoveTransfer(Transfer.INSTANCE,false,false,true, midreadytransferpos,.82),
 
                 //This is going to the corner to grab the arifacts. This path might also need to be adjusted.
                 new ParallelGroup(new FollowPath(DriveTrain.INSTANCE,paths.GrabCorner),
@@ -90,14 +89,13 @@ public class RedLongAuto_Niagra extends NextFTCOpMode {
 
                 //Return to shoot.
                 new ParallelGroup(new FollowPath(DriveTrain.INSTANCE,paths.ReturnToShoot),
-                        new TurnTurret_Timer(Turret.INSTANCE,.5,-900),
-                        new Delay(.8).then(new RunShooter(.87,-2280)),
-                        new Delay(.5).then(new MoveTransfer(Transfer.INSTANCE,false,false,true, midfurtherback,.3))),
-                new MoveTransfer(Transfer.INSTANCE,true,false,false,righttransferpos,.85),
-                new MoveTransfer(Transfer.INSTANCE,true,false,false,Transfer.rightdownpos,.42),
-                new MoveTransfer(Transfer.INSTANCE,false,true,false,Transfer.lefttransferpos,.85),
-                new MoveTransfer(Transfer.INSTANCE,false,true,false,Transfer.leftdownpos,.42),
-                new MoveTransfer(Transfer.INSTANCE,false,false,true, midreadytransferpos,.85),
+                        new RunShooter(.87,-2280)),
+                new ParallelGroup(new MoveTransfer(Transfer.INSTANCE,true,false,false,righttransferpos,.82)
+                        ,new TurnTurret_Timer(Turret.INSTANCE,.3,-920)),
+                new MoveTransfer(Transfer.INSTANCE,true,false,false,Transfer.rightdownpos,.38),
+                new MoveTransfer(Transfer.INSTANCE,false,true,false,Transfer.lefttransferpos,.82),
+                new MoveTransfer(Transfer.INSTANCE,false,true,false,Transfer.leftdownpos,.38),
+                new MoveTransfer(Transfer.INSTANCE,false,false,true, midreadytransferpos,.82),
 
                 //Go to grab more artifacts from corner.
                 new ParallelGroup(new FollowPath(DriveTrain.INSTANCE,paths.GrabCorner),
@@ -106,18 +104,16 @@ public class RedLongAuto_Niagra extends NextFTCOpMode {
                         new MoveTransfer(Transfer.INSTANCE,false,false,true,Transfer.middownpos,.2)),
                 //Go to shoot.
                 new ParallelGroup(new FollowPath(DriveTrain.INSTANCE,paths.ReturnToShoot),
-                        new TurnTurret_Timer(Turret.INSTANCE,.3,-900),
-                        new Delay(.8).then(new RunShooter(.87,-2280)),
-                        new Delay(.5).then(new MoveTransfer(Transfer.INSTANCE,false,false,true, midfurtherback,.3))),
-                new MoveTransfer(Transfer.INSTANCE,true,false,false,righttransferpos,.85),
-                new MoveTransfer(Transfer.INSTANCE,true,false,false,Transfer.rightdownpos,.42),
-                new MoveTransfer(Transfer.INSTANCE,false,true,false,Transfer.lefttransferpos,.85),
-                new MoveTransfer(Transfer.INSTANCE,false,true,false,Transfer.leftdownpos,.42),
-                new MoveTransfer(Transfer.INSTANCE,false,false,true, midreadytransferpos,.85),
+                        new RunShooter(.87,-2280)),
+                new ParallelGroup(new MoveTransfer(Transfer.INSTANCE,true,false,false,righttransferpos,.82)
+                        ,new TurnTurret_Timer(Turret.INSTANCE,.3,-920)),
+                new MoveTransferCheckforPark(Transfer.INSTANCE,true,false,false,Transfer.rightdownpos,.38,getRuntime(),100),
+                new MoveTransferCheckforPark(Transfer.INSTANCE,false,true,false,Transfer.lefttransferpos,.82,getRuntime(),27.9),
+                new MoveTransferCheckforPark(Transfer.INSTANCE,false,true,false,Transfer.leftdownpos,.38,getRuntime(), 100),
 
 //                This is for park.
                 new ParallelGroup(new FollowPath(DriveTrain.INSTANCE,paths.Park),
-                        new MoveTransfer(Transfer.INSTANCE,false,false,true, middownpos,.3)));
+                        new MoveTransfer(Transfer.INSTANCE,false,false,true, midreadytransferpos,.82)));
     }
     @Override
     public void onInit() {

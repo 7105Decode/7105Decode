@@ -26,9 +26,9 @@ public class BlueLongPaths_Niagra {
             Path2 = follower.pathBuilder().addPath(
                             new BezierLine(
                                     new Pose(17.1, 34.950),
-                                    new Pose(58.2, 8.7)
+                                    new Pose(48, 8.7)
                             )
-                    ).setLinearHeadingInterpolation(Math.toRadians(180), Math.toRadians(180))
+                    ).setLinearHeadingInterpolation(Math.toRadians(180), Math.toRadians(190))
                     .build();
 
             //Path3 goes to corner to collect artifacts.
@@ -71,7 +71,7 @@ public class BlueLongPaths_Niagra {
             Path7 = follower.pathBuilder().addPath(
                             new BezierLine(
                                     new Pose(10, 9),
-                                    new Pose(58.2, 8.7)
+                                    new Pose(48, 8.7)
                             )
                     ).setLinearHeadingInterpolation(Math.toRadians(180), Math.toRadians(180))
                     .build();
@@ -80,7 +80,7 @@ public class BlueLongPaths_Niagra {
             Path8 = follower.pathBuilder().addPath(
                             new BezierLine(
                                     new Pose(58.2, 8.7),
-                                    new Pose(7.5, 14)
+                                    new Pose(8.8, 14)
                             )
                     ).setLinearHeadingInterpolation(Math.toRadians(180), Math.toRadians(180))
                     .build();
@@ -89,7 +89,7 @@ public class BlueLongPaths_Niagra {
             Path9 = follower.pathBuilder().addPath(
                             new BezierLine(
                                     new Pose(7.5, 14),
-                                    new Pose(58.2, 8.7)
+                                    new Pose(48, 8.7)
                             )
                     ).setLinearHeadingInterpolation(Math.toRadians(180), Math.toRadians(180))
                     .build();
@@ -97,10 +97,10 @@ public class BlueLongPaths_Niagra {
             //Park
             Path10 = follower.pathBuilder().addPath(
                             new BezierLine(
-                                    new Pose(58.2, 8.7),
-                                    new Pose(31, 23)
+                                    new Pose(48, 8.7),
+                                    new Pose(40, 23)
                             )
-                    ).setLinearHeadingInterpolation(Math.toRadians(180), Math.toRadians(180))
+                    ).setLinearHeadingInterpolation(Math.toRadians(180), Math.toRadians(0))
                     .build();
         }
 }

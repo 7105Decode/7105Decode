@@ -15,7 +15,7 @@ public class RedLongPaths_Niagra {
                             new BezierLine(
                                     startpose,
 
-                                    new Pose(136.5, 14.8)
+                                    new Pose(135.5, 14.8)
                             )
                     ).setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(0))
 
@@ -23,7 +23,7 @@ public class RedLongPaths_Niagra {
 
             BackUp = follower.pathBuilder().addPath(
                             new BezierLine(
-                                    new Pose(136.5, 14.8),
+                                    new Pose(135.5, 14.8),
 
                                     new Pose(125.46, 12.26)
                             )
@@ -62,7 +62,7 @@ public class RedLongPaths_Niagra {
                     .build();
             ReturnToShoot = follower.pathBuilder().addPath(
                             new BezierLine(
-                                    new Pose(135.5, 10.2),
+                                    new Pose(140.5, 10.2),
 
                                     startpose
                             )
@@ -71,7 +71,7 @@ public class RedLongPaths_Niagra {
             GrabLine = follower.pathBuilder().addPath(
                             new BezierCurve(
                                     startpose,
-                                    new Pose(95.1, 43.2),
+                                    new Pose(90.1, 45.2),
                                     new Pose(126.9, 39.9)
                             )
                     ).setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(0))
