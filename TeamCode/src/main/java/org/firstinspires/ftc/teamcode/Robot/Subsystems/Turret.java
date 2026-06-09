@@ -134,10 +134,4 @@ public class Turret extends Subsystem {
     public double getError(double reference){
         return reference - getCurrentPosition();
     }
-    public Command runPID(double targetPos) {
-        return new RunToPosition(turret, // MOTOR TO MOVE
-                targetPos, // TARGET POSITION, IN TICKS
-                pController, // CONTROLLER TO IMPLEMENT
-                this); // IMPLEMENTED SUBSYSTEM
-    }
 }

@@ -112,9 +112,9 @@ public class TeleRedBetter extends LinearOpMode {
             LLResult result = limelight.getLatestResult();
 
              if (gamepad2.right_trigger > .3){
-                topturret.setPower(-.4);
+                topturret.setPower(-.45);
             } else if (gamepad2.left_trigger > .3){
-                topturret.setPower(.4);
+                topturret.setPower(.45);
             } else if (useencoder){
                  topturret.setPower(pid.calculate(535, topturret.getCurrentPosition()));
              }else if (result.isValid()) {
@@ -286,8 +286,8 @@ public class TeleRedBetter extends LinearOpMode {
                     }
                     break;
                 case SLOWERSPEED:
-                    rightshooter.setPower( (-1*shooterpid.calculate(targetvel,leftvel))+ feedforwardshort);
-                    leftshooter.setPower( (-1*shooterpid.calculate(targetvel,leftvel)) + feedforwardshort );
+                    rightshooter.setPower((-1*shooterpid.calculate(targetvel,leftvel))+ feedforwardshort);
+                    leftshooter.setPower((-1*shooterpid.calculate(targetvel,leftvel)) + feedforwardshort );
                     if (gamepad1.a) {
                         shooterStates = ShooterStates.OFF;
                     }else if (gamepad1.right_bumper){

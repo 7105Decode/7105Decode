@@ -1,7 +1,5 @@
 package org.firstinspires.ftc.teamcode.Opmodes;
-import static org.firstinspires.ftc.teamcode.Robot.Subsystems.Shooter.feedforwardlong;
 import static org.firstinspires.ftc.teamcode.Robot.Subsystems.Shooter.hoodUp;
-import static org.firstinspires.ftc.teamcode.Robot.Subsystems.Transfer.middownpos;
 import static org.firstinspires.ftc.teamcode.Robot.Subsystems.Transfer.midfurtherback;
 import static org.firstinspires.ftc.teamcode.Robot.Subsystems.Transfer.midreadytransferpos;
 import static org.firstinspires.ftc.teamcode.Robot.Subsystems.Transfer.righttransferpos;
@@ -14,15 +12,12 @@ import com.rowanmcalpin.nextftc.core.command.utility.delays.Delay;
 import com.rowanmcalpin.nextftc.ftc.NextFTCOpMode;
 
 import org.firstinspires.ftc.teamcode.RedLongPaths;
-import org.firstinspires.ftc.teamcode.Robot.Commands.ArtifactShaker;
 import org.firstinspires.ftc.teamcode.Robot.Commands.FishForAprilTagRedAuto;
 import org.firstinspires.ftc.teamcode.Robot.Commands.FollowPath;
 import org.firstinspires.ftc.teamcode.Robot.Commands.FollowPathTimer;
 import org.firstinspires.ftc.teamcode.Robot.Commands.MoveTransfer;
-import org.firstinspires.ftc.teamcode.Robot.Commands.ReadObelisk;
 import org.firstinspires.ftc.teamcode.Robot.Commands.RunIntakeAuto;
 import org.firstinspires.ftc.teamcode.Robot.Commands.RunShooter;
-import org.firstinspires.ftc.teamcode.Robot.Commands.TurnIntakeOff;
 import org.firstinspires.ftc.teamcode.Robot.Commands.TurnShooterOff;
 import org.firstinspires.ftc.teamcode.Robot.Subsystems.DriveTrain;
 import org.firstinspires.ftc.teamcode.Robot.Subsystems.Intake;
@@ -36,9 +31,6 @@ public class RedSafeLong extends NextFTCOpMode {
         super(Transfer.INSTANCE, Turret.INSTANCE, DriveTrain.INSTANCE, Shooter.INSTANCE, Intake.INSTANCE);
     }
     RedLongPaths paths;
-    Command readObelisk(){
-        return new ReadObelisk(4,telemetry);
-    }
     // from the starpose to middle is around -880
     public Command runRobot() {
         return new SequentialGroup(
@@ -84,8 +76,6 @@ public class RedSafeLong extends NextFTCOpMode {
     public void onWaitForStart() {
         DriveTrain.INSTANCE.drawOnlyCurrent();
         DriveTrain.INSTANCE.updateFollower();
-        readObelisk().invoke();
-        telemetry.update();
     }
     @Override
     public void onStartButtonPressed() {

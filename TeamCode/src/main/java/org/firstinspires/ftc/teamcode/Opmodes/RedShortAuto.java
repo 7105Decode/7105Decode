@@ -17,7 +17,6 @@ import org.firstinspires.ftc.teamcode.Robot.Commands.ArtifactShaker;
 import org.firstinspires.ftc.teamcode.Robot.Commands.FishForAprilTagRedAuto;
 import org.firstinspires.ftc.teamcode.Robot.Commands.FollowPath;
 import org.firstinspires.ftc.teamcode.Robot.Commands.MoveTransfer;
-import org.firstinspires.ftc.teamcode.Robot.Commands.ReadObelisk;
 import org.firstinspires.ftc.teamcode.Robot.Commands.RunIntakeAuto;
 import org.firstinspires.ftc.teamcode.Robot.Commands.RunShooter;
 import org.firstinspires.ftc.teamcode.Robot.Commands.TurnShooterOff;
@@ -34,9 +33,6 @@ public class RedShortAuto extends NextFTCOpMode {
         super(Transfer.INSTANCE, Turret.INSTANCE, DriveTrain.INSTANCE, Shooter.INSTANCE, Intake.INSTANCE);
     }
     Paths paths;
-    Command readObelisk(){
-        return new ReadObelisk(0,telemetry);
-    }
     // from the starpose to middle is around -880
     public Command runRobot() {
         return new SequentialGroup(
@@ -106,8 +102,8 @@ public class RedShortAuto extends NextFTCOpMode {
     public void onWaitForStart() {
         DriveTrain.INSTANCE.drawOnlyCurrent();
         DriveTrain.INSTANCE.updateFollower();
-        readObelisk().invoke();
-        telemetry.update();
+
+
     }
     @Override
     public void onStartButtonPressed() {

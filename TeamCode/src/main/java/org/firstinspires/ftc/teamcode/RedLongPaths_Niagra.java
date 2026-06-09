@@ -7,14 +7,13 @@ import com.pedropathing.geometry.Pose;
 import com.pedropathing.paths.PathChain;
 
 public class RedLongPaths_Niagra {
-        public PathChain GrabCorner, BackUp,PrepShift,ShiftLastArtifact,SixPark,GrabLastArtifact, ReturnToShoot,GrabLine,ShootAgain,
-                SafePark;
-        public static Pose RedLongStartPose = new Pose(85.8, 8.7,Math.toRadians(0));
+        public PathChain GrabCorner, BackUp,PrepShift,ShiftLastArtifact,Park,GrabLastArtifact, ReturnToShoot,GrabLine,Shoot;
+        public static Pose startpose = new Pose(85.8, 8.7,Math.toRadians(0));
         public RedLongPaths_Niagra(Follower follower) {
 
             GrabCorner = follower.pathBuilder().addPath(
                             new BezierLine(
-                                    new Pose(85.8, 8.7),
+                                    startpose,
 
                                     new Pose(136.5, 14.8)
                             )
@@ -65,46 +64,34 @@ public class RedLongPaths_Niagra {
                             new BezierLine(
                                     new Pose(135.5, 10.2),
 
-                                    RedLongStartPose
+                                    startpose
                             )
                     ).setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(0))
                     .build();
             GrabLine = follower.pathBuilder().addPath(
                             new BezierCurve(
-                                    new Pose(85.8, 8.7),
-                                    new Pose(95.1, 41.2),
-                                    new Pose(126.9, 34.9)
+                                    startpose,
+                                    new Pose(95.1, 43.2),
+                                    new Pose(126.9, 39.9)
                             )
                     ).setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(0))
 
                     .build();
-            SixPark = follower.pathBuilder().addPath(
+            Park = follower.pathBuilder().addPath(
                             new BezierLine(
-                                    new Pose(85.8, 8.7),
-                                    new Pose(113.5, 34.9)
+                                    new Pose(85.8, 34),
+                                    new Pose(85.8, 35)
                             )
-                    ).setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(0))
+                    ).setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(180))
 
                     .build();
-            ShootAgain = follower.pathBuilder().addPath(
+            Shoot = follower.pathBuilder().addPath(
                             new BezierLine(
-                                    new Pose(126.9, 34.9),
+                                    new Pose(126.9, 39.9),
 
                                     new Pose(85.8, 8.7)
                             )
                     ).setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(0))
-                    .build();
-
-
-            //This is only for the safe auto
-            SafePark = follower.pathBuilder().addPath(
-                            new BezierCurve(
-                                    new Pose(135.5, 10.2),
-
-                                    new Pose(119.3, 25.8),
-                                    new Pose(113.5, 10.1)
-                            )
-                    ).setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(180))
                     .build();
         }
 
