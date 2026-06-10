@@ -47,7 +47,7 @@ public class RedLongPaths_Niagra {
 
                                     new Pose(132.6, 10.4)
                             )
-                    ).setLinearHeadingInterpolation(Math.toRadians(25), Math.toRadians(25))
+                    ).setLinearHeadingInterpolation(Math.toRadians(45), Math.toRadians(45))
 
                     .build();
 
@@ -79,19 +79,28 @@ public class RedLongPaths_Niagra {
                     .build();
             Park = follower.pathBuilder().addPath(
                             new BezierLine(
-                                    new Pose(85.8, 34),
-                                    new Pose(85.8, 35)
+                                    new Pose(85.8, 8.7),
+                                    new Pose(85.8, 33)
                             )
                     ).setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(180))
 
                     .build();
+//            Shoot = follower.pathBuilder().addPath(
+//                            new BezierLine(
+//                                    new Pose(126.9, 39.9),
+//
+//                                    new Pose(85.8, 8.7)
+//                            )
+//                    ).setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(0))
+//                    .build();
             Shoot = follower.pathBuilder().addPath(
-                            new BezierLine(
+                            new BezierCurve(
                                     new Pose(126.9, 39.9),
-
+                                    new Pose(133.815, 3.641),
                                     new Pose(85.8, 8.7)
                             )
                     ).setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(0))
+
                     .build();
         }
 

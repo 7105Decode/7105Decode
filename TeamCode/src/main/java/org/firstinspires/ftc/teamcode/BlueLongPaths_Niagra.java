@@ -16,8 +16,8 @@ public class BlueLongPaths_Niagra {
                     // Below the first pos is where the robot is starting from. The ast pose so new Pose(17.1, 34.95) is the pose we are driving to
                     //the middle pose, so new Pose(48.8, 41.2), is a control point. You shouldn't need to adjust the
                             new BezierCurve(startpose,
-                                    new Pose(48.8, 41.2),
-                                    new Pose(17.1, 34.95)
+                                    new Pose(50.8, 42.2),
+                                    new Pose(17.1, 37)
                             )
                     ).setLinearHeadingInterpolation(Math.toRadians(180), Math.toRadians(180))
                     .build();
@@ -26,7 +26,7 @@ public class BlueLongPaths_Niagra {
             Path2 = follower.pathBuilder().addPath(
                             new BezierLine(
                                     new Pose(17.1, 34.950),
-                                    new Pose(48, 8.7)
+                                    new Pose(45, 8.7)
                             )
                     ).setLinearHeadingInterpolation(Math.toRadians(180), Math.toRadians(190))
                     .build();
@@ -35,7 +35,7 @@ public class BlueLongPaths_Niagra {
             Path3 = follower.pathBuilder().addPath(
                             new BezierLine(
                                     new Pose(58.2, 8.7),
-                                    new Pose(7.5, 11.8)
+                                    new Pose(8.5, 10)
                             )
                     ).setLinearHeadingInterpolation(Math.toRadians(180), Math.toRadians(180))
                     .build();
@@ -71,7 +71,7 @@ public class BlueLongPaths_Niagra {
             Path7 = follower.pathBuilder().addPath(
                             new BezierLine(
                                     new Pose(10, 9),
-                                    new Pose(48, 8.7)
+                                    new Pose(45, 8.7)
                             )
                     ).setLinearHeadingInterpolation(Math.toRadians(180), Math.toRadians(180))
                     .build();
@@ -89,7 +89,7 @@ public class BlueLongPaths_Niagra {
             Path9 = follower.pathBuilder().addPath(
                             new BezierLine(
                                     new Pose(7.5, 14),
-                                    new Pose(48, 8.7)
+                                    new Pose(45, 8.7)
                             )
                     ).setLinearHeadingInterpolation(Math.toRadians(180), Math.toRadians(180))
                     .build();
@@ -97,7 +97,7 @@ public class BlueLongPaths_Niagra {
             //Park
             Path10 = follower.pathBuilder().addPath(
                             new BezierLine(
-                                    new Pose(48, 8.7),
+                                    new Pose(45, 8.7),
                                     new Pose(40, 23)
                             )
                     ).setLinearHeadingInterpolation(Math.toRadians(180), Math.toRadians(0))

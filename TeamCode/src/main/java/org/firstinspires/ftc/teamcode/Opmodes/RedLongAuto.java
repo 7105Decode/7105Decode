@@ -6,6 +6,7 @@ import static org.firstinspires.ftc.teamcode.Robot.Subsystems.Transfer.midreadyt
 import static org.firstinspires.ftc.teamcode.Robot.Subsystems.Transfer.righttransferpos;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.rowanmcalpin.nextftc.core.command.Command;
 import com.rowanmcalpin.nextftc.core.command.groups.ParallelGroup;
 import com.rowanmcalpin.nextftc.core.command.groups.SequentialGroup;
@@ -27,6 +28,7 @@ import org.firstinspires.ftc.teamcode.Robot.Subsystems.Shooter;
 import org.firstinspires.ftc.teamcode.Robot.Subsystems.Transfer;
 import org.firstinspires.ftc.teamcode.Robot.Subsystems.Turret;
 // optional static import
+@Disabled
 @Autonomous(name = "\uD83D\uDFE5LongAuto")
 public class RedLongAuto extends NextFTCOpMode {
     public RedLongAuto() {
